@@ -12,6 +12,10 @@ export const EMPTY_STRING = "";
 
 export const COOKIE_KEY = "cookie_consent";
 
+export const IS_TEST_MODE = true;
+
+export const MOCK_TIMEOUT = 5000;
+
 export const HOSTING_PROVIDER = {
   NAME: "Scaleway",
   URL: "https://www.scaleway.com/",

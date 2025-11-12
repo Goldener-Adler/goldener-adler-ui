@@ -11,12 +11,15 @@ import type {TranslationKeys} from "@/i18n.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import { LuBedSingle, LuBedDouble, LuCookingPot } from 'react-icons/lu';
 import {isValidBookingForm} from "@/helpers/isValidBookingForm.ts";
+import Altcha from "@/components/Altcha.tsx";
+import {useSendBookingRequest} from "@/hooks/useSendBookingRequest.ts";
 
 export const BookingReview: FunctionComponent = () => {
   const {t} = useTranslation();
   const {bookingFormValues, cancelBooking} = useBooking();
+  const {sendBookingRequest, loading, setLoading} = useSendBookingRequest();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (!isValidBookingForm(bookingFormValues)) {
       navigate("/booking", {replace: true});
@@ -51,11 +54,6 @@ export const BookingReview: FunctionComponent = () => {
       // Will never happen;
       default: return `public.Booking.Options.NoSelection`;
     }
-  }
-  
-  const onBooking = () => {
-    // TODO: Send Email with Booking Details
-    console.log("Sent Booking Details:", bookingFormValues);
   }
   
   if(!isValidBookingForm(bookingFormValues)) {
@@ -144,10 +142,17 @@ export const BookingReview: FunctionComponent = () => {
           )}
         </div>
         <Separator />
-        <div className="flex justify-end gap-2 py-5">
-          <Button onClick={cancelBooking} variant="destructive-outline">{t('public.Buttons.Cancel')}</Button>
-          <Button onClick={onBooking}>{t('public.Buttons.Book')}</Button>
-        </div>
+        <form onSubmit={(e) => { e.preventDefault(); }}>
+          <div className="flex justify-end gap-2 py-5">
+            <Button disabled={loading} onClick={cancelBooking} variant="destructive-outline">{t('public.Buttons.Cancel')}</Button>
+            <Button type="submit" id="submit-button" disabled={loading}>{t('public.Buttons.Book')}</Button>
+          </div>
+          <Altcha
+            onVerifying={() => setLoading(true)}
+            onVerified={(payload) => sendBookingRequest(bookingFormValues, payload)}
+            onError={() => setLoading(false)}
+          />
+        </form>
       </Content>
     </Page>
   )

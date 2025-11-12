@@ -15,11 +15,13 @@ import {BookingProvider} from "@/pages/booking/BookingContext.tsx";
 import {Imprint} from "@/pages/Imprint.tsx";
 import {LegalNotice} from "@/pages/LegalNotice.tsx";
 import {AppGuard} from "@/AppGuard.tsx";
+import {Toaster} from "@/components/ui/sonner.tsx";
 
 export const App: FunctionComponent = () => {
   return (
     <AppGuard>
     <BrowserRouter>
+      <Toaster position="top-center" richColors theme="light" />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
