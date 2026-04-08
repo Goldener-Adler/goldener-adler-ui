@@ -1,6 +1,5 @@
 import {useState} from "react";
 import type {BookingFormValues} from "@/assets/types.ts";
-import {IS_TEST_MODE, MOCK_TIMEOUT} from "@/assets/consts.ts";
 import {toast} from "sonner";
 import {useNavigate} from "react-router";
 import {useBooking} from "@/pages/booking/BookingContext.tsx";
@@ -17,10 +16,6 @@ export const useSendBookingRequest = () => {
     resetBookingFormValues();
     setLoading(false);
     navigate("/");
-  }
-
-  const onError = () => {
-    setLoading(false);
   }
 
   const sendBookingRequest = async (bookingFormValues: BookingFormValues, altchaPayload: string) => {
@@ -50,35 +45,5 @@ export const useSendBookingRequest = () => {
     }
   }
 
-  const sendMockBookingRequest = async (bookingFormValues: BookingFormValues, altchaPayload: string) => {
-    const requestBody = {
-      ...bookingFormValues,
-      altchaPayload: altchaPayload,
-    }
-
-    const promise = new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-        console.log("MOCK send mail with:", requestBody);
-      }, MOCK_TIMEOUT);
-    });
-
-    toast.promise(promise, {
-      loading: 'Versendet Buchungsanfrage...',
-      success: {
-        message: 'Buchungsanfrage versendet',
-        description: 'Sie werden in 5 Sekunden zur Startseite weitergeleitet.',
-        onDismiss: onSuccess,
-        onAutoClose: onSuccess,
-      },
-      error: {
-        message: 'Error sending Mail',
-        description: 'Bitte versuchen Sie es später nochmal.',
-        onDismiss: onError,
-        onAutoClose: onError,
-      },
-    });
-  }
-
-  return { sendBookingRequest: IS_TEST_MODE ? sendMockBookingRequest : sendBookingRequest, loading, setLoading };
+  return { sendBookingRequest, loading, setLoading };
 }
