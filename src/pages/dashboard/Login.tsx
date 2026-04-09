@@ -1,5 +1,5 @@
 import type {FunctionComponent} from "react";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 
 export const Login: FunctionComponent = () => {
   return (

@@ -1,4 +1,4 @@
-import useTitle from "@/hooks/useTitle";
+import useTitle from "@/hooks/useTitle.ts";
 import type {FunctionComponent, PropsWithChildren} from "react";
 
 interface PageProps extends PropsWithChildren {

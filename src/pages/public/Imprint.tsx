@@ -1,6 +1,6 @@
 import type {FunctionComponent} from "react";
-import {Page} from "@/components/layouts/Page.tsx";
-import {Content} from "@/components/Content.tsx";
+import {Page} from "@/layouts/Page.tsx";
+import {Content} from "@/layouts/Content.tsx";
 import { Link } from "react-router";
 import {METADATA} from "@/assets/consts.ts";
 import {Trans, useTranslation} from "react-i18next";

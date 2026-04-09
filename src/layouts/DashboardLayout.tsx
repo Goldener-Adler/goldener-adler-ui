@@ -5,14 +5,14 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from "@/components/ui/sidebar.tsx";
-import { Separator } from "../ui/separator";
+import { Separator } from "../components/ui/separator.tsx";
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-} from "../ui/breadcrumb";
-import {DashboardSidebar} from "@/components/DashboardSidebar.tsx";
+} from "../components/ui/breadcrumb.tsx";
+import {DashboardSidebar} from "@/components/dashboard/DashboardSidebar.tsx";
 
 export const DashboardLayout: FunctionComponent = () => {
   return (

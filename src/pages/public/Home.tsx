@@ -1,16 +1,16 @@
 import {type FunctionComponent} from "react";
-import {Content} from "@/components/Content.tsx";
-import {Hero} from "@/components/Hero.tsx";
+import {Content} from "@/layouts/Content.tsx";
+import {Hero} from "@/components/public/Hero.tsx";
 import { PiAt, PiMapPin, PiPhone, PiCar, PiForkKnife, PiHandshake } from 'react-icons/pi';
 import {Separator} from "@/components/ui/separator.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Trans, useTranslation} from "react-i18next";
 import {useNavigate} from "react-router";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 import TownLg from "/images/town-lg.jpg?url";
 import TownXs from "/images/town-xs.jpg?url";
 import DoorsLg from "/images/doors-lg.jpg?url";
-import {RoomCarousel} from "@/components/RoomCarousel.tsx";
+import {RoomCarousel} from "@/components/public/RoomCarousel.tsx";
 import {METADATA} from "@/assets/consts.ts";
 
 export const Home: FunctionComponent = () => {

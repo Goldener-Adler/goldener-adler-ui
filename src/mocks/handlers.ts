@@ -1,7 +1,7 @@
 import {http, HttpResponse} from "msw";
 import {API_ENDPOINT, EMPTY_STRING} from "@/assets/consts.ts";
 import {MOCK_BOOKINGS, MOCK_ROOMS} from "@/mocks/mockData.ts";
-import {toDateOnly} from "@/helpers/formatDate.ts";
+import {toDateOnly} from "@/utils/formatDate.ts";
 import type {DateRange} from "react-day-picker";
 import type {Booking} from "@/assets/types.ts";
 

@@ -1,6 +1,6 @@
 import type {FunctionComponent} from "react";
-import {Hero} from "@/components/Hero.tsx";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Hero} from "@/components/public/Hero.tsx";
+import {Page} from "@/layouts/Page.tsx";
 import SeaLg from "/images/sea-lg.jpg?url";
 import SeaXs from "/images/sea-xs.jpg?url";
 

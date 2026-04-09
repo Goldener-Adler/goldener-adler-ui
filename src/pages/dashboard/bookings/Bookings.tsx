@@ -1,5 +1,5 @@
 import {type FunctionComponent} from "react";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 import {getBookingsQueryKey, useGetBookings} from "@/hooks/useGetBookings.ts";
 import {DataTable} from "@/components/ui/data-table.tsx";
 import {bookingColumns} from "@/components/dashboard/bookings/columns.tsx";
@@ -11,7 +11,7 @@ import {useSearchWithQueryParams} from "@/hooks/useSearchWithQueryParams.ts";
 import {DateRangePicker} from "@/components/ui/date-range-picker.tsx";
 import {type DateRange} from "react-day-picker";
 import {useStateWithQueryParams} from "@/hooks/useStateWithQueryParams.ts";
-import {isDateRangeState} from "@/helpers/guards/isDateRangeState.ts";
+import {isDateRangeState} from "@/utils/guards/isDateRangeState.ts";
 import {useQueryClient} from "@tanstack/react-query";
 
 export const Bookings: FunctionComponent = () => {

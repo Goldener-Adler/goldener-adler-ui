@@ -1,6 +1,6 @@
 import type {FunctionComponent} from "react";
-import {Page} from "@/components/layouts/Page.tsx";
-import {Content} from "@/components/Content.tsx";
+import {Page} from "@/layouts/Page.tsx";
+import {Content} from "@/layouts/Content.tsx";
 import {Trans, useTranslation} from "react-i18next";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion.tsx";
 import {HOSTING_PROVIDER, METADATA} from "@/assets/consts.ts";

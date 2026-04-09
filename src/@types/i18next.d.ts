@@ -1,5 +1,5 @@
 import 'react-i18next';
-import type {Resources} from "@/i18n.ts";
+import type {Resources} from "@/assets/i18n/i18n.ts";
 
 declare module 'i18next' {
   interface CustomTypeOptions {

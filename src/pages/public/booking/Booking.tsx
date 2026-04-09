@@ -1,4 +1,4 @@
-import { Content } from "@/components/Content.tsx";
+import { Content } from "@/layouts/Content.tsx";
 import {type FunctionComponent, useRef} from "react";
 import {Calendar} from "@/components/ui/calendar.tsx";
 import {
@@ -16,11 +16,11 @@ import {Checkbox} from "@/components/ui/checkbox.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {getCurrentLocale} from "@/helpers/i18n-locale.ts";
+import {getCurrentLocale} from "@/utils/i18n-locale.ts";
 import {Trans, useTranslation} from "react-i18next";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 import {BOOKING_OPTIONS, EMPTY_STRING} from "@/assets/consts.ts";
-import {useBooking} from "@/pages/booking/BookingContext.tsx";
+import {useBooking} from "@/pages/public/booking/BookingContext.tsx";
 import {bookingformSchema, type BookingFormValues, initialBookingFormValues} from "@/assets/types.ts";
 import {useNavigate} from "react-router";
 

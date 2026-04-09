@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import languageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next} from "react-i18next";
 
-import de from './assets/i18n/de';
-import en from './assets/i18n/en';
+import de from './de.ts';
+import en from './en.ts';
 
 export const resources = {
   default: {

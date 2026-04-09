@@ -1,5 +1,5 @@
 import type {FunctionComponent} from "react";
-import {defaultLanguage, type Language} from "@/i18n.ts";
+import {defaultLanguage, type Language} from "@/assets/i18n/i18n.ts";
 import {useTranslation} from "react-i18next";
 import {NavigationMenuContent, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuLink, NavigationMenu, NavigationMenuList} from "@/components/ui/navigation-menu.tsx";
 

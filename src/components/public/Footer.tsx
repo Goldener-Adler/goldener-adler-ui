@@ -3,7 +3,7 @@ import {Link} from "react-router";
 import {useTranslation} from "react-i18next";
 import {METADATA} from "@/assets/consts.ts";
 import { PiCopyright } from 'react-icons/pi';
-import {CookieBanner} from "@/components/layouts/CookieBanner.tsx";
+import {CookieBanner} from "@/components/public/CookieBanner.tsx";
 
 export const Footer: FunctionComponent = () => {
   const {t} = useTranslation();

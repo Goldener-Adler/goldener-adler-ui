@@ -1,6 +1,6 @@
-import type {TranslationKeys} from "@/i18n.ts";
+import type {TranslationKeys} from "@/assets/i18n/i18n.ts";
 import {BOOKING_OPTIONS} from "@/assets/consts.ts";
-import {createBookingSchema} from "@/helpers/createBookingSchema.ts";
+import {createBookingSchema} from "@/utils/createBookingSchema.ts";
 import {z} from "zod";
 
 export type BookingOption = {id: string, label: TranslationKeys}

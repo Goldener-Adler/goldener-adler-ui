@@ -1,7 +1,7 @@
 import { enUS, de } from "date-fns/locale";
 import type { Locale } from "date-fns";
-import i18n from "../i18n";
-import type { Language } from "@/i18n";
+import i18n from "../assets/i18n/i18n.ts";
+import type { Language } from "@/assets/i18n/i18n.ts";
 
 const dateFnsLocales: Record<Language, Locale> = {
   en: enUS,

@@ -1,17 +1,17 @@
 import {type FunctionComponent, useEffect} from "react";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 import {useTranslation} from "react-i18next";
-import {Content} from "@/components/Content.tsx";
+import {Content} from "@/layouts/Content.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {ChevronLeft} from "lucide-react";
 import {useNavigate} from "react-router";
-import {useBooking} from "@/pages/booking/BookingContext.tsx";
-import {FormValueItem} from "@/components/FormValueItem.tsx";
-import type {TranslationKeys} from "@/i18n.ts";
+import {useBooking} from "@/pages/public/booking/BookingContext.tsx";
+import {FormValueItem} from "@/components/public/FormValueItem.tsx";
+import type {TranslationKeys} from "@/assets/i18n/i18n.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import { LuBedSingle, LuBedDouble, LuCookingPot } from 'react-icons/lu';
-import {isValidBookingForm} from "@/helpers/isValidBookingForm.ts";
-import Altcha from "@/components/Altcha.tsx";
+import {isValidBookingForm} from "@/utils/guards/isValidBookingForm.ts";
+import Altcha from "@/components/shared/Altcha.tsx";
 import {useSendBookingRequest} from "@/hooks/useSendBookingRequest.ts";
 
 export const BookingReview: FunctionComponent = () => {

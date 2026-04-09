@@ -1,5 +1,5 @@
 import {type FunctionComponent, useState} from "react";
-import type { MenuItem } from "@/assets/types";
+import type { MenuItem } from "@/assets/types.ts";
 import {LuMenu, LuX} from "react-icons/lu";
 import {
   Drawer,
@@ -7,7 +7,7 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
-} from "@/components/ui/drawer";
+} from "@/components/ui/drawer.tsx";
 import {Link, useLocation} from "react-router";
 import {DialogTitle} from "@radix-ui/react-dialog";
 

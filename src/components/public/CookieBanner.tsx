@@ -7,8 +7,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useCookieConsent } from "@/hooks/useCookieConsent";
+} from "@/components/ui/alert-dialog.tsx";
+import { useCookieConsent } from "@/hooks/useCookieConsent.ts";
 import {useTranslation} from "react-i18next";
 import type {FunctionComponent} from "react";
 

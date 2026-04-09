@@ -1,15 +1,15 @@
 import type {FunctionComponent} from "react";
-import {Hero} from "@/components/Hero.tsx";
-import {Content} from "@/components/Content.tsx";
+import {Hero} from "@/components/public/Hero.tsx";
+import {Content} from "@/layouts/Content.tsx";
 import { z } from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useTranslation} from "react-i18next";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 import LakeLg from "/images/lake-lg.jpg?url";
 import LakeXs from "/images/lake-xs.jpg?url";
 

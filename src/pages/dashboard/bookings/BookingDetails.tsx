@@ -1,8 +1,8 @@
 import {type FunctionComponent, useEffect, useState} from "react";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 import {Navigate, useNavigate, useParams} from "react-router";
 import {useGetBookingDetails} from "@/hooks/useGetBookingDetails.tsx";
-import {DashboardSpacing} from "@/components/layouts/DashboardSpacing.tsx";
+import {DashboardSpacing} from "@/layouts/DashboardSpacing.tsx";
 import {
   Field,
   FieldDescription,

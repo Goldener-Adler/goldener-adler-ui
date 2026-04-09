@@ -1,6 +1,6 @@
 import type {FunctionComponent} from "react";
-import {Hero} from "@/components/Hero.tsx";
-import { Content } from "@/components/Content";
+import {Hero} from "@/components/public/Hero.tsx";
+import { Content } from "@/layouts/Content.tsx";
 import { LuBedSingle, LuBedDouble, LuCookingPot } from 'react-icons/lu';
 import {
   PiWifiHigh,
@@ -18,7 +18,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import type {IconType} from "react-icons";
-import {Page} from "@/components/layouts/Page.tsx";
+import {Page} from "@/layouts/Page.tsx";
 
 import BikeLg from "/images/bike-lg.jpg?url";
 import BikeXs from "/images/bike-xs.jpg?url";

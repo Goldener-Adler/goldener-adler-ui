@@ -2,9 +2,9 @@ import {useEffect, useState, type FunctionComponent} from "react";
 import {Button} from "@/components/ui/button.tsx";
 import {useLocation, useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
-import {LanguageSelect} from "@/components/ui/LanguageSelect.tsx";
+import {LanguageSelect} from "@/components/public/LanguageSelect.tsx";
 import {BOOKING_SESSION_STORAGE_KEY, COOKIE_KEY, TRANSPARENT_ROUTES} from "@/assets/consts.ts";
-import type { MenuItem } from "@/assets/types";
+import type { MenuItem } from "@/assets/types.ts";
 import { MenuDrawer } from "./MenuDrawer.tsx";
 import Cookies from "js-cookie";
 

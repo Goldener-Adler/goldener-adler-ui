@@ -1,10 +1,10 @@
-import {type BookingFormValues, initialBookingFormValues} from "@/assets/types";
+import {type BookingFormValues, initialBookingFormValues} from "@/assets/types.ts";
 import { createContext, useContext, useState, type ReactNode, useEffect } from "react";
-import {isBookingFormValues} from "@/helpers/isBookingFormValues.ts";
+import {isBookingFormValues} from "@/utils/guards/isBookingFormValues.ts";
 import type { DateRange } from "react-day-picker";
 import {useNavigate} from "react-router";
 import {BOOKING_SESSION_STORAGE_KEY, COOKIE_KEY} from "@/assets/consts.ts";
-import {isValidBookingForm} from "@/helpers/isValidBookingForm.ts";
+import {isValidBookingForm} from "@/utils/guards/isValidBookingForm.ts";
 import Cookies from "js-cookie";
 
 type BookingContextType = {

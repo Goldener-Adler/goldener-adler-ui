@@ -1,7 +1,7 @@
 import type {FunctionComponent} from "react";
 import {BookingsToday} from "@/components/dashboard/BookingsToday.tsx";
 import {BookingsWeek} from "@/components/dashboard/BookingsWeek.tsx";
-import { Page } from "@/components/layouts/Page";
+import { Page } from "@/layouts/Page.tsx";
 
 export const Dashboard: FunctionComponent = () => {
   return (
