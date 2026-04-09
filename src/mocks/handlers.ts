@@ -49,7 +49,6 @@ export const handlers = [
   http.put<{ id: string }>(API_ENDPOINT + '/bookings/:id', async ({ params, request }) => {
     const { id } = params;
     const updatedData = await request.json() as Booking;
-    console.log(updatedData);
 
     const index = MOCK_BOOKINGS.findIndex(b => b.id === id)
 
