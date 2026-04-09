@@ -6,7 +6,7 @@ import type {DateRange} from "react-day-picker";
 export const getBookingsQueryKey = (
   searchParameter: string,
   dateRange?: DateRange,
-) => ['Booking', searchParameter, dateRange];
+) => ['bookings', searchParameter, dateRange];
 
 export const useGetBookings = (
   searchParameter: string = EMPTY_STRING,
@@ -38,6 +38,6 @@ export const useGetBookings = (
     queryKey: getBookingsQueryKey(searchParameter, dateRange),
     queryFn: fetchBookings,
     staleTime: 10000,
-    placeholderData: keepPreviousData,
+    placeholderData: keepPreviousData
   });
 }

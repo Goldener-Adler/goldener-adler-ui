@@ -3,6 +3,7 @@ import {API_ENDPOINT, EMPTY_STRING} from "@/assets/consts.ts";
 import {MOCK_BOOKINGS, MOCK_ROOMS} from "@/mocks/mockData.ts";
 import {toDateOnly} from "@/helpers/formatDate.ts";
 import type {DateRange} from "react-day-picker";
+import type {Booking} from "@/assets/types.ts";
 
 export const handlers = [
   http.post(import.meta.env.VITE_BOOKING_ENDPOINT, () => {
@@ -42,6 +43,38 @@ export const handlers = [
       })
     }
     return HttpResponse.json(booking, {
+      status: 200,
+    })
+  }),
+  http.put<{ id: string }>(API_ENDPOINT + '/bookings/:id', async ({ params, request }) => {
+    const { id } = params;
+    const updatedData = await request.json() as Booking;
+    console.log(updatedData);
+
+    const index = MOCK_BOOKINGS.findIndex(b => b.id === id)
+
+    if (index === -1) {
+      return HttpResponse.json(null, { status: 404 })
+    }
+
+    MOCK_BOOKINGS[index] = {
+      ...MOCK_BOOKINGS[index],
+      ...updatedData,
+    }
+
+    return HttpResponse.json(MOCK_BOOKINGS[index], {
+      status: 200,
+    })
+  }),
+  http.delete(API_ENDPOINT + '/bookings/:id', ({ params }) => {
+    const { id } = params;
+    const index = MOCK_BOOKINGS.findIndex(b => b.id === id)
+
+    if (index === -1) {
+      return HttpResponse.json(null, { status: 404 })
+    }
+
+    return HttpResponse.json(id, {
       status: 200,
     })
   }),

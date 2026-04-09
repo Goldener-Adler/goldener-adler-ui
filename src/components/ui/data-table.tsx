@@ -13,21 +13,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {useNavigate} from "react-router";
+import {EMPTY_STRING} from "@/assets/consts.ts";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string | number}, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  enableRowNavigation?: boolean
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string | number; }, TValue>({
                                            columns,
                                            data,
+                                           enableRowNavigation = false,
                                          }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
+
+  const navigate = useNavigate();
 
   return (
     <div className="overflow-hidden rounded-md border">
@@ -56,6 +62,10 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className={enableRowNavigation ? "hover:cursor-pointer" : EMPTY_STRING}
+                onClick={() => {
+                  return enableRowNavigation ? navigate(`${window.location.pathname}/${row.original.id}`) : null
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

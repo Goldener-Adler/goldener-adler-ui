@@ -16,8 +16,9 @@ import {Imprint} from "@/pages/Imprint.tsx";
 import {LegalNotice} from "@/pages/LegalNotice.tsx";
 import {AppGuard} from "@/AppGuard.tsx";
 import {Toaster} from "@/components/ui/sonner.tsx";
-import {Bookings} from "@/pages/dashboard/Bookings.tsx";
+import {Bookings} from "@/pages/dashboard/bookings/Bookings.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {BookingDetails} from "@/pages/dashboard/bookings/BookingDetails.tsx";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ export const App: FunctionComponent = () => {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="bookings" element={<Bookings />} />
+          <Route path="bookings/:id" element={<BookingDetails/>}/>
         </Route>
       </Routes>
       </QueryClientProvider>

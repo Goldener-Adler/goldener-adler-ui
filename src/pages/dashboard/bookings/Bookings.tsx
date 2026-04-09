@@ -5,7 +5,7 @@ import {DataTable} from "@/components/ui/data-table.tsx";
 import {bookingColumns} from "@/components/dashboard/bookings/columns.tsx";
 import {ButtonGroup} from "@/components/ui/button-group.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {RefreshCw, SearchIcon, X} from "lucide-react";
+import {RefreshCw, SearchIcon, X, Plus} from "lucide-react";
 import {Input} from "@/components/ui/input.tsx";
 import {useSearchWithQueryParams} from "@/hooks/useSearchWithQueryParams.ts";
 import {DateRangePicker} from "@/components/ui/date-range-picker.tsx";
@@ -24,7 +24,12 @@ export const Bookings: FunctionComponent = () => {
   return (
     <Page>
       <div className="flex flex-1 flex-col gap-2 p-4 pt-0">
-        <h1>Buchungen</h1>
+        <div className="flex gap-2 items-center justify-between">
+          <h1>Buchungen</h1>
+          <Button variant="outline" size="icon">
+            <Plus/>
+          </Button>
+        </div>
         <div className="flex gap-2 justify-between">
           <ButtonGroup>
             <ButtonGroup className="hidden sm:flex">
@@ -52,7 +57,7 @@ export const Bookings: FunctionComponent = () => {
             </Button>
           </ButtonGroup>
         </div>
-        <DataTable columns={bookingColumns} data={getBookingsResult.isSuccess ? getBookingsResult.data : []} />
+        <DataTable columns={bookingColumns} data={getBookingsResult.isSuccess ? getBookingsResult.data : []} enableRowNavigation />
         {getBookingsResult.isPending && <div>loading</div>}
       </div>
     </Page>

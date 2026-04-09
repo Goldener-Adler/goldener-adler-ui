@@ -7,8 +7,11 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem
 } from "@/components/ui/sidebar.tsx";
 import {LuBadgeEuro, LuCalendar, LuCircleUser, LuConciergeBell, LuDoorOpen, LuList, LuSettings} from "react-icons/lu";
+import {useNavigate} from "react-router";
 
 export const DashboardSidebar: FunctionComponent = () => {
+  const navigate = useNavigate();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -33,7 +36,15 @@ export const DashboardSidebar: FunctionComponent = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/dashboard/bookings">
+                  <a onClick={() => navigate('/dashboard')} className="hover:cursor-pointer">
+                    <LuConciergeBell />
+                    <span>Übersicht</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a onClick={() => navigate('/dashboard/bookings')} className="hover:cursor-pointer">
                     <LuList />
                     <span>Buchungen</span>
                   </a>
@@ -44,14 +55,6 @@ export const DashboardSidebar: FunctionComponent = () => {
                   <a href="">
                     <LuCalendar />
                     <span>Belegungsplan</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <a href="">
-                    <LuConciergeBell />
-                    <span>Reservierungen</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
