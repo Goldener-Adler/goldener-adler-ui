@@ -50,3 +50,22 @@ export type MenuItem = {
   label: string,
   path: string,
 }
+
+export type Room = {
+  id: string,
+  type: 'single' | 'double' | 'apartment',
+}
+
+export type Booking = {
+  id: string,
+  from: Date,
+  to: Date,
+  rooms: string[],
+  people: number,
+  firstName: string,
+  lastName: string,
+  email: string,
+  phone: string | null,
+  message: string,
+  extras: BookingExtras,
+}

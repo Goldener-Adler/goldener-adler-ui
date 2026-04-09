@@ -33,9 +33,9 @@ export const DashboardSidebar: FunctionComponent = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="">
+                  <a href="/dashboard/bookings">
                     <LuList />
-                    <span>Zimmerliste</span>
+                    <span>Buchungen</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

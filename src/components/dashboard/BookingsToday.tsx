@@ -1,7 +1,8 @@
-import type {FunctionComponent} from "react";
+import {type FunctionComponent} from "react";
 import {type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "@/components/ui/chart.tsx";
 import {Pie, PieChart} from "recharts";
 import { Card, CardDescription, CardTitle, CardHeader, CardContent } from "../ui/card";
+import {useGetOccupancy} from "@/hooks/useGetOccupancy.ts";
 
 const chartConfig = {
   rate: {
@@ -9,21 +10,23 @@ const chartConfig = {
   },
   occupied: {
     label: "Belegt",
-    color: "var(--chart-1)", // e.g. green
+    color: "var(--chart-1)",
   },
   available: {
     label: "Frei",
-    color: "var(--chart-2)", // e.g. gray
+    color: "var(--chart-2)",
   },
 } satisfies ChartConfig
 
 
-const chartData = [
-  { status: "available", rate: 25, fill: "var(--color-available)" },
-  { status: "occupied", rate: 75, fill: "var(--color-occupied)" },
-]
-
 export const BookingsToday: FunctionComponent = () => {
+  const {occupancy} = useGetOccupancy();
+
+  const chartData = [
+    { status: "available", rate: occupancy.free, fill: "var(--color-available)" },
+    { status: "occupied", rate: occupancy.occupied, fill: "var(--color-occupied)" },
+  ]
+
   return (
     <Card className="flex flex-col gap-0">
       <CardHeader className="items-center pb-0">

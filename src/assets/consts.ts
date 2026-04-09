@@ -12,6 +12,8 @@ export const EMPTY_STRING = "";
 
 export const COOKIE_KEY = "cookie_consent";
 
+export const API_ENDPOINT = "http://api.pension-goldener-adler";
+
 export const IS_TEST_MODE = import.meta.env.VITE_MOCK_API === 'true'; // test mode enabled when msw
 
 export const MOCK_TIMEOUT = 5000;

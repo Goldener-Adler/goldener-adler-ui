@@ -16,11 +16,16 @@ import {Imprint} from "@/pages/Imprint.tsx";
 import {LegalNotice} from "@/pages/LegalNotice.tsx";
 import {AppGuard} from "@/AppGuard.tsx";
 import {Toaster} from "@/components/ui/sonner.tsx";
+import {Bookings} from "@/pages/dashboard/Bookings.tsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export const App: FunctionComponent = () => {
   return (
     <AppGuard>
     <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
       <Toaster position="top-center" richColors theme="light" />
       <ScrollToTop />
       <Routes>
@@ -49,8 +54,10 @@ export const App: FunctionComponent = () => {
         {/* Protect using wrapping Auth Guard Route */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="bookings" element={<Bookings />} />
         </Route>
       </Routes>
+      </QueryClientProvider>
     </BrowserRouter>
     </AppGuard>
   )
