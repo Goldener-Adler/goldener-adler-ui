@@ -40,14 +40,15 @@ export const Bookings: FunctionComponent = () => {
               </Button>
             </ButtonGroup>
             <ButtonGroup>
-              <DateRangePicker value={date} onChange={setDate} placeholder={`Check-In - Check-Out`} />
-              <Button variant="outline" size="icon" disabled={date === undefined} aria-label="Remove Date" onClick={() => setDate(undefined)}>
+              <DateRangePicker data-testid="bookings-date-range" value={date} onChange={setDate} placeholder={`Check-In - Check-Out`} />
+              <Button data-testid="bookings-clear-date-range" variant="outline" size="icon" disabled={date === undefined} aria-label="Remove Date" onClick={() => setDate(undefined)}>
                 <X/>
               </Button>
             </ButtonGroup>
           </ButtonGroup>
           <ButtonGroup>
             <Input
+              data-testid="bookings-search"
               value={searchInputValue}
               onChange={(event) => setSearchInputValue(event.target.value)}
               placeholder="Suche..."
@@ -57,7 +58,7 @@ export const Bookings: FunctionComponent = () => {
             </Button>
           </ButtonGroup>
         </div>
-        <DataTable columns={bookingColumns} data={getBookingsResult.isSuccess ? getBookingsResult.data : []} enableRowNavigation />
+        <DataTable data-testid="bookings-table" columns={bookingColumns} data={getBookingsResult.isSuccess ? getBookingsResult.data : []} enableRowNavigation />
         {getBookingsResult.isPending && <div>loading</div>}
       </div>
     </Page>

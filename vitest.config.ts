@@ -15,6 +15,7 @@ export default defineConfig({
     browser: {
       enabled: true,
       provider: webdriverio(),
+      screenshotFailures: false,
       // https://vitest.dev/config/browser/webdriverio
       instances: [
         { browser: 'firefox' },

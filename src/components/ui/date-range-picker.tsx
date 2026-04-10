@@ -15,7 +15,7 @@ type DateRangePickerProps = {
   placeholder?: string
 }
 
-export function DateRangePicker({value, onChange, placeholder}: DateRangePickerProps) {
+export function DateRangePicker({value, onChange, placeholder, ...props}: DateRangePickerProps) {
   const date = value;
 
   const handleChange = (newDate: DateRange | undefined) => {
@@ -29,6 +29,7 @@ export function DateRangePicker({value, onChange, placeholder}: DateRangePickerP
             variant="outline"
             id="date-picker-range"
             className="justify-start px-2.5 font-normal"
+            {...props}
           >
             <CalendarIcon />
             {date?.from ? (
