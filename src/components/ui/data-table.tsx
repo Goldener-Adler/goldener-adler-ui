@@ -26,6 +26,7 @@ export function DataTable<TData extends { id: string | number; }, TValue>({
                                            columns,
                                            data,
                                            enableRowNavigation = false,
+                                           ...props
                                          }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -37,7 +38,7 @@ export function DataTable<TData extends { id: string | number; }, TValue>({
 
   return (
     <div className="overflow-hidden rounded-md border">
-      <Table>
+      <Table {...props}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

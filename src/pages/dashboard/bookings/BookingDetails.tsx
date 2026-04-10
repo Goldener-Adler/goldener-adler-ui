@@ -110,7 +110,7 @@ export const BookingDetails: FunctionComponent = () => {
           <div className="flex justify-between">
             <h1>Buchung {bookingDetails.data.id}</h1>
             <div className="flex flex-nowrap gap-2">
-              <Button variant="outline" onClick={handleEditButtonClick} disabled={updateBookingMutation.isPending}>
+              <Button data-testid="toggle-edit-mode" variant="outline" onClick={handleEditButtonClick} disabled={updateBookingMutation.isPending}>
                 {isInEditMode ? 'Speichern' : 'Bearbeiten'}
               </Button>
             </div>
@@ -126,6 +126,7 @@ export const BookingDetails: FunctionComponent = () => {
                     <FieldLabel>Vorname</FieldLabel>
                     {isInEditMode ? (
                       <Input
+                        data-testid="firstName"
                         value={formData?.firstName ?? ""}
                         onChange={(e) =>
                           setFormData((prev) =>
@@ -134,13 +135,14 @@ export const BookingDetails: FunctionComponent = () => {
                         }
                       />
                     ) : (
-                      <InputViewOnly value={bookingDetails.data.firstName} />
+                      <InputViewOnly data-testid="firstName-readonly" value={bookingDetails.data.firstName} />
                     )}
                   </Field>
                   <Field>
                     <FieldLabel>Name</FieldLabel>
                     {isInEditMode ? (
                       <Input
+                        data-testid="lastName"
                         value={formData?.lastName ?? ""}
                         onChange={(e) =>
                           setFormData((prev) =>
@@ -149,13 +151,14 @@ export const BookingDetails: FunctionComponent = () => {
                         }
                       />
                     ) : (
-                      <InputViewOnly value={bookingDetails.data.lastName} />
+                      <InputViewOnly data-testid="lastName-readonly" value={bookingDetails.data.lastName} />
                     )}
                   </Field>
                   <Field>
                     <FieldLabel>Email</FieldLabel>
                     {isInEditMode ? (
                       <Input
+                        data-testid="email"
                         type="email"
                         value={formData?.email ?? ""}
                         onChange={(e) =>
@@ -165,13 +168,14 @@ export const BookingDetails: FunctionComponent = () => {
                         }
                       />
                     ) : (
-                      <InputViewOnly value={bookingDetails.data.email} />
+                      <InputViewOnly data-testid="email-readonly" value={bookingDetails.data.email} />
                     )}
                   </Field>
                   <Field>
                     <FieldLabel>Telefon</FieldLabel>
                     {isInEditMode ? (
                       <Input
+                        data-testid="tel"
                         type="tel"
                         placeholder="Keine Angabe"
                         value={formData?.phone ?? ""}
@@ -182,13 +186,13 @@ export const BookingDetails: FunctionComponent = () => {
                         }
                       />
                     ) : (
-                      <InputViewOnly placeholder="Keine Angabe" value={bookingDetails.data.phone} />
+                      <InputViewOnly data-testid="tel-readonly" placeholder="Keine Angabe" value={bookingDetails.data.phone} />
                     )}
                   </Field>
                 </div>
                 <Field>
                   <FieldLabel>Nachricht</FieldLabel>
-                  <TextareaViewOnly value={bookingDetails.data.message} />
+                  <TextareaViewOnly data-testid="message-readonly" value={bookingDetails.data.message} />
                 </Field>
                 <FieldSeparator/>
                 <div className="grid grid-cols-2 gap-4">
@@ -201,7 +205,7 @@ export const BookingDetails: FunctionComponent = () => {
                         )
                       } />
                     ) : (
-                      <InputViewOnly value={bookingDetails.data.from.toLocaleDateString()} />
+                      <InputViewOnly data-testid="checkIn-readonly" value={bookingDetails.data.from.toLocaleDateString()} />
                     )}
                   </Field>
                   <Field>
@@ -213,7 +217,7 @@ export const BookingDetails: FunctionComponent = () => {
                         )
                       } />
                     ) : (
-                      <InputViewOnly value={bookingDetails.data.to.toLocaleDateString()} />
+                      <InputViewOnly data-testid="checkOut-readonly" value={bookingDetails.data.to.toLocaleDateString()} />
                     )}
                   </Field>
                 </div>
@@ -236,8 +240,8 @@ export const BookingDetails: FunctionComponent = () => {
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-                            <AlertDialogAction variant="destructive" onClick={() => deleteBookingMutation.mutate(bookingDetails.data.id)}>Löschen</AlertDialogAction>
+                            <AlertDialogCancel data-testid="booking-cancel-delete">Abbrechen</AlertDialogCancel>
+                            <AlertDialogAction data-testid="booking-confirm-delete" variant="destructive" onClick={() => deleteBookingMutation.mutate(bookingDetails.data.id)}>Löschen</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

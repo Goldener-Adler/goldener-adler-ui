@@ -1,13 +1,6 @@
 import type {ColumnDef} from "@tanstack/react-table"
 import type {Booking} from "@/assets/types.ts";
 
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
-
 export const bookingColumns: ColumnDef<Booking>[] = [
   {
     id: "name",

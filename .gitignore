@@ -25,3 +25,9 @@ dist-ssr
 
 # env
 .env.local
+
+# Vitest
+.vitest/
+.vitest-attachments/
+__screenshots__/
+__snapshots__/

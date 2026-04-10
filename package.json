@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:msw": "cross-env VITE_MOCK_API=true vite",
+    "test": "MSW_QUIET=1 vitest --browser.headless --silent=true",
+    "test:debug": "vitest --browser.headless",
+    "test:live": "vitest --browser",
     "build": "tsc -b && vite build && cp dist/index.html dist/error.html",
     "build:stg": "tsc -b && vite build --mode=staging && cp dist/index.html dist/error.html",
     "build:prod": "tsc -b && vite build --mode=production && cp dist/index.html dist/error.html",
@@ -61,6 +64,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/browser-webdriverio": "^4.1.4",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -70,6 +74,8 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.3",
     "vite": "^7.1.12",
+    "vitest": "^4.1.4",
+    "vitest-browser-react": "^2.2.0",
     "zod": "^4.1.12"
   },
   "msw": {

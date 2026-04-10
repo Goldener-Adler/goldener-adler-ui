@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 import {type SetStateAction, useEffect, useState} from "react";
 
 const SET_STATE_ERROR = 'Unallowed state change rejected';
@@ -9,10 +9,11 @@ export const useStateWithQueryParams = <TState extends object | string | number 
   isValidState: (parsedData: unknown) => parsedData is TState
 ) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getStateValueFromQueryParameter = (previousState: TState): TState => {
     try {
-      const queryParams = new URLSearchParams(window.location.search);
+      const queryParams = new URLSearchParams(location.search);
       const parameterValue = queryParams.get(queryParameterName);
       if (parameterValue) {
         const parsedData = JSON.parse(parameterValue);
@@ -42,7 +43,7 @@ export const useStateWithQueryParams = <TState extends object | string | number 
         return state;
       }
 
-      const queryParams = new URLSearchParams(window.location.search);
+      const queryParams = new URLSearchParams(location.search);
 
       if (newValue === undefined || newValue === initialState) {
         queryParams.delete(queryParameterName);
@@ -65,7 +66,7 @@ export const useStateWithQueryParams = <TState extends object | string | number 
 
   useEffect(
     () => setState(getStateValueFromQueryParameter(state)),
-    [window.location.search]
+    [location.search]
   );
 
   return [state, updateState] as const;
