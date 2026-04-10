@@ -8,6 +8,7 @@ import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
+import {getUTCDateString} from "@/utils/formatDate";
 
 function Calendar({
   className,
@@ -185,6 +186,7 @@ function CalendarDayButton({
 
   return (
     <Button
+      data-testid={`calendar-day-button-${getUTCDateString(day.date)}`}
       ref={ref}
       variant="ghost"
       size="icon"

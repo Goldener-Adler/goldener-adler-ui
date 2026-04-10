@@ -20,7 +20,7 @@ import {getCurrentLocale} from "@/utils/i18n-locale.ts";
 import {Trans, useTranslation} from "react-i18next";
 import {Page} from "@/layouts/Page.tsx";
 import {BOOKING_OPTIONS, EMPTY_STRING} from "@/assets/consts.ts";
-import {useBooking} from "@/pages/public/booking/BookingContext.tsx";
+import {useBooking} from "@/contexts/BookingContext.tsx";
 import {bookingformSchema, type BookingFormValues, initialBookingFormValues} from "@/assets/types.ts";
 import {useNavigate} from "react-router";
 
@@ -58,7 +58,6 @@ export const Booking: FunctionComponent = () => {
   }
   
   const onSubmit = (values: BookingFormValues) => {
-    // TODO: Send Mail with Cloudflare Worker & Resend
     updateBookingFormValues(values);
     navigate('/booking/review');
   }

@@ -2,7 +2,7 @@ import {useState} from "react";
 import type {BookingFormValues} from "@/assets/types.ts";
 import {toast} from "sonner";
 import {useNavigate} from "react-router";
-import {useBooking} from "@/pages/public/booking/BookingContext.tsx";
+import {useBooking} from "@/contexts/BookingContext.tsx";
 
 export const useSendBookingRequest = () => {
   const {resetBookingFormValues} = useBooking()

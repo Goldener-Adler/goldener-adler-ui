@@ -1,8 +1,10 @@
 {
-  "files": [],
+  "files": [
+    "node_modules/.pnpm/vitest@4.1.4_@types+node@24.12.2_@vitest+browser-webdriverio@4.1.4_msw@2.13.2_@types+no_fc7a7b207b1b4e4d43b68bdf0387f269/node_modules/vitest/globals.d.ts"
+  ],
   "references": [
     { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
     "baseUrl": ".",

@@ -5,7 +5,7 @@ import {Content} from "@/layouts/Content.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {ChevronLeft} from "lucide-react";
 import {useNavigate} from "react-router";
-import {useBooking} from "@/pages/public/booking/BookingContext.tsx";
+import {useBooking} from "@/contexts/BookingContext.tsx";
 import {FormValueItem} from "@/components/public/FormValueItem.tsx";
 import type {TranslationKeys} from "@/assets/i18n/i18n.ts";
 import {Separator} from "@/components/ui/separator.tsx";

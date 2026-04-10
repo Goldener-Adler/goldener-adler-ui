@@ -6,7 +6,7 @@ import {Contact} from "@/pages/public/Contact.tsx";
 import {Torgelow} from "@/pages/public/Torgelow.tsx";
 import {Imprint} from "@/pages/public/Imprint.tsx";
 import {LegalNotice} from "@/pages/public/LegalNotice.tsx";
-import {BookingProvider} from "@/pages/public/booking/BookingContext.tsx";
+import {BookingProvider} from "@/contexts/BookingContext.tsx";
 import {Booking} from "@/pages/public/booking/Booking.tsx";
 import {BookingReview} from "@/pages/public/booking/BookingReview.tsx";
 import {Login} from "@/pages/dashboard/Login.tsx";
