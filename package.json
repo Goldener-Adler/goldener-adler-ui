@@ -14,8 +14,7 @@
     "build:prod": "tsc -b && vite build --mode=production && cp dist/index.html dist/error.html",
     "lint": "eslint .",
     "preview": "vite preview",
-    "interface": "i18next-resources-for-ts interface -i ./public",
-    "test:browser": "vitest --config=vitest.browser.config.ts"
+    "interface": "i18next-resources-for-ts interface -i ./public"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
