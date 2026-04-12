@@ -2,8 +2,12 @@ import { beforeAll, afterEach, afterAll } from "vitest"
 import { worker } from "@/mocks/browser"
 import {cleanup} from "vitest-browser-react";
 import { vi } from "vitest"
+import '@/index.css';
 
-const isQuiet = import.meta.env.MSW_QUIET === "1";
+const isQuiet = import.meta.env.MSW_QUIET === 'true';
+
+export const isHeadless = import.meta.env.HEADLESS === 'true';
+export const isBrowser = import.meta.env.BROWSER === 'true';
 
 vi.mock('sonner', () => ({
   Toaster: () => null,

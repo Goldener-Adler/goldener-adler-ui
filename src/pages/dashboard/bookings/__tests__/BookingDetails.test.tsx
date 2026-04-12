@@ -5,6 +5,7 @@ import {describe, it, expect, vi} from "vitest";
 import {AppRoutes} from "@/AppRoutes";
 import {MOCK_BOOKINGS} from "@/mocks/mockData";
 import {userEvent} from "vitest/browser";
+import {isBrowser} from "@/test/setup";
 
 const testBooking = MOCK_BOOKINGS[0];
 
@@ -30,7 +31,7 @@ function renderBookingDetails(initialEntries = [`/dashboard/bookings/${testBooki
       <QueryClientProvider client={queryClient}>
         <AppRoutes />
       </QueryClientProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   )
 }
 
@@ -147,7 +148,7 @@ describe('BookingDetails', () => {
     await expect.element(getByText("Löschen")).toBeInTheDocument();
   })
 
-  it('should open alert on delete button click', async () => {
+  it.skipIf(isBrowser)('should open alert on delete button click', async () => {
     const user = userEvent.setup();
     const { getByText, getByTestId, getByRole } = await renderBookingDetails();
 

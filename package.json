@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:msw": "cross-env VITE_MOCK_API=true vite",
-    "test": "MSW_QUIET=1 vitest --browser.headless --silent=true",
-    "test:debug": "vitest --browser.headless",
-    "test:live": "vitest --browser",
+    "test": "HEADLESS=true MSW_QUIET=true vitest --browser.headless",
+    "test:debug": "HEADLESS=true vitest --browser.headless",
+    "test:live": "BROWSER=true vitest --browser",
     "build": "tsc -b && vite build && cp dist/index.html dist/error.html",
     "build:stg": "tsc -b && vite build --mode=staging && cp dist/index.html dist/error.html",
     "build:prod": "tsc -b && vite build --mode=production && cp dist/index.html dist/error.html",
