@@ -2,7 +2,7 @@ import {type FunctionComponent, useEffect, useState} from "react";
 import {Page} from "@/layouts/Page.tsx";
 import {Navigate, useNavigate, useParams} from "react-router";
 import {useGetBookingDetails} from "@/hooks/useGetBookingDetails.tsx";
-import {DashboardSpacing} from "@/layouts/DashboardSpacing.tsx";
+import {SidebarPageContentSpacing} from "@/layouts/SidebarPageContentSpacing.tsx";
 import {
   Field,
   FieldDescription,
@@ -105,7 +105,7 @@ export const BookingDetails: FunctionComponent = () => {
 
   return (
     <Page>
-      <DashboardSpacing>
+      <SidebarPageContentSpacing>
         <div className="max-w-4xl">
           <div className="flex justify-between">
             <h1>Buchung {bookingDetails.data.id}</h1>
@@ -253,7 +253,7 @@ export const BookingDetails: FunctionComponent = () => {
           </FieldGroup>
         </form>
         </div>
-      </DashboardSpacing>
+      </SidebarPageContentSpacing>
     </Page>
   )
 }

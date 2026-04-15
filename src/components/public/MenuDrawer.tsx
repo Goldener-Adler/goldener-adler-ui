@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/drawer.tsx";
 import {Link, useLocation} from "react-router";
 import {DialogTitle} from "@radix-ui/react-dialog";
+import {useTranslation} from "react-i18next";
 
 interface MenuSidebarProps {
   items: MenuItem[],
@@ -19,6 +20,7 @@ interface MenuSidebarProps {
 export const MenuDrawer: FunctionComponent<MenuSidebarProps> = ({items, isTransparent}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const location = useLocation();
+  const { t } = useTranslation();
   
   return (
     <>
@@ -40,10 +42,11 @@ export const MenuDrawer: FunctionComponent<MenuSidebarProps> = ({items, isTransp
           <section className="p-2 w-full flex flex-col">
             {items.map((item, index) => (
               <Link
-                className={`text-lg py-2 px-4 rounded-sm hover:bg-gray-100 ${location.pathname.endsWith(item.path) ? 'bg-gray-100' : 'bg-inherit'}`}
+                className={`text-lg py-2 px-4 rounded-sm hover:bg-gray-100 ${location.pathname === item.path ? 'bg-gray-100' : 'bg-inherit'}`}
                 key={index}
                 onClick={() => setIsOpen(false)}
-                to={item.path}>{item.label}
+                to={item.path}>
+                {t(item.label)}
               </Link>
             ))}
           </section>

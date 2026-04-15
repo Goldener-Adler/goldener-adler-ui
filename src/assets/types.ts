@@ -1,7 +1,8 @@
-import type {TranslationKeys} from "@/assets/i18n/i18n.ts";
+import {type TranslationKeys} from "@/assets/i18n/i18n.ts";
 import {BOOKING_OPTIONS} from "@/assets/consts.ts";
 import {createBookingSchema} from "@/utils/createBookingSchema.ts";
 import {z} from "zod";
+import type {IconType} from "react-icons";
 
 export type BookingOption = {id: string, label: TranslationKeys}
 
@@ -47,20 +48,25 @@ export const bookingformSchema = createBookingSchema();
 export type BookingFormValues = z.infer<typeof bookingformSchema>;
 
 export type MenuItem = {
-  label: string,
+  label: TranslationKeys,
   path: string,
 }
 
-export type Room = {
-  id: string,
-  type: 'single' | 'double' | 'apartment',
-}
+export type RoomType = {
+  type: "single" | "double" | "apartment";
+  capacity: number;
+  available: number;
+  price: number;
+  extraBed?: {
+    available: number;
+    priceIncrease: number;
+  }
+};
 
 export type Booking = {
   id: string,
   from: Date,
   to: Date,
-  rooms: string[],
   people: number,
   firstName: string,
   lastName: string,
@@ -68,4 +74,12 @@ export type Booking = {
   phone: string | null,
   message: string,
   extras: BookingExtras,
+  status: 'pending' | 'confirmed' | 'checked-in' | 'checked-out' | 'canceled' | 'no-show',
+}
+
+export type Amenity = {
+  id: string,
+  label: TranslationKeys,
+  icon: IconType,
+  variant: 'default' | 'secondary',
 }

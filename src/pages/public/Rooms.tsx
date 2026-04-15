@@ -2,112 +2,20 @@ import type {FunctionComponent} from "react";
 import {Hero} from "@/components/public/Hero.tsx";
 import { Content } from "@/layouts/Content.tsx";
 import { LuBedSingle, LuBedDouble, LuCookingPot } from 'react-icons/lu';
-import {
-  PiWifiHigh,
-  PiPhone,
-  PiAlarm,
-  PiThermometer,
-  PiTowel,
-  PiTelevisionSimple,
-  PiBed,
-  PiSpeakerSimpleSlash, PiToilet, PiShower, PiOven, PiPlus
-} from 'react-icons/pi';
 import {Badge} from "@/components/ui/badge.tsx";
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
-import type {IconType} from "react-icons";
 import {Page} from "@/layouts/Page.tsx";
 
 import BikeLg from "/images/bike-lg.jpg?url";
 import BikeXs from "/images/bike-xs.jpg?url";
-
-type Amenity = {
-  id: string,
-  label: string,
-  icon: IconType,
-  variant: 'default' | 'secondary',
-}
+import {AMENITIES} from "@/mocks/mockData";
 
 export const Rooms: FunctionComponent = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  
-  const amenities: Amenity[] = [
-    {
-      id: "wifi",
-      label: t('public.Rooms.Labels.WiFi'),
-      icon: PiWifiHigh,
-      variant: "secondary"
-    },
-    {
-      id: "tv",
-      label: t('public.Rooms.Labels.TV'),
-      icon: PiTelevisionSimple,
-      variant: "secondary"
-    },
-    {
-      id: "phone",
-      label: t('public.Rooms.Labels.Phone'),
-      icon: PiPhone,
-      variant: "secondary"
-    },
-    {
-      id: "alarm",
-      label: t('public.Rooms.Labels.Alarm'),
-      icon: PiAlarm,
-      variant: "secondary"
-    },
-    {
-      id: "heating",
-      label: t('public.Rooms.Labels.Heating'),
-      icon: PiThermometer,
-      variant: "secondary"
-    },
-    {
-      id: "sheets",
-      label: t('public.Rooms.Labels.Sheets'),
-      icon: PiBed,
-      variant: "secondary"
-    },
-    {
-      id: "towels",
-      label: t('public.Rooms.Labels.Towels'),
-      icon: PiTowel,
-      variant: "secondary"
-    },
-    {
-      id: "bath",
-      label: t('public.Rooms.Labels.Bath'),
-      icon: PiToilet,
-      variant: "secondary"
-    },
-    {
-      id: "shower",
-      label: t('public.Rooms.Labels.Shower'),
-      icon: PiShower,
-      variant: "secondary"
-    },
-    {
-      id: "windows",
-      label: t('public.Rooms.Labels.IsolatedWindows'),
-      icon: PiSpeakerSimpleSlash,
-      variant: "secondary"
-    },
-    {
-      id: "kitchen",
-      label: t('public.Rooms.Labels.Kitchen'),
-      icon: PiOven,
-      variant: "secondary"
-    },
-    {
-      id: "additionalBed",
-      label: t('public.Rooms.Labels.AdditionalBed'),
-      icon: PiPlus,
-      variant: "default"
-    },
-  ]
   
   return (
     <Page title={t('public.Rooms.Title')}>
@@ -145,10 +53,10 @@ export const Rooms: FunctionComponent = () => {
             </div>
             <h3 className="mt-4 text-md font-semibold">{t('public.Rooms.Headings.Amenities')}</h3>
             <div className="flex gap-2 mt-2 flex-wrap">
-              {amenities.filter(amenity => amenity.id !== "kitchen").map((amenity) => (
+              {AMENITIES.filter(amenity => amenity.id !== "kitchen").map((amenity) => (
                 <Badge key={amenity.id} variant={amenity.variant}>
                   <amenity.icon />
-                  {amenity.label}
+                  {t(amenity.label)}
                 </Badge>
               ))}
             </div>
@@ -166,10 +74,10 @@ export const Rooms: FunctionComponent = () => {
             </div>
             <h3 className="mt-4 text-md font-semibold">{t('public.Rooms.Headings.Amenities')}</h3>
             <div className="flex gap-2 mt-2 flex-wrap lg:justify-end">
-              {amenities.map((amenity) => (
+              {AMENITIES.map((amenity) => (
                 <Badge key={amenity.id} variant={amenity.variant}>
                   <amenity.icon />
-                  {amenity.label}
+                  {t(amenity.label)}
                 </Badge>
               ))}
             </div>

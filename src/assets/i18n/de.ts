@@ -50,6 +50,7 @@ const de = {
         SingleBedroom_other: "Einzelzimmer",
         DoubleBedroom_one: "Doppelzimmer",
         DoubleBedroom_other: "Doppelzimmer",
+        Apartment: "Ferienwohnung",
       },
       Labels: {
         WiFi: "WLAN",

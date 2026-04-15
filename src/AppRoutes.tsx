@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router";
+import {Navigate, Route, Routes} from "react-router";
 import Layout from "@/layouts/Layout.tsx";
 import {Home} from "@/pages/public/Home.tsx";
 import {Rooms} from "@/pages/public/Rooms.tsx";
@@ -14,11 +14,18 @@ import {DashboardLayout} from "@/layouts/DashboardLayout.tsx";
 import {Dashboard} from "@/pages/dashboard/Dashboard.tsx";
 import {Bookings} from "@/pages/dashboard/bookings/Bookings.tsx";
 import {BookingDetails} from "@/pages/dashboard/bookings/BookingDetails.tsx";
+import {NewBooking} from "@/pages/public/newBooking/NewBooking";
+import {BookingLayout} from "@/layouts/BookingLayout";
+import {NewBookingProvider} from "@/contexts/NewBookingContext";
 
 export const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={
+        <NewBookingProvider>
+          <Layout />
+        </NewBookingProvider>
+      }>
         <Route index element={<Home />} />
         <Route path="rooms" element={<Rooms />} />
         <Route path="contact" element={<Contact />} />
@@ -36,6 +43,14 @@ export const AppRoutes = () => {
             </BookingProvider>
           }
         />
+        <Route path="/new-booking" element={
+            <BookingLayout/>
+        }>
+          <Route index element={<Navigate to="rooms" replace />} />
+          <Route path="rooms" element={<NewBooking />}/>
+          <Route path="guests"/>
+          <Route path="check-out"/>
+        </Route>
       </Route>
 
       <Route path="/login" element={<Login />} />

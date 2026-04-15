@@ -1,16 +1,17 @@
-import {type FunctionComponent, useRef} from "react";
+import {type ComponentProps, useRef} from "react";
 import {Link} from "react-router";
 import {useTranslation} from "react-i18next";
 import {METADATA} from "@/assets/consts.ts";
 import { PiCopyright } from 'react-icons/pi';
 import {CookieBanner} from "@/components/public/CookieBanner.tsx";
+import {cn} from "@/lib/utils";
 
-export const Footer: FunctionComponent = () => {
+export function Footer({ className, ...props }: ComponentProps<"footer">) {
   const {t} = useTranslation();
   const openCookieBannerRef = useRef<() => void>(null);
 
   return (
-    <div id="footer-container" className="bg-slate-950 text-white">
+    <footer id="footer-container" className={cn("bg-slate-950 text-white z-10", className)} {...props}>
       <div className="max-w-6xl w-full m-auto px-5 py-8 flex gap-5">
         <div>
           <b>{`${t('public.Imprint.Owner')} ${METADATA.OWNER}`}</b>
@@ -32,6 +33,6 @@ export const Footer: FunctionComponent = () => {
         </div>
       </div>
       <CookieBanner handleOpen={(fn) => (openCookieBannerRef.current = fn)} />
-    </div>
+    </footer>
   )
 }

@@ -1,4 +1,4 @@
-import type {BookingOption} from "@/assets/types.ts";
+import type {BookingOption, MenuItem} from "@/assets/types.ts";
 
 export const BOOKING_SESSION_STORAGE_KEY = 'bookingDetails';
 
@@ -15,6 +15,8 @@ export const COOKIE_KEY = "cookie_consent";
 export const API_ENDPOINT = "http://api.pension-goldener-adler";
 
 export const IS_TEST_MODE = import.meta.env.VITE_MOCK_API === 'true'; // test mode enabled when msw
+
+export const USE_NEW_BOOKING = true;
 
 export const MOCK_TIMEOUT = 5000;
 
@@ -40,6 +42,25 @@ export const METADATA = {
   REGISTER_CITY: "Pasewalk",
   REGISTER_ID: "HRB 74048"
 }
+
+export const MENU_ITEMS: MenuItem[] = [
+  {
+    label: "public.Menu.Start",
+    path: "/",
+  },
+  {
+    label: "public.Menu.Rooms",
+    path: "/rooms",
+  },
+  {
+    label: "public.Menu.Contact",
+    path: "/contact",
+  },
+  {
+    label: "public.Menu.Torgelow",
+    path: "/torgelow",
+  },
+]
 
 export const BOOKING_OPTIONS: BookingOption[] = [
   {

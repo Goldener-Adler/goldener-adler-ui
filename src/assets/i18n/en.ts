@@ -49,7 +49,8 @@ const en = {
         SingleBedroom_one: "Single Room",
         SingleBedroom_other: "Single Rooms",
         DoubleBedroom_one: "Double Room",
-        DoubleBedroom_other: "Double Rooms"
+        DoubleBedroom_other: "Double Rooms",
+        Apartment: "Apartment",
       },
       Labels: {
         WiFi: "Wi-Fi",

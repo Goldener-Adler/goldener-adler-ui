@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {NavigationMenuContent, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuLink, NavigationMenu, NavigationMenuList} from "@/components/ui/navigation-menu.tsx";
 
 interface LanguageSelectProps {
-  isTop: boolean;
+  isTop?: boolean;
 }
 
 type KeysUnion<U extends string, R extends unknown[] = []> = {

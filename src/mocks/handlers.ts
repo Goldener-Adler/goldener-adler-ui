@@ -1,6 +1,6 @@
 import {http, HttpResponse} from "msw";
 import {API_ENDPOINT, EMPTY_STRING} from "@/assets/consts.ts";
-import {MOCK_BOOKINGS, MOCK_ROOMS} from "@/mocks/mockData.ts";
+import {MOCK_BOOKINGS} from "@/mocks/mockData.ts";
 import {toDateOnly} from "@/utils/formatDate.ts";
 import type {DateRange} from "react-day-picker";
 import type {Booking} from "@/assets/types.ts";
@@ -74,24 +74,6 @@ export const handlers = [
     }
 
     return HttpResponse.json(id, {
-      status: 200,
-    })
-  }),
-  // Rooms
-  http.get(API_ENDPOINT + "/rooms", () => {
-    return HttpResponse.json(MOCK_ROOMS, {
-      status: 200
-    })
-  }),
-  http.get<{ id: string }>(API_ENDPOINT + "/rooms/:id", ({ params }) => {
-    const { id } = params;
-    const room = MOCK_ROOMS.find(room => room.id === id);
-    if (!room) {
-      return HttpResponse.json(null, {
-        status: 404
-      })
-    }
-    return HttpResponse.json(room, {
       status: 200,
     })
   }),
