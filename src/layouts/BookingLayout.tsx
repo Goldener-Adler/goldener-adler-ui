@@ -1,4 +1,4 @@
-import type {FunctionComponent} from "react";
+import {type FunctionComponent, useEffect, useState} from "react";
 import {Outlet, useNavigate} from "react-router";
 import {
   SidebarInset,
@@ -14,10 +14,26 @@ import {MENU_ITEMS} from "@/assets/consts";
 import {Button} from "@/components/ui/button";
 import {useTranslation} from "react-i18next";
 import {BookingBreadcrumbSteps} from "@/components/public/BookingBreadcrumbSteps";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 export const BookingLayout: FunctionComponent = () => {
   const navigate = useNavigate();
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    setShowTooltip(true);
+
+    const timeout = setTimeout(() => {
+      setShowTooltip(false);
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [isMobile]);
 
   return (
     <SidebarProvider side="right">
@@ -41,7 +57,14 @@ export const BookingLayout: FunctionComponent = () => {
                 orientation="vertical"
                 className="mr-2 data-[orientation=vertical]:h-4"
               />
-              <SidebarTrigger className="-ml-1" />
+              <Tooltip open={showTooltip}>
+                <TooltipTrigger asChild onClick={() => setShowTooltip(false)}>
+                  <SidebarTrigger className="-ml-1" />
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  <p>Buchungsübersicht</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </header>
           <BookingBreadcrumbSteps />
