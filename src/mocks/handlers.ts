@@ -1,9 +1,10 @@
 import {http, HttpResponse} from "msw";
 import {API_ENDPOINT, EMPTY_STRING} from "@/assets/consts.ts";
-import {MOCK_BOOKINGS} from "@/mocks/mockData.ts";
+import {MOCK_BOOKING_ROOMS, MOCK_BOOKINGS, MOCK_FULL_AVAILABLE_ROOM_MAP, MOCK_ROOMS} from "@/mocks/mockData.ts";
 import {toDateOnly} from "@/utils/formatDate.ts";
 import type {DateRange} from "react-day-picker";
-import type {Booking} from "@/assets/types.ts";
+import type {AvailableRoomMap, Booking} from "@/assets/types.ts";
+import type {RequestedRoom} from "@/assets/bookingTypes";
 
 export const handlers = [
   http.post(import.meta.env.VITE_BOOKING_ENDPOINT, () => {
@@ -11,6 +12,46 @@ export const handlers = [
       { success: true },
       { status: 200 });
   }),
+  // New Booking
+  http.post(API_ENDPOINT + "/available-rooms", async ({ request }) => {
+    const body = await request.json() as {checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[]};
+
+    const availableRooms: AvailableRoomMap = { ...MOCK_FULL_AVAILABLE_ROOM_MAP };
+
+    MOCK_BOOKINGS.filter((booking: Booking) => {
+      const isNotOverlapping =
+        booking.to <= new Date(body.checkIn) ||
+        booking.from >= new Date(body.checkOut);
+
+      if (isNotOverlapping) {
+        return booking;
+      } else {
+        // decrease availability by one
+        const roomIds = MOCK_BOOKING_ROOMS
+          .filter(bookingRoom => bookingRoom.bookingId === booking.id)
+          .map(bookingRoom => bookingRoom.roomId);
+
+        roomIds.forEach((roomId) => {
+          const room = MOCK_ROOMS.find(room => room.id === roomId);
+          if (room) {
+            const availableRoomDetails = availableRooms[room.type];
+            availableRooms[room.type] = {
+              ...availableRoomDetails,
+              available: availableRoomDetails.available - 1
+            }
+          }
+        })
+      }
+    })
+
+    return HttpResponse.json(
+      availableRooms,
+      {
+        status: 200,
+      }
+    );
+  })
+  ,
   // Bookings
   http.post(API_ENDPOINT + "/bookings", async ({ request }) => {
     const body = await request.json() as {search?: string, dateRange?: DateRange};

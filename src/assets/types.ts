@@ -52,8 +52,9 @@ export type MenuItem = {
   path: string,
 }
 
-export type RoomType = {
-  type: "single" | "double" | "apartment";
+export type RoomTypeKey = "single" | "double" | "apartment";
+
+export type AvailableRoomDetails = {
   capacity: number;
   available: number;
   price: number;
@@ -61,7 +62,9 @@ export type RoomType = {
     available: number;
     priceIncrease: number;
   }
-};
+}
+
+export type AvailableRoomMap = Record<RoomTypeKey, AvailableRoomDetails>
 
 export type Booking = {
   id: string,
@@ -75,6 +78,19 @@ export type Booking = {
   message: string,
   extras: BookingExtras,
   status: 'pending' | 'confirmed' | 'checked-in' | 'checked-out' | 'canceled' | 'no-show',
+}
+
+export type Room = {
+  id: string,
+  type: 'single' | 'double' | 'apartment',
+  capacity: number,
+}
+
+export type BookingRoom = {
+  id: string,
+  bookingId: Booking['id'],
+  roomId: Room['id'],
+  people: number,
 }
 
 export type Amenity = {

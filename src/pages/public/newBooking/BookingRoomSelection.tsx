@@ -4,37 +4,31 @@ import {SidebarPageContentSpacing} from "@/layouts/SidebarPageContentSpacing";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {RoomCard} from "@/components/public/RoomCard";
 import {useNewBooking} from "@/contexts/NewBookingContext";
-import type {RoomType} from "@/assets/types";
 import {RoomExtrasDialog} from "@/components/public/RoomExtrasDialog";
 import type {RoomExtrasForm} from "@/assets/bookingTypes";
+import type {RoomTypeKey} from "@/assets/types";
+import {getTypedEntries} from "@/utils/getTypedEntries";
 
-export const NewBooking: FunctionComponent = () => {
-  const { state, dispatch } = useNewBooking();
+export const BookingRoomSelection: FunctionComponent = () => {
+  const { state, updateRoomSelection } = useNewBooking();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [activeRoom, setActiveRoom] = useState<RoomType | null>(null);
+  const [activeRoom, setActiveRoom] = useState<RoomTypeKey | null>(null);
 
   if (state.step === 'request') {
     return;
   }
 
-  const openDialog = (room: RoomType, index: number) => {
+  const openDialog = (room: RoomTypeKey, index: number) => {
     setActiveRoom(room);
     setActiveIndex(index);
     setIsDialogOpen(true);
   };
 
-  const onSaveRoom = (data: RoomExtrasForm) => {
-    dispatch({
-      type: "ADD_OR_UPDATE_SELECTED_ROOM",
-      room: {
-        id: `${activeIndex}-${activeRoom?.type}`,
-        type: activeRoom!.type,
-        extras: data,
-      },
-      index: activeIndex!,
-    });
-
+  const onSaveRoom = (extras: RoomExtrasForm) => {
+    if (activeRoom !== null && activeIndex !== null) {
+      updateRoomSelection(activeIndex, activeRoom, extras);
+    }
     setIsDialogOpen(false);
   }
 
@@ -50,12 +44,13 @@ export const NewBooking: FunctionComponent = () => {
           <TabsContent key={`room-tab-content-${requestedRoomIndex + 1}`} value={`${requestedRoomIndex}`}>
             <SidebarPageContentSpacing>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {state.availableRooms.map((room) =>
+              {getTypedEntries(state.availableRooms).map(([type, room]) =>
                 <RoomCard
-                  key={`${requestedRoomIndex}-${room.type}-${requestedRoomIndex}`}
+                  key={`${requestedRoomIndex}-${type}-${requestedRoomIndex}`}
+                  type={type}
                   room={room}
-                  isSelected={state.selectedRooms[requestedRoomIndex]?.type === room.type}
-                  onButtonClick={() => openDialog(room, requestedRoomIndex)}
+                  isSelected={state.selectedRooms[requestedRoomIndex]?.type === type}
+                  onButtonClick={() => openDialog(type, requestedRoomIndex)}
                 />
               )}
             </div>
@@ -66,8 +61,8 @@ export const NewBooking: FunctionComponent = () => {
         {activeRoom && activeIndex !== null && (
           <RoomExtrasDialog
             isOpen={isDialogOpen}
-            type={activeRoom.type}
-            existing={state.selectedRooms[activeIndex]?.type === activeRoom.type
+            type={activeRoom}
+            existing={state.selectedRooms[activeIndex]?.type === activeRoom
               ? state.selectedRooms[activeIndex]?.extras
               : undefined
             }

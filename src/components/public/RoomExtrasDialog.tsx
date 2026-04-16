@@ -22,13 +22,13 @@ import {Checkbox} from "@/components/ui/checkbox";
 import {Button} from "@/components/ui/button";
 import {type RoomExtrasForm, roomExtrasSchema} from "@/assets/bookingTypes";
 import {zodResolver} from "@hookform/resolvers/zod";
-import type {RoomType} from "@/assets/types";
 import {useTranslation} from "react-i18next";
 import {titleKeyMap} from "@/assets/i18n/i18nConsts";
+import type {RoomTypeKey} from "@/assets/types";
 
 interface RoomExtrasDialogProps {
   isOpen: boolean;
-  type: RoomType['type'];
+  type: RoomTypeKey;
   existing?: RoomExtrasForm;
   isSelected: boolean;
   onClose: () => void;

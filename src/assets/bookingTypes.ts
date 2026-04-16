@@ -1,5 +1,15 @@
-import type {RoomType} from "@/assets/types";
 import {z} from "zod";
+import {createNewBookingSchema} from "@/utils/createNewBookingRequestSchema";
+import type {AvailableRoomMap, RoomTypeKey} from "@/assets/types";
+
+export const newBookingRequestSchema = createNewBookingSchema();
+
+export type NewBookingRequest = z.infer<typeof newBookingRequestSchema>;
+
+export const initialBookingRequestValues: NewBookingRequest = {
+  dateRange: undefined,
+  requestedRooms: [{people: 1}]
+}
 
 export const roomExtrasSchema = z.object({
   breakfast: z.enum(["none", "default", "vegetarian", "vegan"]),
@@ -10,38 +20,44 @@ export const roomExtrasSchema = z.object({
 
 export type RoomExtrasForm = z.infer<typeof roomExtrasSchema>;
 
+export type RequestedRoom = {
+  people: number,
+}
+
 export type SelectedRoom = {
   id: string;
-  type: RoomType['type'];
+  type: RoomTypeKey;
   extras: RoomExtrasForm;
 };
 
 export type NewBookingState =
   | {
   step: "request";
-  requestedRooms: { people: number }[];
+  checkIn: Date | undefined;
+  checkOut: Date | undefined;
+  requestedRooms: RequestedRoom[];
 }
   | {
   step: "selection";
   checkIn: Date;
   checkOut: Date;
-  requestedRooms: { people: number }[];
-  availableRooms: RoomType[];
+  requestedRooms: RequestedRoom[];
+  availableRooms: AvailableRoomMap;
   selectedRooms: Partial<Record<number, SelectedRoom>>;
 }
   | {
   step: "checkout";
   checkIn: Date;
   checkOut: Date;
-  requestedRooms: { people: number }[];
-  availableRooms: RoomType[];
+  requestedRooms: RequestedRoom[];
+  availableRooms: AvailableRoomMap;
   selectedRooms: Partial<Record<number, SelectedRoom>>;
   // guest data
 };
 
 export type Action =
-  | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, rooms: { people: number }[] }
-  | { type: "SET_AVAILABLE_ROOMS"; rooms: RoomType[] }
+  | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, rooms: RequestedRoom[], availableRooms?: AvailableRoomMap }
+  | { type: "SET_AVAILABLE_ROOMS"; rooms: AvailableRoomMap }
   | { type: "ADD_OR_UPDATE_SELECTED_ROOM"; room: SelectedRoom, index: number }
   | { type: "REMOVE_SELECTED_ROOM"; index: number }
   | { type: "GO_TO_GUESTS" }

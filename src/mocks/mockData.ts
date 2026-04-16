@@ -1,5 +1,4 @@
-import type { NewBookingState } from "@/assets/bookingTypes";
-import type {Amenity, Booking, RoomType} from "@/assets/types.ts";
+import type {Amenity, AvailableRoomMap, Booking, BookingRoom, Room} from "@/assets/types.ts";
 import {
   PiAlarm,
   PiBed, PiOven,
@@ -86,32 +85,151 @@ export const AMENITIES: Amenity[] = [
   },
 ]
 
-export const MOCK_AVAILABLE_ROOMS_RESPONSE: RoomType[] = [
+/*
+ * Mocks simulating persistent data
+ */
+export const MOCK_BOOKING_ROOMS: BookingRoom[] = [
+  // b1, 2 people, double room
   {
+    id: "br1",
+    bookingId: "b1",
+    roomId: "r4",
+    people: 2
+  },
+  // b2, 3 people, single room + double room
+  {
+    id: "br2",
+    bookingId: "b2",
+    roomId: "r1",
+    people: 1
+  },
+  {
+    id: "br3",
+    bookingId: "b2",
+    roomId: "r5",
+    people: 2
+  },
+  // b3, 1 person, single room
+  {
+    id: "br4",
+    bookingId: "b3",
+    roomId: "r2",
+    people: 1
+  },
+  // b4, 4 people, 2 double rooms
+  {
+    id: "br5",
+    bookingId: "b4",
+    roomId: "r6",
+    people: 2
+  },
+  {
+    id: "br6",
+    bookingId: "b4",
+    roomId: "r7",
+    people: 2
+  },
+  // b5, 2 people, 1 double room
+  {
+    id: "br7",
+    bookingId: "b5",
+    roomId: "r4",
+    people: 2
+  },
+  // b6, 3 people, 1 single room, 1 double room
+  {
+    id: "br8",
+    bookingId: "b6",
+    roomId: "r1",
+    people: 1
+  },
+  {
+    id: "br9",
+    bookingId: "b6",
+    roomId: "r5",
+    people: 2
+  },
+  // b7, 1 person, 1 double room
+  {
+    id: "br10",
+    bookingId: "b7",
+    roomId: "r6",
+    people: 1
+  },
+  // b8, 3 people, apartment
+  {
+    id: "br11",
+    bookingId: "b8",
+    roomId: "r10",
+    people: 3
+  },
+  // b9, 1 person, 1 single room
+  {
+    id: "br11",
+    bookingId: "b9",
+    roomId: "r3",
+    people: 1
+  },
+  // b10, 2 people, 1 double room
+  {
+    id: "br11",
+    bookingId: "b10",
+    roomId: "r7",
+    people: 2
+  }
+]
+
+// 3 single rooms, 6 double rooms, 1 apartment
+export const MOCK_ROOMS: Room[] = [
+  {
+    id: "r1",
     type: "single",
-    capacity: 1,
-    available: 2,
-    price: 40,
+    capacity: 1
   },
   {
+    id: "r2",
+    type: "single",
+    capacity: 1
+  },
+  {
+    id: "r3",
+    type: "single",
+    capacity: 1
+  },
+  {
+    id: "r4",
     type: "double",
-    capacity: 2,
-    available: 4,
-    price: 55,
-    extraBed: {
-      available: 2,
-      priceIncrease: 10,
-    }
+    capacity: 2
   },
   {
+    id: "r5",
+    type: "double",
+    capacity: 2
+  },
+  {
+    id: "r6",
+    type: "double",
+    capacity: 2
+  },
+  {
+    id: "r7",
+    type: "double",
+    capacity: 2
+  },
+  {
+    id: "r8",
+    type: "double",
+    capacity: 2
+  },
+  {
+    id: "r9",
+    type: "double",
+    capacity: 2
+  },
+  {
+    id: "r10",
     type: "apartment",
-    capacity: 3,
-    available: 1,
-    price: 60,
-    extraBed: {
-      available: 1,
-      priceIncrease: 10,
-    }
+    capacity: 3
   },
 ]
 
@@ -248,14 +366,32 @@ export const MOCK_BOOKINGS: Booking[] = [
   }
 ];
 
-export const MOCK_NEW_BOOKING_REQUEST: NewBookingState = {
-  step: "selection",
-  checkIn: new Date("2026-05-15"),
-  checkOut: new Date("2026-05-18"),
-  requestedRooms: [
-    { people: 2 },
-    { people: 1 },
-  ],
-  availableRooms: MOCK_AVAILABLE_ROOMS_RESPONSE,
-  selectedRooms: [],
+export const MOCK_FULL_AVAILABLE_ROOM_MAP: AvailableRoomMap = {
+  single: {
+    capacity: 1,
+    available: 3,
+    price: 40,
+    extraBed: {
+      available: 0,
+      priceIncrease: 0
+    }
+  },
+  double: {
+    capacity: 2,
+    available: 6,
+    price: 55,
+    extraBed: {
+      available: 0,
+      priceIncrease: 0
+    }
+  },
+  apartment: {
+    capacity: 4,
+    available: 1,
+    price: 60,
+    extraBed: {
+      available: 0,
+      priceIncrease: 0
+    }
+  }
 };

@@ -14,7 +14,7 @@ import {DashboardLayout} from "@/layouts/DashboardLayout.tsx";
 import {Dashboard} from "@/pages/dashboard/Dashboard.tsx";
 import {Bookings} from "@/pages/dashboard/bookings/Bookings.tsx";
 import {BookingDetails} from "@/pages/dashboard/bookings/BookingDetails.tsx";
-import {NewBooking} from "@/pages/public/newBooking/NewBooking";
+import {BookingRoomSelection} from "@/pages/public/newBooking/BookingRoomSelection";
 import {BookingLayout} from "@/layouts/BookingLayout";
 import {NewBookingProvider} from "@/contexts/NewBookingContext";
 
@@ -47,7 +47,7 @@ export const AppRoutes = () => {
             <BookingLayout/>
         }>
           <Route index element={<Navigate to="rooms" replace />} />
-          <Route path="rooms" element={<NewBooking />}/>
+          <Route path="rooms" element={<BookingRoomSelection />}/>
           <Route path="guests"/>
           <Route path="check-out"/>
         </Route>

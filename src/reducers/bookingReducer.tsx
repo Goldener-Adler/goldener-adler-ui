@@ -1,9 +1,18 @@
 import type {Action, NewBookingState} from "@/assets/bookingTypes";
+import {EMPTY_AVAILABLE_ROOMS_MAP} from "@/assets/consts";
 
 export const initialState: NewBookingState = {
   step: "request",
+  checkIn: undefined,
+  checkOut: undefined,
   requestedRooms: [],
 };
+
+/*
+ * Reducer for managing Booking State
+ * It should only manage state and not call or handle requests.
+ * Leave this to the Context.
+ */
 
 export function bookingReducer(
   state: NewBookingState,
@@ -11,14 +20,12 @@ export function bookingReducer(
 ): NewBookingState {
   switch (action.type) {
     case "SET_REQUEST": {
-      // TODO: Fetch here (but extract it?)
-
       return {
         step: "selection",
         checkIn: action.checkIn,
         checkOut: action.checkOut,
         requestedRooms: action.rooms,
-        availableRooms: [],
+        availableRooms: action.availableRooms ?? EMPTY_AVAILABLE_ROOMS_MAP,
         selectedRooms: [],
       };
     }
@@ -34,8 +41,6 @@ export function bookingReducer(
 
     case "ADD_OR_UPDATE_SELECTED_ROOM": {
       if (state.step !== "selection") return state;
-
-      // TODO: Create or Update RoomHolds. If create fails because concurrent bookings reduced availability to 0, error toast to user and return previous state. Also trigger availability refetch
 
       let newSelectedRooms = {...state.selectedRooms};
       newSelectedRooms[action.index] = action.room;

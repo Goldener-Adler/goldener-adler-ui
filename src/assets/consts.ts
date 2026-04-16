@@ -1,4 +1,4 @@
-import type {BookingOption, MenuItem} from "@/assets/types.ts";
+import type {AvailableRoomMap, BookingOption, MenuItem} from "@/assets/types.ts";
 
 export const BOOKING_SESSION_STORAGE_KEY = 'bookingDetails';
 
@@ -80,3 +80,33 @@ export const BOOKING_OPTIONS: BookingOption[] = [
     label: "public.Forms.Labels.Pet",
   },
 ] as const
+
+export const EMPTY_AVAILABLE_ROOMS_MAP: AvailableRoomMap = {
+  single: {
+    capacity: 1,
+    available: 0,
+    price: 0,
+    extraBed: {
+      available: 0,
+      priceIncrease: 0
+    }
+  },
+  double: {
+    capacity: 2,
+    available: 0,
+    price: 0,
+    extraBed: {
+      available: 0,
+      priceIncrease: 0
+    }
+  },
+  apartment: {
+    capacity: 4,
+    available: 0,
+    price: 0,
+    extraBed: {
+      available: 0,
+      priceIncrease: 0
+    }
+  }
+};

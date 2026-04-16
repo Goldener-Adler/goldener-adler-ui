@@ -6,13 +6,13 @@ import {LanguageSelect} from "@/components/public/LanguageSelect.tsx";
 import {BOOKING_SESSION_STORAGE_KEY, COOKIE_KEY, MENU_ITEMS, TRANSPARENT_ROUTES} from "@/assets/consts.ts";
 import { MenuDrawer } from "./MenuDrawer.tsx";
 import Cookies from "js-cookie";
+import {BookingRequestDialog} from "@/components/public/BookingRequestDialog";
 
 export const Navbar: FunctionComponent = () => {
   const [isTransparent, setIsTransparent] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
-  
 
   
   useEffect(() => {
@@ -43,7 +43,7 @@ export const Navbar: FunctionComponent = () => {
       : false;
     if(location.pathname.startsWith("/booking")) return;
     return (
-      <Button onClick={() => navigate(hasBookingDetails ? '/booking/review' : '/booking')} className={`text-md ${isTransparent ? "" : ""}`} variant={isTransparent ? "secondary" : "default"}>
+      <Button className={`text-md ${isTransparent ? "" : ""}`} variant={isTransparent ? "secondary" : "default"}>
         {hasBookingDetails ? t("public.Buttons.Return") : t("public.Buttons.BookNow")}
       </Button>
     )
@@ -62,7 +62,9 @@ export const Navbar: FunctionComponent = () => {
         ))}
         <div className="flex-1"></div>
         <LanguageSelect isTop={isTransparent}></LanguageSelect>
-        {getBookingButton()}
+        <BookingRequestDialog>
+          {getBookingButton()}
+        </BookingRequestDialog>
       </menu>
     </div>
   )
