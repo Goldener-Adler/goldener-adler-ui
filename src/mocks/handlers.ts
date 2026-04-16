@@ -3,8 +3,9 @@ import {API_ENDPOINT, EMPTY_STRING} from "@/assets/consts.ts";
 import {MOCK_BOOKING_ROOMS, MOCK_BOOKINGS, MOCK_FULL_AVAILABLE_ROOM_MAP, MOCK_ROOMS} from "@/mocks/mockData.ts";
 import {toDateOnly} from "@/utils/formatDate.ts";
 import type {DateRange} from "react-day-picker";
-import type {AvailableRoomMap, Booking} from "@/assets/types.ts";
+import type {AvailableRoomMap, Booking, RoomTypeKey} from "@/assets/types.ts";
 import type {RequestedRoom} from "@/assets/bookingTypes";
+import {createSessionId} from "@/utils/createSessionId";
 
 export const handlers = [
   http.post(import.meta.env.VITE_BOOKING_ENDPOINT, () => {
@@ -50,8 +51,23 @@ export const handlers = [
         status: 200,
       }
     );
-  })
-  ,
+  }),
+  http.post(API_ENDPOINT + "/room-holdings", async ({ request }) => {
+    const body = await request.json() as {
+      sessionId: string,
+      roomType: RoomTypeKey,
+      requestedRoomIndex: number,
+      from: Date,
+      to: Date,
+      holdingId: string | undefined,
+    }
+
+    const holdingId = body.holdingId ? body.holdingId : createSessionId();
+    return HttpResponse.json(holdingId, { status: 200 });
+  }),
+  http.delete(API_ENDPOINT + "/room-holdings/:id", async () => {
+    return HttpResponse.json({status: 200});
+  }),
   // Bookings
   http.post(API_ENDPOINT + "/bookings", async ({ request }) => {
     const body = await request.json() as {search?: string, dateRange?: DateRange};

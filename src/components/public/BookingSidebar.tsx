@@ -15,7 +15,7 @@ import {Button} from "@/components/ui/button";
 import {BookingRequestDialog} from "@/components/public/BookingRequestDialog";
 
 export const BookingSidebar: FunctionComponent = () => {
-  const { state, dispatch } = useNewBooking();
+  const { state, deleteRoomSelection } = useNewBooking();
   const navigate = useNavigate();
 
   // Universal Guard for Booking Components
@@ -27,13 +27,6 @@ export const BookingSidebar: FunctionComponent = () => {
 
   if (state.step === "request") {
     return;
-  }
-
-  const onRemoveSelection = (index: number) => {
-    dispatch({
-      type: 'REMOVE_SELECTED_ROOM',
-      index: index
-    })
   }
 
   return (
@@ -94,7 +87,7 @@ export const BookingSidebar: FunctionComponent = () => {
               key={`${index}-${selectedRoom ? selectedRoom.type : 'no-selection' }`}
               recordKey={index}
               selectedRoom={selectedRoom}
-              onRemoveSelection={onRemoveSelection}
+              onRemoveSelection={() => deleteRoomSelection(index)}
             />)
         })}
       </SidebarContent>

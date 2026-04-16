@@ -82,7 +82,7 @@ export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ chi
           <DialogDescription>Geben Sie ihren gewünschten Aufenthaltszeitraum, sowie die erforderlichen Zimmer inklusive der Personenanzahl an</DialogDescription>
         </DialogHeader>*/}
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-          <ScrollArea className={`max-h-[450px] w-full px-4`}>
+          <ScrollArea className={`w-full px-4 max-h-[500px]`}>
             <div className="flex flex-col gap-2 items-center mb-4">
               <Controller
                 control={control}
@@ -90,6 +90,7 @@ export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ chi
                 render={({ field }) => (
                   <Calendar
                     mode="range"
+                    weekStartsOn={1}
                     numberOfMonths={isMobile ? 1 : 2}
                     selected={field.value}
                     onSelect={field.onChange}

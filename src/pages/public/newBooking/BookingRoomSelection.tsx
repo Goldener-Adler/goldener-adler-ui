@@ -27,7 +27,7 @@ export const BookingRoomSelection: FunctionComponent = () => {
 
   const onSaveRoom = (extras: RoomExtrasForm) => {
     if (activeRoom !== null && activeIndex !== null) {
-      updateRoomSelection(activeIndex, activeRoom, extras);
+      updateRoomSelection(state.sessionId, activeIndex, activeRoom, extras);
     }
     setIsDialogOpen(false);
   }
@@ -66,7 +66,7 @@ export const BookingRoomSelection: FunctionComponent = () => {
               ? state.selectedRooms[activeIndex]?.extras
               : undefined
             }
-            isSelected={!!state.selectedRooms[activeIndex]?.extras}
+            isSelected={state.selectedRooms[activeIndex]?.type === activeRoom}
             onClose={() => setIsDialogOpen(false)}
             onSubmit={onSaveRoom}
           />

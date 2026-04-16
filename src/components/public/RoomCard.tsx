@@ -42,8 +42,9 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({type, room, onButton
         <CardHeader>
           <CardTitle>{t(titleKeyMap[type])}</CardTitle>
           <CardDescription>Beschreibung</CardDescription>
-          <CardAction>
-            <b>{`${room.price} €`}</b>
+          <CardAction className="flex flex-col items-end">
+            <b className="text-2xl leading-7">{`${room.price} €`}</b>
+            <small>pro Nacht</small>
           </CardAction>
         </CardHeader>
         <CardContent>

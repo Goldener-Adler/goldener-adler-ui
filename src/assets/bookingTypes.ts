@@ -39,16 +39,20 @@ export type NewBookingState =
 }
   | {
   step: "selection";
+  sessionId: string;
   checkIn: Date;
   checkOut: Date;
+  nights: number;
   requestedRooms: RequestedRoom[];
   availableRooms: AvailableRoomMap;
   selectedRooms: Partial<Record<number, SelectedRoom>>;
 }
   | {
   step: "checkout";
+  sessionId: string;
   checkIn: Date;
   checkOut: Date;
+  nights: number;
   requestedRooms: RequestedRoom[];
   availableRooms: AvailableRoomMap;
   selectedRooms: Partial<Record<number, SelectedRoom>>;
@@ -56,7 +60,7 @@ export type NewBookingState =
 };
 
 export type Action =
-  | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, rooms: RequestedRoom[], availableRooms?: AvailableRoomMap }
+  | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, sessionId: string, rooms: RequestedRoom[], availableRooms?: AvailableRoomMap }
   | { type: "SET_AVAILABLE_ROOMS"; rooms: AvailableRoomMap }
   | { type: "ADD_OR_UPDATE_SELECTED_ROOM"; room: SelectedRoom, index: number }
   | { type: "REMOVE_SELECTED_ROOM"; index: number }

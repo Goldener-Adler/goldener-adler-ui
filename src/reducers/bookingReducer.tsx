@@ -1,5 +1,6 @@
 import type {Action, NewBookingState} from "@/assets/bookingTypes";
 import {EMPTY_AVAILABLE_ROOMS_MAP} from "@/assets/consts";
+import {getNights} from "@/utils/formatDate";
 
 export const initialState: NewBookingState = {
   step: "request",
@@ -24,6 +25,8 @@ export function bookingReducer(
         step: "selection",
         checkIn: action.checkIn,
         checkOut: action.checkOut,
+        sessionId: action.sessionId,
+        nights: getNights(action.checkIn, action.checkOut),
         requestedRooms: action.rooms,
         availableRooms: action.availableRooms ?? EMPTY_AVAILABLE_ROOMS_MAP,
         selectedRooms: [],
@@ -68,6 +71,8 @@ export function bookingReducer(
         step: "checkout",
         checkIn: state.checkIn,
         checkOut: state.checkOut,
+        sessionId: state.sessionId,
+        nights: state.nights,
         requestedRooms: state.requestedRooms,
         availableRooms: state.availableRooms,
         selectedRooms: state.selectedRooms,
