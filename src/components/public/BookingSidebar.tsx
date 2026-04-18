@@ -1,4 +1,4 @@
-import {type FunctionComponent, useEffect, useState} from "react";
+import {type FunctionComponent, useState} from "react";
 import {
   Sidebar, SidebarContent,
   SidebarFooter,
@@ -21,13 +21,6 @@ export const BookingSidebar: FunctionComponent = () => {
 
   const { mutate: removeRoomSelection } = useRemoveRoomSelection();
   const navigate = useNavigate();
-
-  // Universal Guard for Booking Components
-  useEffect(() => {
-    if (state.step === "request") {
-      navigate("/", { replace: true });
-    }
-  }, [state.step, navigate]);
 
   if (state.step === "request") {
     return;

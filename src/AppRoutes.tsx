@@ -17,6 +17,7 @@ import {BookingDetails} from "@/pages/dashboard/bookings/BookingDetails.tsx";
 import {BookingRoomSelection} from "@/pages/public/newBooking/BookingRoomSelection";
 import {BookingLayout} from "@/layouts/BookingLayout";
 import {NewBookingProvider} from "@/contexts/NewBookingContext";
+import {BookingGuard} from "@/layouts/BookingGuard";
 
 export const AppRoutes = () => {
   return (
@@ -47,9 +48,11 @@ export const AppRoutes = () => {
             <BookingLayout/>
         }>
           <Route index element={<Navigate to="rooms" replace />} />
-          <Route path="rooms" element={<BookingRoomSelection />}/>
-          <Route path="guests"/>
-          <Route path="check-out"/>
+          <Route element={<BookingGuard/>}>
+            <Route path="rooms" element={<BookingRoomSelection />}/>
+            <Route path="guests"/>
+            <Route path="check-out"/>
+          </Route>
         </Route>
       </Route>
 
