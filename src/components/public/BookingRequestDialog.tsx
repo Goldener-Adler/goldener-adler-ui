@@ -16,9 +16,12 @@ import {initialBookingRequestValues, type NewBookingRequest, newBookingRequestSc
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useIsMobile} from "@/hooks/use-mobile";
 import {useLocation, useNavigate} from "react-router";
+import {useCreateBookingRequest} from "@/hooks/useCreateBookingRequest";
 
 export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const {state, makeNewBookingRequest} = useNewBooking();
+  const {state} = useNewBooking();
+  const createBookingRequest = useCreateBookingRequest();
+
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,15 +60,19 @@ export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ chi
 
     if (!dateRange || dateRange.to === undefined) return;
 
-    await makeNewBookingRequest(dateRange.from, dateRange.to, data.requestedRooms);
-
-    // TODO: On Error don't close and don't navigate away
-
-    setOpen(false);
-    if (location.pathname !== "/new-booking/rooms") {
-      navigate("/new-booking/rooms");
+    try {
+      await createBookingRequest(
+        dateRange.from,
+        dateRange.to,
+        data.requestedRooms,
+      );
+      setOpen(false);
+      if (location.pathname !== "/new-booking/rooms") {
+        navigate("/new-booking/rooms");
+      }
+    } catch (error) {
+      // TODO: On Error don't close and don't navigate away
     }
-
   }
 
   // TODO: Make a VisuallyHidden component to hide elements but still provide aria labels
@@ -82,7 +89,7 @@ export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ chi
           <DialogDescription>Geben Sie ihren gewünschten Aufenthaltszeitraum, sowie die erforderlichen Zimmer inklusive der Personenanzahl an</DialogDescription>
         </DialogHeader>*/}
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-          <ScrollArea className={`w-full px-4 max-h-[500px]`}>
+          <ScrollArea className={`w-full px-4 max-h-125`}>
             <div className="flex flex-col gap-2 items-center mb-4">
               <Controller
                 control={control}

@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {createNewBookingSchema} from "@/utils/createNewBookingRequestSchema";
-import type {AvailableRoomMap, RoomTypeKey} from "@/assets/types";
+import type {RoomTypeKey} from "@/assets/types";
 
 export const newBookingRequestSchema = createNewBookingSchema();
 
@@ -30,7 +30,9 @@ export type SelectedRoom = {
   extras: RoomExtrasForm;
 };
 
-export type NewBookingState =
+export type NewBookingState = {
+  sessionId: string | null;
+  } & (
   | {
   step: "request";
   checkIn: Date | undefined;
@@ -39,29 +41,24 @@ export type NewBookingState =
 }
   | {
   step: "selection";
-  sessionId: string;
   checkIn: Date;
   checkOut: Date;
   nights: number;
   requestedRooms: RequestedRoom[];
-  availableRooms: AvailableRoomMap;
   selectedRooms: Partial<Record<number, SelectedRoom>>;
 }
   | {
   step: "checkout";
-  sessionId: string;
   checkIn: Date;
   checkOut: Date;
   nights: number;
   requestedRooms: RequestedRoom[];
-  availableRooms: AvailableRoomMap;
   selectedRooms: Partial<Record<number, SelectedRoom>>;
   // guest data
-};
+});
 
 export type Action =
-  | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, sessionId: string, rooms: RequestedRoom[], availableRooms?: AvailableRoomMap }
-  | { type: "SET_AVAILABLE_ROOMS"; rooms: AvailableRoomMap }
+  | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, rooms: RequestedRoom[], sessionId: string }
   | { type: "ADD_OR_UPDATE_SELECTED_ROOM"; room: SelectedRoom, index: number }
   | { type: "REMOVE_SELECTED_ROOM"; index: number }
   | { type: "GO_TO_GUESTS" }

@@ -2,11 +2,12 @@ import type {RequestedRoom} from "@/assets/bookingTypes";
 import {API_ENDPOINT, EMPTY_AVAILABLE_ROOMS_MAP} from "@/assets/consts";
 import type {AvailableRoomMap, RoomTypeKey} from "@/assets/types";
 
-async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[]): Promise<AvailableRoomMap> {
+async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[], sessionId: string): Promise<AvailableRoomMap> {
   const requestBody = {
     checkIn,
     checkOut,
-    requestedRooms
+    requestedRooms,
+    sessionId,
   }
   try {
     const response = await fetch(API_ENDPOINT + "/available-rooms",

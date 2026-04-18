@@ -8,9 +8,13 @@ import {RoomExtrasDialog} from "@/components/public/RoomExtrasDialog";
 import type {RoomExtrasForm} from "@/assets/bookingTypes";
 import type {RoomTypeKey} from "@/assets/types";
 import {getTypedEntries} from "@/utils/getTypedEntries";
+import {useCheckAvailability} from "@/hooks/useCheckAvailability";
+import {useUpdateRoomSelection} from "@/hooks/useUpdateRoomSelection";
 
 export const BookingRoomSelection: FunctionComponent = () => {
-  const { state, updateRoomSelection } = useNewBooking();
+  const { state } = useNewBooking();
+  const { isLoading, data } = useCheckAvailability();
+  const { mutate: updateRoomSelection } = useUpdateRoomSelection();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeRoom, setActiveRoom] = useState<RoomTypeKey | null>(null);
@@ -27,7 +31,11 @@ export const BookingRoomSelection: FunctionComponent = () => {
 
   const onSaveRoom = (extras: RoomExtrasForm) => {
     if (activeRoom !== null && activeIndex !== null) {
-      updateRoomSelection(state.sessionId, activeIndex, activeRoom, extras);
+      updateRoomSelection({
+        roomIndex: activeIndex,
+        roomType: activeRoom,
+        extras: extras,
+      })
     }
     setIsDialogOpen(false);
   }
@@ -40,11 +48,11 @@ export const BookingRoomSelection: FunctionComponent = () => {
             <TabsTrigger key={`room-tab-trigger-${index + 1}`} className="flex-initial" value={`${index}`}>Zimmer {index + 1}</TabsTrigger>
           ))}
         </TabsList>
-        {state.requestedRooms.map((_, requestedRoomIndex) => (
+        {!isLoading && data && state.requestedRooms.map((_, requestedRoomIndex) => (
           <TabsContent key={`room-tab-content-${requestedRoomIndex + 1}`} value={`${requestedRoomIndex}`}>
             <SidebarPageContentSpacing>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {getTypedEntries(state.availableRooms).map(([type, room]) =>
+              {getTypedEntries(data).map(([type, room]) =>
                 <RoomCard
                   key={`${requestedRoomIndex}-${type}-${requestedRoomIndex}`}
                   type={type}

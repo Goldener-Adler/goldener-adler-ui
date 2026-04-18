@@ -1,5 +1,4 @@
 import type {Action, NewBookingState} from "@/assets/bookingTypes";
-import {EMPTY_AVAILABLE_ROOMS_MAP} from "@/assets/consts";
 import {getNights} from "@/utils/formatDate";
 
 export const initialState: NewBookingState = {
@@ -7,12 +6,16 @@ export const initialState: NewBookingState = {
   checkIn: undefined,
   checkOut: undefined,
   requestedRooms: [],
+  sessionId: null,
 };
 
 /*
  * Reducer for managing Booking State
  * It should only manage state and not call or handle requests.
  * Leave this to the Context.
+ *
+ * Store sessionId, checkIn, checkOut and requestedRooms in sessionStorage (if cookies allowed)
+ * Pull on initialisation, else set initial state
  */
 
 export function bookingReducer(
@@ -22,23 +25,14 @@ export function bookingReducer(
   switch (action.type) {
     case "SET_REQUEST": {
       return {
+        ...state,
         step: "selection",
         checkIn: action.checkIn,
         checkOut: action.checkOut,
         sessionId: action.sessionId,
         nights: getNights(action.checkIn, action.checkOut),
         requestedRooms: action.rooms,
-        availableRooms: action.availableRooms ?? EMPTY_AVAILABLE_ROOMS_MAP,
         selectedRooms: [],
-      };
-    }
-
-    case "SET_AVAILABLE_ROOMS": {
-      if (state.step === "request") return state;
-
-      return {
-        ...state,
-        availableRooms: action.rooms,
       };
     }
 
@@ -74,7 +68,6 @@ export function bookingReducer(
         sessionId: state.sessionId,
         nights: state.nights,
         requestedRooms: state.requestedRooms,
-        availableRooms: state.availableRooms,
         selectedRooms: state.selectedRooms,
         // guest data
       };

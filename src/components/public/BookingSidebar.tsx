@@ -13,9 +13,11 @@ import {Separator} from "@/components/ui/separator";
 import {BookingSelectionSidebarGroup} from "@/components/public/BookingSelectionSidebarGroup";
 import {Button} from "@/components/ui/button";
 import {BookingRequestDialog} from "@/components/public/BookingRequestDialog";
+import {useRemoveRoomSelection} from "@/hooks/useRemoveRoomSelection";
 
 export const BookingSidebar: FunctionComponent = () => {
-  const { state, deleteRoomSelection } = useNewBooking();
+  const { state } = useNewBooking();
+  const { mutate: removeRoomSelection } = useRemoveRoomSelection();
   const navigate = useNavigate();
 
   // Universal Guard for Booking Components
@@ -35,7 +37,7 @@ export const BookingSidebar: FunctionComponent = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <BookingRequestDialog>
-              <SidebarMenuButton size="lg" className="h-fit flex flex-col hover:cursor-pointer items-stretch group-data-[collapsible=icon]:!h-auto">
+              <SidebarMenuButton size="lg" className="h-fit flex flex-col hover:cursor-pointer items-stretch group-data-[collapsible=icon]:h-auto!">
                 <div className="grid grid-cols-3 items-center">
                   <div className="flex flex-col items-center justify-center">
                     <span className="text-xs block">Check-In</span>
@@ -87,7 +89,7 @@ export const BookingSidebar: FunctionComponent = () => {
               key={`${index}-${selectedRoom ? selectedRoom.type : 'no-selection' }`}
               recordKey={index}
               selectedRoom={selectedRoom}
-              onRemoveSelection={() => deleteRoomSelection(index)}
+              onRemoveSelection={() => removeRoomSelection(index)}
             />)
         })}
       </SidebarContent>
