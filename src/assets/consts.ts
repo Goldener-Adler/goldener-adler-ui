@@ -110,3 +110,5 @@ export const EMPTY_AVAILABLE_ROOMS_MAP: AvailableRoomMap = {
     }
   }
 };
+
+export const SESSION_STORAGE_KEY = "session";

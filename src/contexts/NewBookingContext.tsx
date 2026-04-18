@@ -6,6 +6,8 @@ import {
 
 import { bookingReducer, initialState } from "@/reducers/bookingReducer";
 import type {NewBookingState, Action} from "@/assets/bookingTypes";
+import {SESSION_STORAGE_KEY} from "@/assets/consts";
+import {isBookingSession} from "@/utils/guards/isBookingSession";
 
 type BookingContextType = {
   state: NewBookingState;
@@ -16,14 +18,43 @@ const NewBookingContext = createContext<BookingContextType | undefined>(
   undefined
 );
 
+const getInitialState = () => {
+  if (typeof window === "undefined") {
+    return initialState;
+  }
+
+  const storedValue = sessionStorage.getItem(SESSION_STORAGE_KEY);
+
+  if (!storedValue) return initialState;
+
+  try {
+    if (storedValue) {
+      const parsedData = JSON.parse(storedValue);
+      if (isBookingSession(parsedData)) {
+        return {
+          step: "selection",
+          sessionId: parsedData.sessionId,
+          checkIn: new Date(parsedData.checkIn),
+          checkOut: new Date(parsedData.checkOut),
+          requestedRooms: parsedData.requestedRooms,
+          selectedRooms: {},
+        } satisfies Extract<NewBookingState, { step: "selection" }>;
+      }
+    }
+    return initialState;
+  } catch {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    return initialState;
+  }
+}
+
 export function NewBookingProvider({children}: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(bookingReducer, initialState);
+  const [state, dispatch] = useReducer(bookingReducer, initialState, getInitialState);
+
+  //TODO: Rehydrate selected rooms with a backend fetch on init (useEffect with empty dependency)
 
   //TODO: Add Hooks for
   /*
-    X - fetch availability request
-    X - create or update RoomHolds. (If create fails because concurrent bookings reduced availability to 0, error toast to user and return previous state. Trigger availability refetch after)
-    X - delete RoomHolds (On Remove from Sidebar)
     O - reset booking (delete room holds if existing, finally clear state)
     O - confirm booking
    */

@@ -1,4 +1,9 @@
-import {type FunctionComponent, type PropsWithChildren, useEffect, useState} from "react";
+import {
+  type Dispatch,
+  type FunctionComponent,
+  type SetStateAction,
+  useEffect,
+} from "react";
 import {
   Dialog,
   DialogContent, DialogFooter,
@@ -18,11 +23,14 @@ import {useIsMobile} from "@/hooks/use-mobile";
 import {useLocation, useNavigate} from "react-router";
 import {useCreateBookingRequest} from "@/hooks/useCreateBookingRequest";
 
-export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ children }) => {
+interface BookingRequestDialogProps {
+  open: boolean,
+  setOpen: Dispatch<SetStateAction<boolean>>,
+}
+
+export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> = ({ open, setOpen }) => {
   const {state} = useNewBooking();
   const createBookingRequest = useCreateBookingRequest();
-
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -78,11 +86,7 @@ export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ chi
   // TODO: Make a VisuallyHidden component to hide elements but still provide aria labels
 
   return (
-    <>
-      <div onClick={() => setOpen(true)}>
-        {children}
-      </div>
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogContent className="px-0 py-4 md:min-w-xl">
         {/*<DialogHeader className="px-4">
           <DialogTitle>Neue Buchung</DialogTitle>
@@ -160,6 +164,5 @@ export const BookingRequestDialog: FunctionComponent<PropsWithChildren> = ({ chi
         </form>
       </DialogContent>
     </Dialog>
-    </>
   )
 }

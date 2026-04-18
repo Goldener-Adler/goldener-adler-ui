@@ -3,17 +3,18 @@ import {Button} from "@/components/ui/button.tsx";
 import {useLocation, useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import {LanguageSelect} from "@/components/public/LanguageSelect.tsx";
-import {BOOKING_SESSION_STORAGE_KEY, COOKIE_KEY, MENU_ITEMS, TRANSPARENT_ROUTES} from "@/assets/consts.ts";
+import {MENU_ITEMS, TRANSPARENT_ROUTES} from "@/assets/consts.ts";
 import { MenuDrawer } from "./MenuDrawer.tsx";
-import Cookies from "js-cookie";
 import {BookingRequestDialog} from "@/components/public/BookingRequestDialog";
+import {useNewBooking} from "@/contexts/NewBookingContext";
 
 export const Navbar: FunctionComponent = () => {
   const [isTransparent, setIsTransparent] = useState(true);
+  const [openBookingDialog, setOpenBookingDialog] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { state } = useNewBooking();
   const { t } = useTranslation();
-
   
   useEffect(() => {
     const isTransparentRoute = TRANSPARENT_ROUTES.some(route => {
@@ -37,13 +38,19 @@ export const Navbar: FunctionComponent = () => {
   }, [location.pathname]);
   
   const getBookingButton = () => {
-    const hasConsent = Cookies.get(COOKIE_KEY) !== "none";
-    const hasBookingDetails = hasConsent
-      ? sessionStorage.getItem(BOOKING_SESSION_STORAGE_KEY) !== null
-      : false;
-    if(location.pathname.startsWith("/booking")) return;
+    const hasBookingDetails = state.step !== "request";
     return (
-      <Button className={`text-md ${isTransparent ? "" : ""}`} variant={isTransparent ? "secondary" : "default"}>
+      <Button
+        onClick={() => {
+          if (hasBookingDetails) {
+            navigate("/new-booking/rooms");
+          } else {
+            setOpenBookingDialog(true);
+          }}
+        }
+        className={`text-md ${isTransparent ? "" : ""}`}
+        variant={isTransparent ? "secondary" : "default"}
+      >
         {hasBookingDetails ? t("public.Buttons.Return") : t("public.Buttons.BookNow")}
       </Button>
     )
@@ -62,9 +69,8 @@ export const Navbar: FunctionComponent = () => {
         ))}
         <div className="flex-1"></div>
         <LanguageSelect isTop={isTransparent}></LanguageSelect>
-        <BookingRequestDialog>
-          {getBookingButton()}
-        </BookingRequestDialog>
+        {getBookingButton()}
+        <BookingRequestDialog open={openBookingDialog} setOpen={setOpenBookingDialog} />
       </menu>
     </div>
   )

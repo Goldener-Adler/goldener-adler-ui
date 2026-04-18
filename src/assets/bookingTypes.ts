@@ -24,6 +24,13 @@ export type RequestedRoom = {
   people: number,
 }
 
+export type BookingSession = {
+  sessionId: string;
+  checkIn: Date;
+  checkOut: Date;
+  requestedRooms: RequestedRoom[];
+}
+
 export type SelectedRoom = {
   id: string;
   type: RoomTypeKey;
@@ -43,7 +50,6 @@ export type NewBookingState = {
   step: "selection";
   checkIn: Date;
   checkOut: Date;
-  nights: number;
   requestedRooms: RequestedRoom[];
   selectedRooms: Partial<Record<number, SelectedRoom>>;
 }
@@ -51,7 +57,6 @@ export type NewBookingState = {
   step: "checkout";
   checkIn: Date;
   checkOut: Date;
-  nights: number;
   requestedRooms: RequestedRoom[];
   selectedRooms: Partial<Record<number, SelectedRoom>>;
   // guest data

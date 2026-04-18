@@ -1,5 +1,4 @@
 import type {Action, NewBookingState} from "@/assets/bookingTypes";
-import {getNights} from "@/utils/formatDate";
 
 export const initialState: NewBookingState = {
   step: "request",
@@ -30,7 +29,6 @@ export function bookingReducer(
         checkIn: action.checkIn,
         checkOut: action.checkOut,
         sessionId: action.sessionId,
-        nights: getNights(action.checkIn, action.checkOut),
         requestedRooms: action.rooms,
         selectedRooms: [],
       };
@@ -66,7 +64,6 @@ export function bookingReducer(
         checkIn: state.checkIn,
         checkOut: state.checkOut,
         sessionId: state.sessionId,
-        nights: state.nights,
         requestedRooms: state.requestedRooms,
         selectedRooms: state.selectedRooms,
         // guest data

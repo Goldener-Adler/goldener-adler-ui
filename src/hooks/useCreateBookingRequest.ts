@@ -1,8 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNewBooking } from "@/contexts/NewBookingContext";
 import { fetchAvailableRooms } from "@/api/bookingAPI";
-import type { RequestedRoom } from "@/assets/bookingTypes";
+import type {RequestedRoom} from "@/assets/bookingTypes";
 import {createSessionId} from "@/utils/createSessionId";
+import {SESSION_STORAGE_KEY} from "@/assets/consts";
+import {isBookingSession} from "@/utils/guards/isBookingSession";
 
 export function useCreateBookingRequest() {
   const { state, dispatch } = useNewBooking();
@@ -14,6 +16,19 @@ export function useCreateBookingRequest() {
     requestedRooms: RequestedRoom[]
   ) => {
     const sessionId = state.sessionId ?? createSessionId();
+
+    const sessionStorageValue: string = JSON.stringify({
+      sessionId: sessionId,
+      checkIn: checkIn,
+      checkOut: checkOut,
+      requestedRooms: requestedRooms,
+    });
+
+    if (isBookingSession(JSON.parse(sessionStorageValue))) {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, sessionStorageValue);
+    } else {
+      console.error("Could not store session in session storage");
+    }
 
     const availableRooms = await queryClient.fetchQuery({
       queryKey: [
