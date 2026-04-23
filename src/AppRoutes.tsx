@@ -18,6 +18,7 @@ import {BookingRoomSelection} from "@/pages/public/newBooking/BookingRoomSelecti
 import {BookingLayout} from "@/layouts/BookingLayout";
 import {NewBookingProvider} from "@/contexts/NewBookingContext";
 import {BookingGuard} from "@/layouts/BookingGuard";
+import {GuestInformation} from "@/pages/public/newBooking/GuestInformation";
 
 export const AppRoutes = () => {
   return (
@@ -49,8 +50,8 @@ export const AppRoutes = () => {
         }>
           <Route index element={<Navigate to="rooms" replace />} />
           <Route element={<BookingGuard/>}>
-            <Route path="rooms" element={<BookingRoomSelection />}/>
-            <Route path="guests"/>
+            <Route path="rooms" element={<BookingRoomSelection/>}/>
+            <Route path="guests" element={<GuestInformation/>}/>
             <Route path="check-out"/>
           </Route>
         </Route>
