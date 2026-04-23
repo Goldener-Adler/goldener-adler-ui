@@ -8,6 +8,8 @@ import { bookingReducer, initialState } from "@/reducers/bookingReducer";
 import type {NewBookingState, Action} from "@/assets/bookingTypes";
 import {SESSION_STORAGE_KEY} from "@/assets/consts";
 import {isBookingSession} from "@/utils/guards/isBookingSession";
+import {getInitialBookingFormValues} from "@/assets/guestTypes";
+import getAdditionalGuestCount from "@/utils/getAdditionalGuestCount";
 
 type BookingContextType = {
   state: NewBookingState;
@@ -38,6 +40,7 @@ const getInitialState = () => {
           checkOut: new Date(parsedData.checkOut),
           requestedRooms: parsedData.requestedRooms,
           selectedRooms: {},
+          bookingFormValues: getInitialBookingFormValues(getAdditionalGuestCount(parsedData.requestedRooms)), //TODO: Read booking form values from session storage
         } satisfies Extract<NewBookingState, { step: "selection" }>;
       }
     }

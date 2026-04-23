@@ -1,4 +1,5 @@
 import type {Action, NewBookingState} from "@/assets/bookingTypes";
+import {getInitialBookingFormValues} from "@/assets/guestTypes";
 
 export const initialState: NewBookingState = {
   step: "request",
@@ -23,6 +24,8 @@ export function bookingReducer(
 ): NewBookingState {
   switch (action.type) {
     case "SET_REQUEST": {
+      const totalGuests = action.rooms.reduce((sum, room) => sum + room.people, 0);
+      const additionalGuestCount = Math.max(0, totalGuests - 1);
       return {
         ...state,
         step: "selection",
@@ -31,6 +34,7 @@ export function bookingReducer(
         sessionId: action.sessionId,
         requestedRooms: action.rooms,
         selectedRooms: [],
+        bookingFormValues: getInitialBookingFormValues(additionalGuestCount)
       };
     }
 
@@ -52,21 +56,24 @@ export function bookingReducer(
       delete newSelectedRooms[action.index];
       return {
         ...state,
-        selectedRooms: newSelectedRooms
+        selectedRooms: newSelectedRooms,
       };
+    }
+
+    case "UPDATE_BOOKING_FORM_VALUES": {
+      if (state.step === 'request') return state;
+      return {
+        ...state,
+        bookingFormValues: action.bookingFormValues
+      }
     }
 
     case "GO_TO_CHECKOUT": {
       if (state.step === "request") return state;
 
       return {
+        ...state,
         step: "checkout",
-        checkIn: state.checkIn,
-        checkOut: state.checkOut,
-        sessionId: state.sessionId,
-        requestedRooms: state.requestedRooms,
-        selectedRooms: state.selectedRooms,
-        // guest data
       };
     }
 

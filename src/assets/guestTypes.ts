@@ -231,3 +231,29 @@ export const bookingSchema = z.object({
 })
 
 export type BookingForm = z.infer<typeof bookingSchema>;
+
+export const getInitialBookingFormValues = (additionalGuestCount: number): BookingForm => {
+  return {
+    contact: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      message: "",
+    },
+    differentGuest: false,
+    fillAtCheckIn: false,
+    meldepflicht: {
+      mainGuest: {
+        citizenship: "",
+      },
+      allGuestsAreFamily: false,
+      additionalGuests: Array(additionalGuestCount).fill(null).map(() => ({
+        firstName: '',
+        lastName: '',
+        citizenship: '',
+        familyMember: false,
+      }))
+    }
+  }
+}

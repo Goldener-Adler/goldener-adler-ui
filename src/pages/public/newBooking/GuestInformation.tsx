@@ -1,7 +1,7 @@
-import {type FunctionComponent, useEffect} from "react";
+import {type FunctionComponent, useEffect, useRef} from "react";
 import {Page} from "@/layouts/Page";
 import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
-import {type BookingForm, bookingSchema} from "@/assets/guestTypes";
+import {type BookingForm, bookingSchema, getInitialBookingFormValues} from "@/assets/guestTypes";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
   Field,
@@ -22,33 +22,18 @@ import {Link} from "react-router";
 import {Separator} from "@/components/ui/separator";
 import {Trans, useTranslation} from "react-i18next";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
+import {DEFAULT_INPUT_DEBOUNCE_MS} from "@/assets/consts";
 
 export const GuestInformation: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { state } = useNewBooking();
+  const { state, dispatch } = useNewBooking();
 
   const totalGuests = state.requestedRooms.reduce((sum, room) => sum + room.people, 0);
   const additionalGuestCount = Math.max(0, totalGuests - 1); // Exclude main guest
 
   const form = useForm({
     resolver: zodResolver(bookingSchema),
-    defaultValues: {
-      contact: {},
-      differentGuest: false,
-      fillAtCheckIn: false,
-      meldepflicht: {
-        mainGuest: {
-          citizenship: "",
-        },
-        allGuestsAreFamily: false,
-        additionalGuests: Array(additionalGuestCount).fill(null).map(() => ({
-          firstName: '',
-          lastName: '',
-          citizenship: '',
-          familyMember: false,
-        }))
-      }
-    },
+    defaultValues: state.step !== "request" ? state.bookingFormValues : getInitialBookingFormValues(additionalGuestCount),
   });
 
   const { control, watch } = form;
@@ -56,7 +41,31 @@ export const GuestInformation: FunctionComponent = () => {
   const { fields } = useFieldArray({
     control,
     name: "meldepflicht.additionalGuests",
-  })
+  });
+
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const subscription = watch((values) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        dispatch({
+          type: "UPDATE_BOOKING_FORM_VALUES",
+          bookingFormValues: values as BookingForm,
+        });
+      }, DEFAULT_INPUT_DEBOUNCE_MS);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [watch]);
 
   const differentGuest = watch("differentGuest");
 
@@ -82,7 +91,7 @@ export const GuestInformation: FunctionComponent = () => {
 
   return (
     <Page>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 px-5 my-2 mx-auto max-w-3xl">
+      <form id="booking-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 px-5 my-2 mx-auto max-w-3xl">
         <FieldSet>
           <FieldLegend>
             <FieldTitle className="text-2xl">{t('public.GuestInfo.Contact')}</FieldTitle>
@@ -118,7 +127,6 @@ export const GuestInformation: FunctionComponent = () => {
         <FieldSet>
           <FieldLegend className="w-full">
             <FieldTitle className="text-2xl">{t('public.GuestInfo.ReportingRequirement')}</FieldTitle>
-            <FieldDescription>
             <Accordion type="single" collapsible>
               <AccordionItem className="w-full" value="item-1">
                 <AccordionTrigger>{t('public.GuestInfo.WhyReportingRequirement')}</AccordionTrigger>
@@ -136,7 +144,6 @@ export const GuestInformation: FunctionComponent = () => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            </FieldDescription>
           </FieldLegend>
           <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field orientation="horizontal" className="col-span-1 sm:col-span-2">

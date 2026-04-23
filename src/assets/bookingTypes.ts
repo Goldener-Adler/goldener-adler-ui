@@ -1,6 +1,7 @@
 import {z} from "zod";
 import {createNewBookingSchema} from "@/utils/createNewBookingRequestSchema";
 import type {RoomTypeKey} from "@/assets/types";
+import type {BookingForm} from "@/assets/guestTypes";
 
 export const newBookingRequestSchema = createNewBookingSchema();
 
@@ -52,6 +53,7 @@ export type NewBookingState = {
   checkOut: Date;
   requestedRooms: RequestedRoom[];
   selectedRooms: Partial<Record<number, SelectedRoom>>;
+  bookingFormValues: BookingForm;
 }
   | {
   step: "checkout";
@@ -59,7 +61,7 @@ export type NewBookingState = {
   checkOut: Date;
   requestedRooms: RequestedRoom[];
   selectedRooms: Partial<Record<number, SelectedRoom>>;
-  // guest data
+  bookingFormValues: BookingForm;
 });
 
 export type Action =
@@ -67,5 +69,6 @@ export type Action =
   | { type: "ADD_OR_UPDATE_SELECTED_ROOM"; room: SelectedRoom, index: number }
   | { type: "REMOVE_SELECTED_ROOM"; index: number }
   | { type: "GO_TO_GUESTS" }
+  | { type: "UPDATE_BOOKING_FORM_VALUES"; bookingFormValues: BookingForm }
   | { type: "GO_TO_CHECKOUT" }
   | { type: "RESET_BOOKING" };

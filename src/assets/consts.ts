@@ -10,6 +10,8 @@ export const ISO_DATE_REGEX = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d
 
 export const EMPTY_STRING = "";
 
+export const DEFAULT_INPUT_DEBOUNCE_MS = 700;
+
 export const COOKIE_KEY = "cookie_consent";
 
 export const API_ENDPOINT = "http://api.pension-goldener-adler";
