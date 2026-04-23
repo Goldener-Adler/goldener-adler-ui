@@ -30,6 +30,10 @@ export function getNationalities(locale: string = "de") {
     type: "region"
   });
 
+  const collator = new Intl.Collator(locale, {
+    sensitivity: "base", // Case-insensitive, accent-sensitive
+  });
+
   // ISO-3166-1 alpha-2 Codes (gekürzt hier – vollständig unten)
   return ISO_ALPHA2_CODES.map((code) => {
     const countryName = regionNames.of(code) || code;
@@ -38,5 +42,9 @@ export function getNationalities(locale: string = "de") {
       value: code.toLowerCase(),
       label: `${getFlagEmoji(code)} ${countryName}`
     };
-  }).sort((a, b) => a.label.localeCompare(b.label));
+  }).sort((a, b) => {
+    const nameA = a.label.replace(/^[^ ]+ /, "");
+    const nameB = b.label.replace(/^[^ ]+ /, "");
+    return collator.compare(nameA, nameB);
+  });
 }

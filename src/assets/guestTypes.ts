@@ -1,23 +1,32 @@
 import {z} from "zod";
+import type {TranslationKey} from "@/assets/i18n/i18n";
 
+const phoneSchema = z.string().regex(
+  /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
+  'public.Forms.Errors.Required.Phone' satisfies TranslationKey
+);
 export const contactInfoSchema = z.object({
-  firstName: z.string() .min(1, { message: 'public.Forms.Errors.Required.FirstName' }),
-  lastName: z.string() .min(1, { message: 'public.Forms.Errors.Required.LastName' }),
-  email: z.email({ error: 'public.Forms.Errors.Required.Email'}),
-  phone: z.string()
-    .regex(/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/, 'public.Forms.Errors.Required.Phone')
-    .or(z.string("")).optional(), message: z.string().optional()
+  firstName: z.string().min(1, { message: 'public.Forms.Errors.Required.FirstName' satisfies TranslationKey }),
+  lastName: z.string().min(1, { message: 'public.Forms.Errors.Required.LastName' satisfies TranslationKey }),
+  email: z.email({ error: 'public.Forms.Errors.Required.Email' satisfies TranslationKey}),
+  phone: z.union([phoneSchema, z.literal("")]).optional(),
+  message: z.string().optional()
 });
 
 const meldepflichtMainGuestSchema = z.object({
-  citizenship: z.string().min(1),
+  citizenship: z
+    .string()
+    .optional()
+    .refine((val) => val && val.length > 0, {
+      message: 'public.Forms.Errors.Required.Citizenship' satisfies TranslationKey,
+    }),
   birthDate: z.date().optional(),
   address: z
     .object({
-      street: z.string().min(1),
-      postalCode: z.string().min(1),
-      city: z.string().min(1),
-      country: z.string().min(1),
+      street: z.string().min(1, { message: 'public.Forms.Errors.Required.Street' satisfies TranslationKey }),
+      postalCode: z.string().min(1, { message: 'public.Forms.Errors.Required.PostalCode' satisfies TranslationKey}),
+      city: z.string().min(1, { message: 'public.Forms.Errors.Required.City' satisfies TranslationKey}),
+      country: z.string().min(1, { message: 'public.Forms.Errors.Required.Country' satisfies TranslationKey}),
     })
     .optional(),
 }).superRefine((data, ctx) => {
@@ -29,7 +38,7 @@ const meldepflichtMainGuestSchema = z.object({
     ctx.addIssue({
       code: "custom",
       path: ["birthDate"],
-      message: "Geburtsdatum erforderlich",
+      message: 'public.Forms.Errors.Required.BirthDate' satisfies TranslationKey,
     })
   }
 
@@ -37,7 +46,7 @@ const meldepflichtMainGuestSchema = z.object({
     ctx.addIssue({
       code: "custom",
       path: ["address"],
-      message: "Adresse erforderlich",
+      message: 'public.Forms.Errors.Required.Address' satisfies TranslationKey,
     })
     return
   }
@@ -63,7 +72,12 @@ const meldepflichtMainGuestSchema = z.object({
 const additionalGuestSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  citizenship: z.string().min(1),
+  citizenship: z
+    .string()
+    .optional()
+    .refine((val) => val && val.length > 0, {
+      message: 'public.Forms.Errors.Required.Citizenship' satisfies TranslationKey,
+    }),
   birthDate: z.date().optional(),
   familyMember: z.boolean().optional(),
   address: z
@@ -85,7 +99,7 @@ const additionalGuestSchema = z.object({
       ctx.addIssue({
         code: "custom",
         path: ["birthDate"],
-        message: "Geburtsdatum erforderlich",
+        message: 'public.Forms.Errors.Required.BirthDate' satisfies TranslationKey,
       })
     }
     return
@@ -94,7 +108,7 @@ const additionalGuestSchema = z.object({
       ctx.addIssue({
         code: "custom",
         path: ["firstName"],
-        message: "Vorname erforderlich",
+        message: 'public.Forms.Errors.Required.FirstName' satisfies TranslationKey,
       })
     }
 
@@ -102,7 +116,7 @@ const additionalGuestSchema = z.object({
       ctx.addIssue({
         code: "custom",
         path: ["lastName"],
-        message: "Nachname erforderlich",
+        message: 'public.Forms.Errors.Required.LastName' satisfies TranslationKey,
       })
     }
 
@@ -110,7 +124,7 @@ const additionalGuestSchema = z.object({
       ctx.addIssue({
         code: "custom",
         path: ["birthDate"],
-        message: "Geburtsdatum erforderlich",
+        message: 'public.Forms.Errors.Required.BirthDate' satisfies TranslationKey,
       })
     }
 
@@ -118,7 +132,7 @@ const additionalGuestSchema = z.object({
       ctx.addIssue({
         code: "custom",
         path: ["address"],
-        message: "Adresse erforderlich",
+        message: 'public.Forms.Errors.Required.Address' satisfies TranslationKey,
       })
       return
     }
@@ -161,7 +175,7 @@ export const bookingSchema = z.object({
       ctx.addIssue({
         code: "custom",
         path: ["mainGuestContact"],
-        message: "Main guest contact required",
+        message: 'public.Forms.Errors.Required.MainGuestContact' satisfies TranslationKey,
       })
       return
     }
@@ -184,16 +198,17 @@ export const bookingSchema = z.object({
     ctx.addIssue({
       code: "custom",
       path: ["meldepflicht"],
-      message: "Meldepflicht required",
+      message: 'public.Forms.Errors.Required.ReportingRequirement' satisfies TranslationKey,
     })
     return
   }
 
   if(data.meldepflicht.allGuestsAreFamily && data.meldepflicht.mainGuest.citizenship === "de") {
+    // should never happen
     ctx.addIssue({
       code: "custom",
       path: ["meldepflicht"],
-      message: "For German Citizens family data is never required",
+      message: 'german citizens do not require reporting required data',
     })
     return
   }

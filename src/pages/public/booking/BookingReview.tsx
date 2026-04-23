@@ -7,7 +7,7 @@ import {ChevronLeft} from "lucide-react";
 import {useNavigate} from "react-router";
 import {useBooking} from "@/contexts/BookingContext.tsx";
 import {FormValueItem} from "@/components/public/FormValueItem.tsx";
-import type {TranslationKeys} from "@/assets/i18n/i18n.ts";
+import type {TranslationKey} from "@/assets/i18n/i18n.ts";
 import {Separator} from "@/components/ui/separator.tsx";
 import { LuBedSingle, LuBedDouble, LuCookingPot } from 'react-icons/lu';
 import {isValidBookingForm} from "@/utils/guards/isValidBookingForm.ts";
@@ -26,7 +26,7 @@ export const BookingReview: FunctionComponent = () => {
     }
   }, []);
   
-  const getSelectedOption = (roomType: "singleBedrooms" | "doubleBedrooms" | "apartmentGuests", value: string): TranslationKeys => {
+  const getSelectedOption = (roomType: "singleBedrooms" | "doubleBedrooms" | "apartmentGuests", value: string): TranslationKey => {
     switch (roomType) {
       case "singleBedrooms": {
         switch (value) {

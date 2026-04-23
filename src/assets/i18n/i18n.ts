@@ -28,7 +28,7 @@ export type NestedKeyOf<ObjectType extends object> = {
 }[keyof ObjectType & string];
 
 export type Resources = typeof resources['default']['translation'];
-export type TranslationKeys = NestedKeyOf<Resources>;
+export type TranslationKey = NestedKeyOf<Resources>;
 
 export type Language = Exclude<keyof typeof resources, 'default'>;
 

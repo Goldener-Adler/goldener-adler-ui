@@ -15,13 +15,16 @@ import {
 import {Checkbox} from "@/components/ui/checkbox";
 import {Button} from "@/components/ui/button";
 import {useNewBooking} from "@/contexts/NewBookingContext";
-import {MeldepflichtFields} from "@/components/public/MeldepflichtFields";
+import {ReportingRequirementFields} from "@/components/public/ReportingRequirementFields";
 import {ContactFields} from "@/components/public/ContactFields";
 import {ExternalLink} from "lucide-react";
 import {Link} from "react-router";
 import {Separator} from "@/components/ui/separator";
+import {Trans, useTranslation} from "react-i18next";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 
 export const GuestInformation: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { state } = useNewBooking();
 
   const totalGuests = state.requestedRooms.reduce((sum, room) => sum + room.people, 0);
@@ -34,7 +37,9 @@ export const GuestInformation: FunctionComponent = () => {
       differentGuest: false,
       fillAtCheckIn: false,
       meldepflicht: {
-        mainGuest: {},
+        mainGuest: {
+          citizenship: "",
+        },
         allGuestsAreFamily: false,
         additionalGuests: Array(additionalGuestCount).fill(null).map(() => ({
           firstName: '',
@@ -80,8 +85,8 @@ export const GuestInformation: FunctionComponent = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 px-5 my-2 mx-auto max-w-3xl">
         <FieldSet>
           <FieldLegend>
-            <FieldTitle className="text-2xl">Kontaktdaten</FieldTitle>
-            <FieldDescription>Die folgenden Daten erhalten die Buchungsbestätigung und werden ggf. zur Kontaktaufnahme verwendet.</FieldDescription>
+            <FieldTitle className="text-2xl">{t('public.GuestInfo.Contact')}</FieldTitle>
+            <FieldDescription>{t('public.GuestInfo.ContactDescription')}</FieldDescription>
           </FieldLegend>
           <FieldGroup className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field orientation="horizontal" className="col-span-1 sm:col-span-2">
@@ -97,13 +102,13 @@ export const GuestInformation: FunctionComponent = () => {
                 )}
               />
               <FieldLabel htmlFor="differentGuest">
-                Für eine andere Person buchen
+                {t('public.Forms.Labels.DifferentPerson')}
               </FieldLabel>
             </Field>
             <ContactFields prefix="contact" form={form}/>
             {differentGuest && (
               <>
-                <h3 className="col-span-1 sm:col-span-2">Hauptgast</h3>
+                <FieldTitle className="mt-4 text-lg col-span-1 sm:col-span-2">{t('public.GuestInfo.MainGuest')}</FieldTitle>
                 <ContactFields prefix="mainGuestContact" form={form} />
               </>
             )}
@@ -111,11 +116,29 @@ export const GuestInformation: FunctionComponent = () => {
         </FieldSet>
         <Separator />
         <FieldSet>
-          <FieldLegend>
-            <FieldTitle className="text-2xl">Meldepflicht</FieldTitle>
-            <FieldDescription>Gemäß <Link className="inline-flex flex-nowrap w-fit gap-1 items-center" to="https://www.gesetze-im-internet.de/bmg/__29.html" target="_blank">§ 29 und § 30 BMG <ExternalLink size="16px" /></Link> benötigen wir von Gästen mit nicht-deutscher Staatsbürgerschaft weitere Informationen. Alternativ können Sie diese Informationen auch bei der Ankunft ausfüllen.</FieldDescription>
+          <FieldLegend className="w-full">
+            <FieldTitle className="text-2xl">{t('public.GuestInfo.ReportingRequirement')}</FieldTitle>
+            <FieldDescription>
+            <Accordion type="single" collapsible>
+              <AccordionItem className="w-full" value="item-1">
+                <AccordionTrigger>{t('public.GuestInfo.WhyReportingRequirement')}</AccordionTrigger>
+                <AccordionContent>
+                  <Trans
+                    i18nKey="public.GuestInfo.ReportingRequirementDescription"
+                    components={{
+                      1: <Link className="inline-flex flex-nowrap w-fit gap-1 items-center"
+                        to="https://www.gesetze-im-internet.de/bmg/__29.html"
+                        target="_blank"
+                      ></Link>,
+                      2: <ExternalLink size="16px" />
+                    }}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            </FieldDescription>
           </FieldLegend>
-          <FieldGroup className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field orientation="horizontal" className="col-span-1 sm:col-span-2">
               <Controller
                 control={control}
@@ -129,12 +152,12 @@ export const GuestInformation: FunctionComponent = () => {
                 )}
               />
               <FieldLabel htmlFor="fillAtCheckIn">
-                Meldepflichtige Daten bei Ankunft ausfüllen
+                {t('public.Forms.Labels.FillAtCheckIn')}
               </FieldLabel>
             </Field>
             {!skipMeldepflicht &&
               <>
-                <MeldepflichtFields prefix="meldepflicht.mainGuest" form={form}/>
+                <ReportingRequirementFields prefix="meldepflicht.mainGuest" form={form}/>
               </>
             }
           </FieldGroup>
@@ -144,10 +167,10 @@ export const GuestInformation: FunctionComponent = () => {
             <Separator />
             <FieldSet className="mt-8">
               <FieldLegend>
-                <FieldTitle className="text-2xl">Gast {index + 2}</FieldTitle>
+                <FieldTitle className="text-lg">{t('public.GuestInfo.Guest')} {index + 2}</FieldTitle>
               </FieldLegend>
-            <FieldGroup className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <MeldepflichtFields
+            <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ReportingRequirementFields
                 prefix={`meldepflicht.additionalGuests.${index}`}
                 form={form}
                 showFamilyCheckbox={mainGuestCitizenship !== 'de'}
@@ -158,7 +181,7 @@ export const GuestInformation: FunctionComponent = () => {
         ))}
         <div className="my-4 flex justify-end">
           <Button type="submit">
-            Überprüfen
+            {t('public.Buttons.ToOverview')}
           </Button>
         </div>
       </form>

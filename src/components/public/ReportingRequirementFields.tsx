@@ -7,8 +7,10 @@ import {DatePickerBirthdate} from "@/components/ui/date-picker-birthdate";
 import { Input } from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import type {BookingForm} from "@/assets/guestTypes";
+import {useTranslation} from "react-i18next";
+import {getErrorMessage} from "@/utils/guards/translateError";
 
-interface MeldepflichtFieldsProps {
+interface ReportingRequirementFieldsProps {
   prefix:  "meldepflicht.mainGuest" | `meldepflicht.additionalGuests.${number}`,
   form: UseFormReturn<BookingForm>
   showFamilyCheckbox?: boolean
@@ -34,21 +36,12 @@ interface MeldepflichtFieldsProps {
  * @param showFamilyCheckbox - Decides whether to render the familyMemberCheckbox for additional guests
  *
  */
-export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({ prefix, form, showFamilyCheckbox = true }: MeldepflichtFieldsProps) => {
+export const ReportingRequirementFields: FunctionComponent<ReportingRequirementFieldsProps> = ({ prefix, form, showFamilyCheckbox = true }: ReportingRequirementFieldsProps) => {
+  const { t, i18n } = useTranslation();
+
   const {control, register, formState: {errors}} = form;
 
-  const getErrorMessage = (fieldPath: string): string | undefined => {
-    const pathParts = fieldPath.split('.');
-    let current: any = errors;
-
-    for (const part of pathParts) {
-      current = current?.[part];
-    }
-
-    return current?.message;
-  };
-
-  const nationalities = getNationalities("de");
+  const nationalities = getNationalities(i18n.language);
 
   const citizenship = useWatch({
     control,
@@ -106,7 +99,7 @@ export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({
   // Render birthdate field
   const birthdate = () => (
     <Field>
-      <FieldLabel>Geburtsdatum</FieldLabel>
+      <FieldLabel>{t('public.Forms.Labels.BirthDate')}*</FieldLabel>
       <Controller
         control={control}
         name={`${prefix}.birthDate`}
@@ -118,7 +111,7 @@ export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({
           />
         )}
       />
-      <FieldError>{getErrorMessage(`${prefix}.birthDate`)}</FieldError>
+      <FieldError>{getErrorMessage(`${prefix}.birthDate`, errors)}</FieldError>
     </Field>
   );
 
@@ -126,14 +119,14 @@ export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({
   const nameFields = () => !isMainGuest ? (
     <>
       <Field>
-        <FieldLabel htmlFor={`${prefix}.firstName`}>Vorname</FieldLabel>
+        <FieldLabel htmlFor={`${prefix}.firstName`}>{t('public.Forms.Labels.FirstName')}*</FieldLabel>
         <Input id={`${prefix}.firstName`} {...register(`${prefix}.firstName`)} />
-        <FieldError>{getErrorMessage(`${prefix}.firstName`)}</FieldError>
+        <FieldError>{getErrorMessage(`${prefix}.firstName`, errors)}</FieldError>
       </Field>
       <Field>
-        <FieldLabel htmlFor={`${prefix}.lastName`}>Nachname</FieldLabel>
+        <FieldLabel htmlFor={`${prefix}.lastName`}>{t('public.Forms.Labels.LastName')}*</FieldLabel>
         <Input id={`${prefix}.lastName`} {...register(`${prefix}.lastName`)} />
-        <FieldError>{getErrorMessage(`${prefix}.lastName`)}</FieldError>
+        <FieldError>{getErrorMessage(`${prefix}.lastName`, errors)}</FieldError>
       </Field>
     </>
   ) : null;
@@ -142,24 +135,24 @@ export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({
   const addressFields = () => (
     <>
       <Field className="col-span-1 sm:col-span-2">
-        <FieldLabel htmlFor={`${prefix}.address.street`}>Addresse</FieldLabel>
+        <FieldLabel htmlFor={`${prefix}.address.street`}>{t('public.Forms.Labels.Address')}*</FieldLabel>
         <Input id={`${prefix}.address.street`} {...register(`${prefix}.address.street`)} />
-        <FieldError>{getErrorMessage(`${prefix}.address.street`)}</FieldError>
+        <FieldError>{getErrorMessage(`${prefix}.address.street`, errors)}</FieldError>
       </Field>
       <Field>
-        <FieldLabel htmlFor={`${prefix}.address.postalCode`}>PLZ</FieldLabel>
+        <FieldLabel htmlFor={`${prefix}.address.postalCode`}>{t('public.Forms.Labels.PostalCode')}*</FieldLabel>
         <Input id={`${prefix}.address.postalCode`} {...register(`${prefix}.address.postalCode`)} />
-        <FieldError>{getErrorMessage(`${prefix}.address.postalCode`)}</FieldError>
+        <FieldError>{getErrorMessage(`${prefix}.address.postalCode`, errors)}</FieldError>
       </Field>
       <Field>
-        <FieldLabel htmlFor={`${prefix}.address.city`}>Stadt</FieldLabel>
+        <FieldLabel htmlFor={`${prefix}.address.city`}>{t('public.Forms.Labels.City')}*</FieldLabel>
         <Input id={`${prefix}.address.city`} {...register(`${prefix}.address.city`)} />
-        <FieldError>{getErrorMessage(`${prefix}.address.city`)}</FieldError>
+        <FieldError>{getErrorMessage(`${prefix}.address.city`, errors)}</FieldError>
       </Field>
       <Field>
-        <FieldLabel htmlFor={`${prefix}.address.country`}>Land</FieldLabel>
+        <FieldLabel htmlFor={`${prefix}.address.country`}>{t('public.Forms.Labels.Country')}*</FieldLabel>
         <Input id={`${prefix}.address.country`} {...register(`${prefix}.address.country`)} />
-        <FieldError>{getErrorMessage(`${prefix}.address.country`)}</FieldError>
+        <FieldError>{getErrorMessage(`${prefix}.address.country`, errors)}</FieldError>
       </Field>
     </>
   );
@@ -180,9 +173,9 @@ export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({
         )}
       />
       <FieldLabel htmlFor={`${prefix}.familyMember`}>
-        Mitreisende Person ist ein*e Ehegatt*in, Lebenspartner*in oder ein minderjähriges Kind
+        {t('public.Forms.Labels.IsFamilyMember')}
       </FieldLabel>
-      <FieldError>{getErrorMessage(`${prefix}.familyMember`)}</FieldError>
+      <FieldError>{getErrorMessage(`${prefix}.familyMember`, errors)}</FieldError>
     </Field>
   ) : <span id="no-family-member-checkbox"></span>;
 
@@ -201,23 +194,23 @@ export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({
         )}
       />
       <FieldLabel htmlFor="meldepflicht.allGuestsAreFamily">
-        Mitreisenden sind ausschließlich Ehegatt*in, Lebenspartner*in oder minderjährige Kinder
+        {t('public.Forms.Labels.AllAreFamilyMembers')}
       </FieldLabel>
-      <FieldError>{getErrorMessage("meldepflicht.allGuestsAreFamily")}</FieldError>
+      <FieldError>{getErrorMessage("meldepflicht.allGuestsAreFamily", errors)}</FieldError>
     </Field>
   );
 
   return (
     <>
       <Field>
-        <FieldLabel>Staatsbürgerschaft</FieldLabel>
+        <FieldLabel>{t('public.Forms.Labels.Citizenship')}</FieldLabel>
         <Controller
           control={control}
           name={`${prefix}.citizenship`}
           render={({ field }) => (
             <Select value={field.value || ""} onValueChange={field.onChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Auswählen" />
+                <SelectValue placeholder={t('public.Forms.Placeholders.Select')} />
               </SelectTrigger>
               <SelectContent>
                 {nationalities.map((n) => (
@@ -229,7 +222,7 @@ export const MeldepflichtFields: FunctionComponent<MeldepflichtFieldsProps> = ({
             </Select>
           )}
         />
-        <FieldError>{getErrorMessage(`${prefix}.citizenship`)}</FieldError>
+        <FieldError>{getErrorMessage(`${prefix}.citizenship`, errors)}</FieldError>
       </Field>
 
       {isForeign && (
