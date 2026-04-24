@@ -40,7 +40,8 @@ const getInitialState = () => {
           checkOut: new Date(parsedData.checkOut),
           requestedRooms: parsedData.requestedRooms,
           selectedRooms: {},
-          bookingFormValues: getInitialBookingFormValues(getAdditionalGuestCount(parsedData.requestedRooms)), //TODO: Read booking form values from session storage
+          guestFormValues: getInitialBookingFormValues(getAdditionalGuestCount(parsedData.requestedRooms)), //TODO: Read booking form values from session storage
+          guestFormIsValid: false,
         } satisfies Extract<NewBookingState, { step: "selection" }>;
       }
     }

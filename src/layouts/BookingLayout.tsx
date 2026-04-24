@@ -13,7 +13,7 @@ import {MenuDrawer} from "@/components/public/MenuDrawer";
 import {MENU_ITEMS} from "@/assets/consts";
 import {Button} from "@/components/ui/button";
 import {useTranslation} from "react-i18next";
-import {BookingBreadcrumbSteps} from "@/components/public/BookingBreadcrumbSteps";
+import {BookingSteps} from "@/components/public/BookingSteps";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {useIsMobile} from "@/hooks/use-mobile";
 
@@ -40,7 +40,7 @@ export const BookingLayout: FunctionComponent = () => {
       <BookingSidebar/>
       <SidebarInset>
         <div className="min-h-dvh">
-          <header className="h-16 sticky top-0 z-50 flex justify-between items-center gap-3 pl-2 bg-background border-b-[1px] border-sidebar-border">
+          <header className="h-16 sticky top-0 z-50 flex justify-between items-center gap-3 pl-2 bg-background border-b border-sidebar-border">
             <menu className="flex gap-3 items-center">
               <li className="lg:hidden block">
                 <MenuDrawer items={MENU_ITEMS} isTransparent={false} />
@@ -67,7 +67,7 @@ export const BookingLayout: FunctionComponent = () => {
               </Tooltip>
             </div>
           </header>
-          <BookingBreadcrumbSteps />
+          <BookingSteps />
           <Outlet />
         </div>
         <div className="mx-4">

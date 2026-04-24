@@ -7,7 +7,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {useNewBooking} from "@/contexts/NewBookingContext";
-import {useNavigate} from "react-router";
 import {ChevronRight, Users} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {BookingSelectionSidebarGroup} from "@/components/public/BookingSelectionSidebarGroup";
@@ -16,14 +15,19 @@ import {BookingRequestDialog} from "@/components/public/BookingRequestDialog";
 import {useRemoveRoomSelection} from "@/hooks/useRemoveRoomSelection";
 
 export const BookingSidebar: FunctionComponent = () => {
-  const { state } = useNewBooking();
+  const { state, dispatch } = useNewBooking();
   const [openBookingDialog, setOpenBookingDialog] = useState(false);
 
   const { mutate: removeRoomSelection } = useRemoveRoomSelection();
-  const navigate = useNavigate();
 
   if (state.step === "request") {
     return;
+  }
+
+  const handleCancelBooking = () => {
+    dispatch({
+      type: "RESET_BOOKING",
+    })
   }
 
   return (
@@ -91,9 +95,8 @@ export const BookingSidebar: FunctionComponent = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Button size="lg" className="w-full" disabled={Object.keys(state.selectedRooms).length !== state.requestedRooms.length} onClick={() => navigate("/new-booking/guests")}>
-              Nächster Schritt
-              <ChevronRight />
+            <Button size="lg" variant="destructive-outline" className="w-full" onClick={handleCancelBooking}>
+              Buchung Abbrechen
             </Button>
           </SidebarMenuItem>
         </SidebarMenu>

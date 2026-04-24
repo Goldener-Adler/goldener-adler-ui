@@ -34,7 +34,8 @@ export function bookingReducer(
         sessionId: action.sessionId,
         requestedRooms: action.rooms,
         selectedRooms: [],
-        bookingFormValues: getInitialBookingFormValues(additionalGuestCount)
+        guestFormValues: getInitialBookingFormValues(additionalGuestCount),
+        guestFormIsValid: false
       };
     }
 
@@ -64,7 +65,8 @@ export function bookingReducer(
       if (state.step === 'request') return state;
       return {
         ...state,
-        bookingFormValues: action.bookingFormValues
+        guestFormValues: action.guestFormValues,
+        guestFormIsValid: action.isValid
       }
     }
 

@@ -13,30 +13,31 @@ import {
   FieldTitle
 } from "@/components/ui/field";
 import {Checkbox} from "@/components/ui/checkbox";
-import {Button} from "@/components/ui/button";
 import {useNewBooking} from "@/contexts/NewBookingContext";
 import {ReportingRequirementFields} from "@/components/public/ReportingRequirementFields";
 import {ContactFields} from "@/components/public/ContactFields";
 import {ExternalLink} from "lucide-react";
-import {Link} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {Separator} from "@/components/ui/separator";
 import {Trans, useTranslation} from "react-i18next";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {DEFAULT_INPUT_DEBOUNCE_MS} from "@/assets/consts";
+import {Button} from "@/components/ui/button";
 
 export const GuestInformation: FunctionComponent = () => {
   const { t } = useTranslation();
   const { state, dispatch } = useNewBooking();
+  const navigate = useNavigate();
 
   const totalGuests = state.requestedRooms.reduce((sum, room) => sum + room.people, 0);
   const additionalGuestCount = Math.max(0, totalGuests - 1); // Exclude main guest
 
   const form = useForm({
     resolver: zodResolver(bookingSchema),
-    defaultValues: state.step !== "request" ? state.bookingFormValues : getInitialBookingFormValues(additionalGuestCount),
+    defaultValues: state.step !== "request" ? state.guestFormValues : getInitialBookingFormValues(additionalGuestCount),
   });
 
-  const { control, watch } = form;
+  const { control, watch, formState: {isValid} } = form;
 
   const { fields } = useFieldArray({
     control,
@@ -54,7 +55,8 @@ export const GuestInformation: FunctionComponent = () => {
       timeoutRef.current = setTimeout(() => {
         dispatch({
           type: "UPDATE_BOOKING_FORM_VALUES",
-          bookingFormValues: values as BookingForm,
+          guestFormValues: values as BookingForm,
+          isValid: isValid
         });
       }, DEFAULT_INPUT_DEBOUNCE_MS);
     });
@@ -65,7 +67,7 @@ export const GuestInformation: FunctionComponent = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [watch]);
+  }, [watch, isValid]);
 
   const differentGuest = watch("differentGuest");
 
@@ -75,7 +77,7 @@ export const GuestInformation: FunctionComponent = () => {
 
   useEffect(() => {
     if(skipMeldepflicht) {
-      form.setValue('meldepflicht', null);
+      form.setValue('meldepflicht', undefined);
     }
   }, [skipMeldepflicht, differentGuest]);
 
@@ -86,12 +88,20 @@ export const GuestInformation: FunctionComponent = () => {
   }, [differentGuest]);
 
   const onSubmit = (data: BookingForm) => {
-    console.log("submitted", data);
+    dispatch({
+      type: "UPDATE_BOOKING_FORM_VALUES",
+      guestFormValues: data,
+      isValid: isValid
+    });
+    if (isValid) {
+      console.log("submitted", data);
+      navigate('/new-booking/check-out')
+    }
   }
 
   return (
     <Page>
-      <form id="booking-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 px-5 my-2 mx-auto max-w-3xl">
+      <form id="guest-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 px-5 mt-2 mb-24 mx-auto max-w-3xl">
         <FieldSet>
           <FieldLegend>
             <FieldTitle className="text-2xl">{t('public.GuestInfo.Contact')}</FieldTitle>
@@ -164,7 +174,7 @@ export const GuestInformation: FunctionComponent = () => {
             </Field>
             {!skipMeldepflicht &&
               <>
-                <ReportingRequirementFields prefix="meldepflicht.mainGuest" form={form}/>
+                <ReportingRequirementFields prefix="meldepflicht.mainGuest" form={form} showAllAreFamilyCheckbox={additionalGuestCount > 0}/>
               </>
             }
           </FieldGroup>
@@ -186,7 +196,8 @@ export const GuestInformation: FunctionComponent = () => {
             </FieldSet>
           </div>
         ))}
-        <div className="my-4 flex justify-end">
+        <Separator />
+        <div className="flex justify-end">
           <Button type="submit">
             {t('public.Buttons.ToOverview')}
           </Button>

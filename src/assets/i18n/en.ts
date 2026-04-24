@@ -89,6 +89,7 @@ const en = {
         RoomSelection: "Room Selection",
         AdditionalDetails: "Additional Details",
         ContactDetails: "Contact Details",
+        CheckOut: "Check Out",
       },
       Options: {
         NoSelection: 'No Selection',
@@ -315,6 +316,12 @@ const en = {
       Rooms: 'Rooms',
       Contact: 'Contact',
       Torgelow: 'Torgelow',
+    },
+    Toast: {
+      GuestFormInvalid: "Contact Data is incomplete"
+    },
+    Default: {
+      Title: "No Title"
     }
   },
   internal: {

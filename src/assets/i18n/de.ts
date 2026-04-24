@@ -89,6 +89,7 @@ const de = {
         RoomSelection: "Zimmerauswahl",
         AdditionalDetails: "Weitere Angaben",
         ContactDetails: "Kontaktangaben",
+        CheckOut: "Übersicht",
       },
       Options: {
         NoSelection: 'Keine Auswahl',
@@ -315,6 +316,12 @@ const de = {
       Rooms: 'Zimmer',
       Contact: 'Kontakt',
       Torgelow: 'Torgelow',
+    },
+    Toast: {
+      GuestFormInvalid: "Kontaktangaben unvollständig"
+    },
+    Default: {
+      Title: "No Title"
     }
   },
   internal: {

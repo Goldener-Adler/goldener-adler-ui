@@ -14,6 +14,7 @@ interface ReportingRequirementFieldsProps {
   prefix:  "meldepflicht.mainGuest" | `meldepflicht.additionalGuests.${number}`,
   form: UseFormReturn<BookingForm>
   showFamilyCheckbox?: boolean
+  showAllAreFamilyCheckbox?: boolean
 }
 
 /**
@@ -34,9 +35,9 @@ interface ReportingRequirementFieldsProps {
  * @param prefix - The schema prefix, either for the main guest or for any additional guest
  * @param form - The forwarded form object created with react-hook-form based on the BookingForm zod schema
  * @param showFamilyCheckbox - Decides whether to render the familyMemberCheckbox for additional guests
- *
+ * @param showAllAreFamilyCheckbox - Decides whether to render the allArefamilyCheckbox for the main guest
  */
-export const ReportingRequirementFields: FunctionComponent<ReportingRequirementFieldsProps> = ({ prefix, form, showFamilyCheckbox = true }: ReportingRequirementFieldsProps) => {
+export const ReportingRequirementFields: FunctionComponent<ReportingRequirementFieldsProps> = ({ prefix, form, showFamilyCheckbox = true, showAllAreFamilyCheckbox = false }: ReportingRequirementFieldsProps) => {
   const { t, i18n } = useTranslation();
 
   const {control, register, formState: {errors}} = form;
@@ -107,6 +108,7 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
           <DatePickerBirthdate
             id={`${prefix}.birthDate`}
             value={field.value}
+            placeholder={'public.Forms.Placeholders.Select'}
             onChange={field.onChange}
           />
         )}
@@ -180,7 +182,7 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
   ) : <span id="no-family-member-checkbox"></span>;
 
   // Render all are family checkbox (for main guest)
-  const allAreFamilyCheckbox = () => (
+  const allAreFamilyCheckbox = () => showAllAreFamilyCheckbox ? (
     <Field orientation="horizontal" className="col-span-1 sm:col-span-2">
       <Controller
         control={control}
@@ -198,7 +200,7 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
       </FieldLabel>
       <FieldError>{getErrorMessage("meldepflicht.allGuestsAreFamily", errors)}</FieldError>
     </Field>
-  );
+  ) : null;
 
   return (
     <>
