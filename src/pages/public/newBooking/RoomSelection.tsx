@@ -11,7 +11,7 @@ import {getTypedEntries} from "@/utils/getTypedEntries";
 import {useCheckAvailability} from "@/hooks/useCheckAvailability";
 import {useUpdateRoomSelection} from "@/hooks/useUpdateRoomSelection";
 
-export const BookingRoomSelection: FunctionComponent = () => {
+export const RoomSelection: FunctionComponent = () => {
   const { state } = useNewBooking();
   const { isLoading, data } = useCheckAvailability();
   const { mutate: updateRoomSelection } = useUpdateRoomSelection();
@@ -19,7 +19,7 @@ export const BookingRoomSelection: FunctionComponent = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeRoom, setActiveRoom] = useState<RoomTypeKey | null>(null);
 
-  if (state.step === 'request') {
+  if (state.status === 'uninitialized') {
     return;
   }
 

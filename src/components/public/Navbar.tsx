@@ -38,7 +38,7 @@ export const Navbar: FunctionComponent = () => {
   }, [location.pathname]);
   
   const getBookingButton = () => {
-    const hasBookingDetails = state.step !== "request";
+    const hasBookingDetails = state.status === "initialized";
     return (
       <Button
         onClick={() => {

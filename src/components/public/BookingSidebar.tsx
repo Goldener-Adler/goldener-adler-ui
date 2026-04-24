@@ -20,7 +20,7 @@ export const BookingSidebar: FunctionComponent = () => {
 
   const { mutate: removeRoomSelection } = useRemoveRoomSelection();
 
-  if (state.step === "request") {
+  if (state.status === "uninitialized") {
     return;
   }
 

@@ -34,7 +34,7 @@ const getInitialState = () => {
       const parsedData = JSON.parse(storedValue);
       if (isBookingSession(parsedData)) {
         return {
-          step: "selection",
+          status: "initialized",
           sessionId: parsedData.sessionId,
           checkIn: new Date(parsedData.checkIn),
           checkOut: new Date(parsedData.checkOut),
@@ -42,7 +42,7 @@ const getInitialState = () => {
           selectedRooms: {},
           guestFormValues: getInitialBookingFormValues(getAdditionalGuestCount(parsedData.requestedRooms)), //TODO: Read booking form values from session storage
           guestFormIsValid: false,
-        } satisfies Extract<NewBookingState, { step: "selection" }>;
+        } satisfies Extract<NewBookingState, { status: "initialized" }>;
       }
     }
     return initialState;

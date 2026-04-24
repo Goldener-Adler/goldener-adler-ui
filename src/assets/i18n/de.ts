@@ -88,7 +88,7 @@ const de = {
       Headings: {
         RoomSelection: "Zimmerauswahl",
         AdditionalDetails: "Weitere Angaben",
-        ContactDetails: "Kontaktangaben",
+        GuestDetails: "Gästeangaben",
         CheckOut: "Übersicht",
       },
       Options: {
@@ -304,7 +304,7 @@ const de = {
       Accept: "Alle Akzeptieren",
       Decline: "Alle Ablehnen",
       Essential: "Nur Notwendige",
-      ToOverview: "Zur Übersicht",
+      ToCheckOut: "Zur Übersicht",
     },
     CookieBanner: {
       Title: "Wir verwenden Cookies 🍪",

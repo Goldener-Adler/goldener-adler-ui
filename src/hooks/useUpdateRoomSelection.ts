@@ -18,7 +18,7 @@ export function useUpdateRoomSelection() {
     mutationFn: async (input: UpdateRoomSelectionInput) => {
       const { roomIndex, roomType } = input;
 
-      if (state.step === "request") {
+      if (state.status === "uninitialized") {
         throw new Error("Invalid state");
       }
 

@@ -200,7 +200,7 @@ export const Booking: FunctionComponent = () => {
                 </>
               )}
             />
-            <h3 className="col-span-2 text-xl font-semibold mt-8 mb-4">{t('public.Booking.Headings.ContactDetails')}</h3>
+            <h3 className="col-span-2 text-xl font-semibold mt-8 mb-4">{t('public.Booking.Headings.GuestDetails')}</h3>
             <FormField
               control={form.control}
               name="firstName"

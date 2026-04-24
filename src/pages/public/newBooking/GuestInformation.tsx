@@ -34,10 +34,10 @@ export const GuestInformation: FunctionComponent = () => {
 
   const form = useForm({
     resolver: zodResolver(bookingSchema),
-    defaultValues: state.step !== "request" ? state.guestFormValues : getInitialBookingFormValues(additionalGuestCount),
+    defaultValues: state.status !== "uninitialized" ? state.guestFormValues : getInitialBookingFormValues(additionalGuestCount),
   });
 
-  const { control, watch, formState: {isValid} } = form;
+  const { control, watch } = form;
 
   const { fields } = useFieldArray({
     control,
@@ -56,7 +56,7 @@ export const GuestInformation: FunctionComponent = () => {
         dispatch({
           type: "UPDATE_BOOKING_FORM_VALUES",
           guestFormValues: values as BookingForm,
-          isValid: isValid
+          isValid: form.formState.isValid
         });
       }, DEFAULT_INPUT_DEBOUNCE_MS);
     });
@@ -67,7 +67,7 @@ export const GuestInformation: FunctionComponent = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [watch, isValid]);
+  }, [watch, form.formState.isValid]);
 
   const differentGuest = watch("differentGuest");
 
@@ -91,12 +91,9 @@ export const GuestInformation: FunctionComponent = () => {
     dispatch({
       type: "UPDATE_BOOKING_FORM_VALUES",
       guestFormValues: data,
-      isValid: isValid
+      isValid: form.formState.isValid
     });
-    if (isValid) {
-      console.log("submitted", data);
-      navigate('/new-booking/check-out')
-    }
+    navigate('/new-booking/check-out');
   }
 
   return (
@@ -199,7 +196,7 @@ export const GuestInformation: FunctionComponent = () => {
         <Separator />
         <div className="flex justify-end">
           <Button type="submit">
-            {t('public.Buttons.ToOverview')}
+            {t('public.Buttons.ToCheckOut')}
           </Button>
         </div>
       </form>

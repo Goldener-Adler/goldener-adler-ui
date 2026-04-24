@@ -2,7 +2,7 @@ import type {Action, NewBookingState} from "@/assets/bookingTypes";
 import {getInitialBookingFormValues} from "@/assets/guestTypes";
 
 export const initialState: NewBookingState = {
-  step: "request",
+  status: "uninitialized",
   checkIn: undefined,
   checkOut: undefined,
   requestedRooms: [],
@@ -28,7 +28,7 @@ export function bookingReducer(
       const additionalGuestCount = Math.max(0, totalGuests - 1);
       return {
         ...state,
-        step: "selection",
+        status: "initialized",
         checkIn: action.checkIn,
         checkOut: action.checkOut,
         sessionId: action.sessionId,
@@ -40,7 +40,7 @@ export function bookingReducer(
     }
 
     case "ADD_OR_UPDATE_SELECTED_ROOM": {
-      if (state.step !== "selection") return state;
+      if (state.status === 'uninitialized') return state;
 
       let newSelectedRooms = {...state.selectedRooms};
       newSelectedRooms[action.index] = action.room;
@@ -52,7 +52,7 @@ export function bookingReducer(
     }
 
     case "REMOVE_SELECTED_ROOM": {
-      if (state.step === 'request') return state;
+      if (state.status === 'uninitialized') return state;
       const newSelectedRooms = {...state.selectedRooms};
       delete newSelectedRooms[action.index];
       return {
@@ -62,21 +62,12 @@ export function bookingReducer(
     }
 
     case "UPDATE_BOOKING_FORM_VALUES": {
-      if (state.step === 'request') return state;
+      if (state.status === 'uninitialized') return state;
       return {
         ...state,
         guestFormValues: action.guestFormValues,
         guestFormIsValid: action.isValid
       }
-    }
-
-    case "GO_TO_CHECKOUT": {
-      if (state.step === "request") return state;
-
-      return {
-        ...state,
-        step: "checkout",
-      };
     }
 
     case "RESET_BOOKING": {

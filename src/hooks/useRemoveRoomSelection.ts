@@ -9,7 +9,7 @@ export function useRemoveRoomSelection() {
   return useMutation({
     mutationFn: async (requestedRoomIndex: number) => {
 
-      if (state.step === "request") {
+      if (state.status === "uninitialized") {
         throw new Error("Invalid state");
       }
 

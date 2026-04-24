@@ -42,22 +42,13 @@ export type NewBookingState = {
   sessionId: string | null;
   } & (
   | {
-  step: "request";
+  status: "uninitialized";
   checkIn: Date | undefined;
   checkOut: Date | undefined;
   requestedRooms: RequestedRoom[];
 }
   | {
-  step: "selection";
-  checkIn: Date;
-  checkOut: Date;
-  requestedRooms: RequestedRoom[];
-  selectedRooms: Partial<Record<number, SelectedRoom>>;
-  guestFormValues: BookingForm;
-  guestFormIsValid: boolean;
-}
-  | {
-  step: "checkout";
+  status: "initialized";
   checkIn: Date;
   checkOut: Date;
   requestedRooms: RequestedRoom[];

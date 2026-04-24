@@ -14,11 +14,12 @@ import {DashboardLayout} from "@/layouts/DashboardLayout.tsx";
 import {Dashboard} from "@/pages/dashboard/Dashboard.tsx";
 import {Bookings} from "@/pages/dashboard/bookings/Bookings.tsx";
 import {BookingDetails} from "@/pages/dashboard/bookings/BookingDetails.tsx";
-import {BookingRoomSelection} from "@/pages/public/newBooking/BookingRoomSelection";
+import {RoomSelection} from "@/pages/public/newBooking/RoomSelection";
 import {BookingLayout} from "@/layouts/BookingLayout";
 import {NewBookingProvider} from "@/contexts/NewBookingContext";
 import {BookingGuard} from "@/layouts/BookingGuard";
 import {GuestInformation} from "@/pages/public/newBooking/GuestInformation";
+import {CheckOut} from "@/pages/public/newBooking/CheckOut";
 
 export const AppRoutes = () => {
   return (
@@ -50,9 +51,9 @@ export const AppRoutes = () => {
         }>
           <Route index element={<Navigate to="rooms" replace />} />
           <Route element={<BookingGuard/>}>
-            <Route path="rooms" element={<BookingRoomSelection/>}/>
+            <Route path="rooms" element={<RoomSelection/>}/>
             <Route path="guests" element={<GuestInformation/>}/>
-            <Route path="check-out"/>
+            <Route path="check-out" element={<CheckOut/>}/>
           </Route>
         </Route>
       </Route>

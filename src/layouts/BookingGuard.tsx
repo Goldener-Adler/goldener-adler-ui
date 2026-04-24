@@ -4,7 +4,7 @@ import {useNewBooking} from "@/contexts/NewBookingContext";
 export function BookingGuard() {
   const { state } = useNewBooking();
 
-  if (state.step === "request") {
+  if (state.status === "uninitialized") {
     return <Navigate to="/" replace />
   }
 

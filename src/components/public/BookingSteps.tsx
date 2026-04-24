@@ -24,7 +24,7 @@ const steps: Step[] = [
   },
   {
     path: "/new-booking/guests",
-    key: "public.Booking.Headings.ContactDetails",
+    key: "public.Booking.Headings.GuestDetails",
     onNext: "submit-form",
     formId: 'guest-form'
   },
@@ -46,7 +46,7 @@ export const BookingSteps: FunctionComponent = () => {
   const currentIndex = steps.findIndex((s) => s.path === location.pathname);
   const current = steps[currentIndex];
 
-  if (state.step === "request") return;
+  if (state.status === "uninitialized") return;
 
   const handlePrevButton = () => {
     const prev = steps[currentIndex - 1];
