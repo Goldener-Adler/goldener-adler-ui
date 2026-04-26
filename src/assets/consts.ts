@@ -1,4 +1,14 @@
-import type {AvailableRoomMap, BookingOption, MenuItem} from "@/assets/types.ts";
+import type {Amenity, AmenityKey, AvailableRoomMap, BookingOption, MenuItem} from "@/assets/types.ts";
+import {
+  PiBed, PiOven,
+  PiPhone,
+  PiPlus,
+  PiShower, PiSpeakerSimpleSlash,
+  PiTelevisionSimple,
+  PiToilet,
+  PiTowel,
+  PiWifiHigh
+} from "react-icons/pi";
 
 export const BOOKING_SESSION_STORAGE_KEY = 'bookingDetails';
 
@@ -83,33 +93,63 @@ export const BOOKING_OPTIONS: BookingOption[] = [
   },
 ] as const
 
+export const AMENITY_KEYS = [
+  "wifi", "tv", "phone", "sheets",
+  "towels", "bath", "shower", "windows", "kitchen", "additionalBed"
+] as const;
+
+export const AMENITIES: Record<AmenityKey, Omit<Amenity, 'id'>> = {
+  wifi:          { label: 'public.Rooms.Labels.WiFi',             icon: PiWifiHigh,           variant: "secondary" },
+  tv:            { label: 'public.Rooms.Labels.TV',               icon: PiTelevisionSimple,   variant: "secondary" },
+  phone:         { label: 'public.Rooms.Labels.Phone',            icon: PiPhone,              variant: "secondary" },
+  sheets:        { label: 'public.Rooms.Labels.Sheets',           icon: PiBed,                variant: "secondary" },
+  towels:        { label: 'public.Rooms.Labels.Towels',           icon: PiTowel,              variant: "secondary" },
+  bath:          { label: 'public.Rooms.Labels.Bath',             icon: PiToilet,             variant: "secondary" },
+  shower:        { label: 'public.Rooms.Labels.Shower',           icon: PiShower,             variant: "secondary" },
+  windows:       { label: 'public.Rooms.Labels.IsolatedWindows',  icon: PiSpeakerSimpleSlash, variant: "secondary" },
+  kitchen:       { label: 'public.Rooms.Labels.Kitchen',          icon: PiOven,               variant: "secondary" },
+  additionalBed: { label: 'public.Rooms.Labels.AdditionalBed',    icon: PiPlus,               variant: "default" },
+};
+
 export const EMPTY_AVAILABLE_ROOMS_MAP: AvailableRoomMap = {
   single: {
     capacity: 1,
     available: 0,
     price: 0,
-    extraBed: {
-      available: 0,
-      priceIncrease: 0
-    }
+    extraPrices: {
+      pet: undefined,
+      extraBed: undefined,
+      breakfast: undefined,
+      bikeParking: undefined,
+      motorbike: undefined
+    },
+    amenities: []
   },
   double: {
     capacity: 2,
     available: 0,
     price: 0,
-    extraBed: {
-      available: 0,
-      priceIncrease: 0
-    }
+    extraPrices: {
+      pet: undefined,
+      extraBed: undefined,
+      breakfast: undefined,
+      bikeParking: undefined,
+      motorbike: undefined
+    },
+    amenities: []
   },
   apartment: {
     capacity: 4,
     available: 0,
     price: 0,
-    extraBed: {
-      available: 0,
-      priceIncrease: 0
-    }
+    extraPrices: {
+      pet: undefined,
+      extraBed: undefined,
+      breakfast: undefined,
+      bikeParking: undefined,
+      motorbike: undefined
+    },
+    amenities: []
   }
 };
 

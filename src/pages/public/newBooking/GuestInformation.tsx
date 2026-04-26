@@ -32,16 +32,28 @@ export const GuestInformation: FunctionComponent = () => {
   const totalGuests = state.requestedRooms.reduce((sum, room) => sum + room.people, 0);
   const additionalGuestCount = Math.max(0, totalGuests - 1); // Exclude main guest
 
+  if (state.status === "uninitialized") return;
+
+  const getFormDefaults = () => {
+    const defaults = state.guestFormValues;
+
+    if (!defaults.reportingRequirement && additionalGuestCount > 0) {
+      defaults.reportingRequirement = getInitialBookingFormValues(additionalGuestCount).reportingRequirement;
+    }
+
+    return defaults;
+  };
+
   const form = useForm({
     resolver: zodResolver(bookingSchema),
-    defaultValues: state.status !== "uninitialized" ? state.guestFormValues : getInitialBookingFormValues(additionalGuestCount),
+    defaultValues: getFormDefaults(),
   });
 
   const { control, watch } = form;
 
   const { fields } = useFieldArray({
     control,
-    name: "meldepflicht.additionalGuests",
+    name: "reportingRequirement.additionalGuests",
   });
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -71,15 +83,15 @@ export const GuestInformation: FunctionComponent = () => {
 
   const differentGuest = watch("differentGuest");
 
-  const skipMeldepflicht = useWatch({control, name: 'fillAtCheckIn'});
+  const skipReportingRequirement = useWatch({control, name: 'fillAtCheckIn'});
 
-  const mainGuestCitizenship = useWatch({control, name: 'meldepflicht.mainGuest.citizenship'})
+  const mainGuestCitizenship = useWatch({control, name: 'reportingRequirement.mainGuest.citizenship'})
 
   useEffect(() => {
-    if(skipMeldepflicht) {
-      form.setValue('meldepflicht', undefined);
+    if(skipReportingRequirement) {
+      form.setValue('reportingRequirement', undefined);
     }
-  }, [skipMeldepflicht, differentGuest]);
+  }, [skipReportingRequirement, differentGuest]);
 
   useEffect(() => {
     if (!differentGuest) {
@@ -169,23 +181,23 @@ export const GuestInformation: FunctionComponent = () => {
                 {t('public.Forms.Labels.FillAtCheckIn')}
               </FieldLabel>
             </Field>
-            {!skipMeldepflicht &&
+            {!skipReportingRequirement &&
               <>
-                <ReportingRequirementFields prefix="meldepflicht.mainGuest" form={form} showAllAreFamilyCheckbox={additionalGuestCount > 0}/>
+                <ReportingRequirementFields prefix="reportingRequirement.mainGuest" form={form} showAllAreFamilyCheckbox={additionalGuestCount > 0}/>
               </>
             }
           </FieldGroup>
         </FieldSet>
-        {!skipMeldepflicht && fields.map((field, index) => (
+        {!skipReportingRequirement && fields.map((field, index) => (
           <div key={field.id}>
             <Separator />
             <FieldSet className="mt-8">
               <FieldLegend>
-                <FieldTitle className="text-lg">{t('public.GuestInfo.Guest')} {index + 2}</FieldTitle>
+                <FieldTitle className="text-lg">{t('public.GuestInfo.Guest_one')} {index + 2}</FieldTitle>
               </FieldLegend>
             <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <ReportingRequirementFields
-                prefix={`meldepflicht.additionalGuests.${index}`}
+                prefix={`reportingRequirement.additionalGuests.${index}`}
                 form={form}
                 showFamilyCheckbox={mainGuestCitizenship !== 'de'}
               />

@@ -13,7 +13,7 @@ export const contactInfoSchema = z.object({
   message: z.string().optional()
 });
 
-const meldepflichtMainGuestSchema = z.object({
+const reportingRequirementMainGuestSchema = z.object({
   citizenship: z
     .string()
     .optional()
@@ -69,7 +69,7 @@ const meldepflichtMainGuestSchema = z.object({
   }
 })
 
-const additionalGuestSchema = z.object({
+const reportingRequirementAdditionalGuestSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   citizenship: z
@@ -156,11 +156,11 @@ const additionalGuestSchema = z.object({
   }
 })
 
-const meldepflichtObjectSchema = z.object({
-  mainGuest: meldepflichtMainGuestSchema,
+const reportingRequirementObjectSchema = z.object({
+  mainGuest: reportingRequirementMainGuestSchema,
   allGuestsAreFamily: z.boolean().optional(),
   allGuestsSameCitizenship: z.boolean().optional(),
-  additionalGuests: z.array(additionalGuestSchema).optional()
+  additionalGuests: z.array(reportingRequirementAdditionalGuestSchema).optional()
 })
 
 export const bookingSchema = z.object({
@@ -168,7 +168,7 @@ export const bookingSchema = z.object({
   differentGuest: z.boolean(),
   mainGuestContact: contactInfoSchema.optional(),
   fillAtCheckIn: z.boolean(),
-  meldepflicht: meldepflichtObjectSchema.nullable().optional(),
+  reportingRequirement: reportingRequirementObjectSchema.nullable().optional(),
 }).superRefine((data, ctx) => {
   if (data.differentGuest) {
     if (!data.mainGuestContact) {
@@ -194,43 +194,44 @@ export const bookingSchema = z.object({
 }).superRefine((data, ctx) => {
   if (data.fillAtCheckIn) return
 
-  if (!data.meldepflicht) {
+  if (!data.reportingRequirement) {
     ctx.addIssue({
       code: "custom",
-      path: ["meldepflicht"],
+      path: ["reportingRequirement"],
       message: 'public.Forms.Errors.Required.ReportingRequirement' satisfies TranslationKey,
     })
     return
   }
 
-  if(data.meldepflicht.allGuestsAreFamily && data.meldepflicht.mainGuest.citizenship === "de") {
+  if(data.reportingRequirement.allGuestsAreFamily && data.reportingRequirement.mainGuest.citizenship === "de") {
     // should never happen
     ctx.addIssue({
       code: "custom",
-      path: ["meldepflicht"],
+      path: ["reportingRequirement"],
       message: 'german citizens do not require reporting required data',
     })
     return
   }
 
   const result = z.object({
-    mainGuest: meldepflichtMainGuestSchema,
+    mainGuest: reportingRequirementMainGuestSchema,
     allGuestsAreFamily: z.boolean().optional(),
     allGuestsSameCitizenship: z.boolean().optional(),
-    additionalGuestSchema: z.array(additionalGuestSchema).optional()
-  }).safeParse(data.meldepflicht)
+    additionalGuestSchema: z.array(reportingRequirementAdditionalGuestSchema).optional()
+  }).safeParse(data.reportingRequirement)
 
   if (!result.success) {
     result.error.issues.forEach((issue) => {
       ctx.addIssue({
         ...issue,
-        path: ["meldepflicht", ...issue.path],
+        path: ["reportingRequirement", ...issue.path],
       })
     })
   }
 })
 
 export type BookingForm = z.infer<typeof bookingSchema>;
+export type ReportingRequirement = NonNullable<BookingForm['reportingRequirement']>;
 
 export const getInitialBookingFormValues = (additionalGuestCount: number): BookingForm => {
   return {
@@ -243,7 +244,7 @@ export const getInitialBookingFormValues = (additionalGuestCount: number): Booki
     },
     differentGuest: false,
     fillAtCheckIn: false,
-    meldepflicht: {
+    reportingRequirement: {
       mainGuest: {
         citizenship: "",
       },

@@ -10,8 +10,10 @@ import type {RoomTypeKey} from "@/assets/types";
 import {getTypedEntries} from "@/utils/getTypedEntries";
 import {useCheckAvailability} from "@/hooks/useCheckAvailability";
 import {useUpdateRoomSelection} from "@/hooks/useUpdateRoomSelection";
+import {useTranslation} from "react-i18next";
 
 export const RoomSelection: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { state } = useNewBooking();
   const { isLoading, data } = useCheckAvailability();
   const { mutate: updateRoomSelection } = useUpdateRoomSelection();
@@ -30,11 +32,13 @@ export const RoomSelection: FunctionComponent = () => {
   };
 
   const onSaveRoom = (extras: RoomExtrasForm) => {
-    if (activeRoom !== null && activeIndex !== null) {
+    if (activeRoom !== null && activeIndex !== null && data) {
       updateRoomSelection({
         roomIndex: activeIndex,
         roomType: activeRoom,
         extras: extras,
+        extraPrices: data[activeRoom].extraPrices,
+        pricePerNight: data[activeRoom].price
       })
     }
     setIsDialogOpen(false);
@@ -45,7 +49,7 @@ export const RoomSelection: FunctionComponent = () => {
       <Tabs defaultValue="0">
         <TabsList variant="line" className="w-full px-4 overflow-y-hidden overflow-x-auto justify-start no-scrollbar">
           {state.requestedRooms.map((_, index) => (
-            <TabsTrigger key={`room-tab-trigger-${index + 1}`} className="flex-initial" value={`${index}`}>Zimmer {index + 1}</TabsTrigger>
+            <TabsTrigger key={`room-tab-trigger-${index + 1}`} className="flex-initial" value={`${index}`}>{t('public.Booking.Options.Rooms_one')} {index + 1}</TabsTrigger>
           ))}
         </TabsList>
         {!isLoading && data && state.requestedRooms.map((_, requestedRoomIndex) => (
@@ -66,7 +70,7 @@ export const RoomSelection: FunctionComponent = () => {
           </TabsContent>
         ))}
       </Tabs>
-        {activeRoom && activeIndex !== null && (
+        {data && activeRoom && activeIndex !== null && (
           <RoomExtrasDialog
             isOpen={isDialogOpen}
             type={activeRoom}
@@ -74,6 +78,7 @@ export const RoomSelection: FunctionComponent = () => {
               ? state.selectedRooms[activeIndex]?.extras
               : undefined
             }
+            prices={data[activeRoom].extraPrices}
             isSelected={state.selectedRooms[activeIndex]?.type === activeRoom}
             onClose={() => setIsDialogOpen(false)}
             onSubmit={onSaveRoom}

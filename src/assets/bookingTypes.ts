@@ -12,12 +12,27 @@ export const initialBookingRequestValues: NewBookingRequest = {
   requestedRooms: [{people: 1}]
 }
 
+export const EXTRA_KEYS = ["breakfast", "bikeParking", "motorbike", "pet", "extraBed"] as const;
+export type ExtraKey = typeof EXTRA_KEYS[number];
+
+export const extraPriceSchema = z.object({
+  amount: z.number(),
+  currency: z.string(),
+  per: z.enum(["night", "stay", "person", "nightAndPerson"]),
+});
+
+export const extraPricesSchema = z.record(z.enum(EXTRA_KEYS), extraPriceSchema.optional());
+
+export type ExtraPrice = z.infer<typeof extraPriceSchema>;
+export type ExtraPrices = z.infer<typeof extraPricesSchema>;
+
 export const roomExtrasSchema = z.object({
   breakfast: z.enum(["none", "default", "vegetarian", "vegan"]),
   bikeParking: z.boolean(),
   motorbike: z.boolean(),
   pet: z.boolean(),
-});
+  extraBed: z.boolean(),
+}) satisfies z.ZodType<Record<ExtraKey, string | boolean>>;
 
 export type RoomExtrasForm = z.infer<typeof roomExtrasSchema>;
 
@@ -36,6 +51,8 @@ export type SelectedRoom = {
   id: string;
   type: RoomTypeKey;
   extras: RoomExtrasForm;
+  extraPrices: ExtraPrices;
+  pricePerNight: number;
 };
 
 export type NewBookingState = {

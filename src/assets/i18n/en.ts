@@ -74,6 +74,27 @@ const en = {
         SingleAndDouble: "The rooms, approximately 21 m² in size, are decorated in bright colors and furnished in a modern, functional style.",
         Apartment: "We also offer a holiday apartment. It consists of one double room and one single room with a small hallway, plus a kitchen as well as a bathroom with a shower.",
         MinRentApartment: "The apartment can only be booked for a minimum of 5 nights."
+      },
+      Extras: {
+        Breakfast: {
+          Label: "Breakfast",
+          Values: {
+            None: "No Breakfast",
+            Default: "Standard",
+            Vegetarian: "Vegetarian",
+            Vegan: "Vegan",
+          }
+        },
+        BikeParking: {Label: "Bike Parking"},
+        Motorbike: {Label: "Motorbike"},
+        Pets: {Label: "Pets"},
+        ExtraBed: {Label: "Extra Bed"},
+        Per: {
+          Night: "per Night",
+          Guest: "per Guest",
+          Stay: "per Stay",
+          NightAndGuest: "per Night / per Guest",
+        }
       }
     },
     Contact: {
@@ -92,6 +113,7 @@ const en = {
         CheckOut: "Check Out",
       },
       Options: {
+        Description: "Enhance your stay with additional amenities.",
         NoSelection: 'No Selection',
         SingleBedroom: {
           "1": "1 Room",
@@ -125,7 +147,14 @@ const en = {
       WhyReportingRequirement: "Why do I have to fill this out?",
       ReportingRequirementDescription: "In accordance with <1>§ 29 and § 30 BMG<2/></1>, we require additional information from guests who are not German citizens. Alternatively, you may also provide this information upon arrival.",
       MainGuest: "Main Guest",
-      Guest: "Guest",
+      Guest_one: "Guest",
+      Guest_other: "Guests"
+    },
+    CheckOut: {
+      Title: "Overview",
+      PriceForNights: "Price for {{nights}} nights",
+      Selection: "Selection",
+      Total: "Total",
     },
     Imprint: {
       Title: "Imprint",
@@ -305,6 +334,10 @@ const en = {
       Decline: "Decline All",
       Essential: "Only Essential",
       ToCheckOut: "Check Out",
+      Save: "Save",
+      Add: "Add",
+      Select: "Select",
+      NotAvailable: "Not Available",
     },
     CookieBanner: {
       Title: "We use cookies 🍪",

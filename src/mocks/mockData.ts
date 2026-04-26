@@ -1,89 +1,6 @@
-import type {Amenity, AvailableRoomMap, Booking, BookingRoom, Room} from "@/assets/types.ts";
-import {
-  PiAlarm,
-  PiBed, PiOven,
-  PiPhone, PiPlus, PiShower, PiSpeakerSimpleSlash,
-  PiTelevisionSimple,
-  PiThermometer,
-  PiToilet,
-  PiTowel,
-  PiWifiHigh
-} from "react-icons/pi";
+import type {AvailableRoomMap, Booking, BookingRoom, Room} from "@/assets/types.ts";
 
-export const AMENITIES: Amenity[] = [
-  {
-    id: "wifi",
-    label: 'public.Rooms.Labels.WiFi',
-    icon: PiWifiHigh,
-    variant: "secondary"
-  },
-  {
-    id: "tv",
-    label: 'public.Rooms.Labels.TV',
-    icon: PiTelevisionSimple,
-    variant: "secondary"
-  },
-  {
-    id: "phone",
-    label: 'public.Rooms.Labels.Phone',
-    icon: PiPhone,
-    variant: "secondary"
-  },
-  {
-    id: "alarm",
-    label: 'public.Rooms.Labels.Alarm',
-    icon: PiAlarm,
-    variant: "secondary"
-  },
-  {
-    id: "heating",
-    label: 'public.Rooms.Labels.Heating',
-    icon: PiThermometer,
-    variant: "secondary"
-  },
-  {
-    id: "sheets",
-    label: 'public.Rooms.Labels.Sheets',
-    icon: PiBed,
-    variant: "secondary"
-  },
-  {
-    id: "towels",
-    label: 'public.Rooms.Labels.Towels',
-    icon: PiTowel,
-    variant: "secondary"
-  },
-  {
-    id: "bath",
-    label: 'public.Rooms.Labels.Bath',
-    icon: PiToilet,
-    variant: "secondary"
-  },
-  {
-    id: "shower",
-    label: 'public.Rooms.Labels.Shower',
-    icon: PiShower,
-    variant: "secondary"
-  },
-  {
-    id: "windows",
-    label: 'public.Rooms.Labels.IsolatedWindows',
-    icon: PiSpeakerSimpleSlash,
-    variant: "secondary"
-  },
-  {
-    id: "kitchen",
-    label: 'public.Rooms.Labels.Kitchen',
-    icon: PiOven,
-    variant: "secondary"
-  },
-  {
-    id: "additionalBed",
-    label: 'public.Rooms.Labels.AdditionalBed',
-    icon: PiPlus,
-    variant: "default"
-  },
-]
+import {AMENITY_KEYS} from "@/assets/consts";
 
 /*
  * Mocks simulating persistent data
@@ -371,27 +288,39 @@ export const MOCK_FULL_AVAILABLE_ROOM_MAP: AvailableRoomMap = {
     capacity: 1,
     available: 3,
     price: 40,
-    extraBed: {
-      available: 0,
-      priceIncrease: 0
-    }
+    extraPrices: {
+      breakfast: { amount: 5, currency: "EUR", per: "nightAndPerson" },
+      extraBed: { amount: 10, currency: "EUR", per: "night" },
+      bikeParking: undefined,
+      motorbike: undefined,
+      pet: undefined
+    },
+    amenities: [...AMENITY_KEYS.filter(amenity => amenity !== 'kitchen' && amenity !== 'additionalBed')]
   },
   double: {
     capacity: 2,
     available: 6,
     price: 55,
-    extraBed: {
-      available: 0,
-      priceIncrease: 0
-    }
+    extraPrices: {
+      breakfast: { amount: 5, currency: "EUR", per: "nightAndPerson" },
+      extraBed: { amount: 10, currency: "EUR", per: "night" },
+      bikeParking: undefined,
+      motorbike: undefined,
+      pet: undefined
+    },
+    amenities: [...AMENITY_KEYS.filter(amenity => amenity !== 'kitchen')]
   },
   apartment: {
     capacity: 4,
     available: 1,
     price: 60,
-    extraBed: {
-      available: 0,
-      priceIncrease: 0
-    }
+    extraPrices: {
+      breakfast: { amount: 15, currency: "EUR", per: "person" },
+      extraBed: { amount: 30, currency: "EUR", per: "night" },
+      bikeParking: undefined,
+      motorbike: undefined,
+      pet: undefined
+    },
+    amenities: [...AMENITY_KEYS],
   }
 };

@@ -11,7 +11,7 @@ import {Page} from "@/layouts/Page.tsx";
 
 import BikeLg from "/images/bike-lg.jpg?url";
 import BikeXs from "/images/bike-xs.jpg?url";
-import {AMENITIES} from "@/mocks/mockData";
+import {AMENITIES, AMENITY_KEYS} from "@/assets/consts";
 
 export const Rooms: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -53,12 +53,16 @@ export const Rooms: FunctionComponent = () => {
             </div>
             <h3 className="mt-4 text-md font-semibold">{t('public.Rooms.Headings.Amenities')}</h3>
             <div className="flex gap-2 mt-2 flex-wrap">
-              {AMENITIES.filter(amenity => amenity.id !== "kitchen").map((amenity) => (
-                <Badge key={amenity.id} variant={amenity.variant}>
-                  <amenity.icon />
-                  {t(amenity.label)}
-                </Badge>
-              ))}
+              {AMENITY_KEYS
+                .filter(amenityKey => amenityKey !== "kitchen")
+                .map((amenityKey) => {
+                  const amenity = AMENITIES[amenityKey];
+                  return (
+                    <Badge key={amenityKey} variant={amenity.variant}>
+                      <amenity.icon />
+                      {t(amenity.label)}
+                    </Badge>
+              )})}
             </div>
           </div>
           <img className="flex-1 min-w-0 w-full max-w-[100dvw] sm:max-w-xl" src="https://www.gasthof-goldener-adler.de/images/adler/zimmer.jpg" alt="" />
@@ -74,12 +78,15 @@ export const Rooms: FunctionComponent = () => {
             </div>
             <h3 className="mt-4 text-md font-semibold">{t('public.Rooms.Headings.Amenities')}</h3>
             <div className="flex gap-2 mt-2 flex-wrap lg:justify-end">
-              {AMENITIES.map((amenity) => (
-                <Badge key={amenity.id} variant={amenity.variant}>
-                  <amenity.icon />
-                  {t(amenity.label)}
-                </Badge>
-              ))}
+              {AMENITY_KEYS
+                .map((amenityKey) => {
+                  const amenity = AMENITIES[amenityKey];
+                  return (
+                    <Badge key={amenityKey} variant={amenity.variant}>
+                      <amenity.icon />
+                      {t(amenity.label)}
+                    </Badge>
+                  )})}
             </div>
           </div>
         </section>

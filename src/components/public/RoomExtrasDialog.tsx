@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog";
-import {Field, FieldDescription, FieldGroup, FieldLabel, FieldSet} from "@/components/ui/field";
+import {Field, FieldGroup, FieldLabel, FieldSet} from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -20,16 +20,18 @@ import {
 import {Controller, useForm} from "react-hook-form";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Button} from "@/components/ui/button";
-import {type RoomExtrasForm, roomExtrasSchema} from "@/assets/bookingTypes";
+import {type ExtraPrices, type RoomExtrasForm, roomExtrasSchema} from "@/assets/bookingTypes";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useTranslation} from "react-i18next";
-import {titleKeyMap} from "@/assets/i18n/i18nConsts";
+import {pricePerTranslationMap, titleKeyMap} from "@/assets/i18n/i18nConsts";
 import type {RoomTypeKey} from "@/assets/types";
+import {Separator} from "@/components/ui/separator";
 
 interface RoomExtrasDialogProps {
   isOpen: boolean;
   type: RoomTypeKey;
   existing?: RoomExtrasForm;
+  prices: ExtraPrices;
   isSelected: boolean;
   onClose: () => void;
   onSubmit: (data: RoomExtrasForm) => void;
@@ -37,8 +39,9 @@ interface RoomExtrasDialogProps {
 
 export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
   isOpen,
-  type, // use late for displaying text
+  type, // use later for displaying text
   existing,
+  prices, // to use for displaying price info
   isSelected,
   onClose,
   onSubmit,
@@ -52,6 +55,7 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
       bikeParking: false,
       motorbike: false,
       pet: false,
+      extraBed: false,
     },
   });
 
@@ -62,6 +66,7 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
         bikeParking: existing?.bikeParking ?? false,
         motorbike: existing?.motorbike ?? false,
         pet: existing?.pet ?? false,
+        extraBed: existing?.extraBed ?? false,
       });
     }
   }, [isOpen, existing]);
@@ -72,40 +77,69 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
         <DialogHeader>
           <DialogTitle>{t(titleKeyMap[type])}</DialogTitle>
           <DialogDescription>
-            Beschreibung
+            {t('public.Booking.Options.Description')}
           </DialogDescription>
         </DialogHeader>
+        <Separator/>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldSet>
-            <FieldDescription>
-              Verbessern Sie ihren Aufenthalt und fügen Sie zusätzliche Angaben für Ihr gewähltes Zimmer hinzu
-            </FieldDescription>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="breakfast">Frühstück</FieldLabel>
-              <Controller
-                name="breakfast"
-                control={form.control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full max-w-48">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Frühstücksoptionen</SelectLabel>
-                        <SelectItem value="none">Kein Frühstück</SelectItem>
-                        <SelectItem value="default">Frühstück</SelectItem>
-                        <SelectItem value="vegetarian">Frühstück (Vegetarisch)</SelectItem>
-                        <SelectItem value="vegan">Frühstück (Vegan)</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                )}
+                <FieldLabel htmlFor="breakfast">
+                  {`${t("public.Rooms.Extras.Breakfast.Label")} (${prices.breakfast?.amount.toFixed(2)} € ${prices.breakfast?.per && t(pricePerTranslationMap[prices.breakfast.per])})`}
+                </FieldLabel>
+                <Controller
+                  name="breakfast"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>{t("public.Rooms.Extras.Breakfast.Label")}</SelectLabel>
+                          <SelectItem value="none">
+                            {t("public.Rooms.Extras.Breakfast.Values.None")}
+                          </SelectItem>
+                          <SelectItem value="default">
+                            {t("public.Rooms.Extras.Breakfast.Values.Default")}
+                          </SelectItem>
+                          <SelectItem value="vegetarian">
+                            {t("public.Rooms.Extras.Breakfast.Values.Vegetarian")}
+                          </SelectItem>
+                          <SelectItem value="vegan">
+                            {t("public.Rooms.Extras.Breakfast.Values.Vegan")}
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
                 />
               </Field>
             </FieldGroup>
             <FieldGroup className="gap-3">
+              <Controller
+                name="extraBed"
+                control={form.control}
+                render={({ field }) => (
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="extraBed-checkbox"
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked === true);
+                      }}
+                    />
+                    <FieldLabel
+                      htmlFor="extraBed-checkbox"
+                      className="font-normal"
+                    >
+                      {t('public.Rooms.Extras.ExtraBed.Label')} ({prices.extraBed?.amount.toFixed(2)} € {prices.extraBed?.per && t(pricePerTranslationMap[prices.extraBed.per])})
+                    </FieldLabel>
+                  </Field>
+                )}
+              />
               <Controller
                 name="bikeParking"
                 control={form.control}
@@ -122,7 +156,7 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
                       htmlFor="bikeparking-checkbox"
                       className="font-normal"
                     >
-                      Fahrradstellplätze
+                      {t("public.Rooms.Extras.BikeParking.Label")}
                     </FieldLabel>
                   </Field>
                 )}
@@ -143,7 +177,7 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
                       htmlFor="motorbike-checkbox"
                       className="font-normal"
                     >
-                      Motorrad
+                      {t("public.Rooms.Extras.Motorbike.Label")}
                     </FieldLabel>
                   </Field>
                 )}
@@ -164,16 +198,16 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
                       htmlFor="pet-checkbox"
                       className="font-normal"
                     >
-                      Haustiere
+                      {t("public.Rooms.Extras.Pets.Label")}
                     </FieldLabel>
                   </Field>
                 )}
               />
             </FieldGroup>
           </FieldSet>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>Abbrechen</Button>
-            <Button type="submit">{isSelected ? 'Speichern' : 'Hinzufügen'}</Button>
+          <DialogFooter className="mt-4">
+            <Button type="button" variant="outline" onClick={onClose}>{t('public.Buttons.Cancel')}</Button>
+            <Button type="submit">{isSelected ? t('public.Buttons.Save') : t('public.Buttons.Add')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

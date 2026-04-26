@@ -1,8 +1,9 @@
 import {type TranslationKey} from "@/assets/i18n/i18n.ts";
-import {BOOKING_OPTIONS} from "@/assets/consts.ts";
+import {AMENITY_KEYS, BOOKING_OPTIONS} from "@/assets/consts.ts";
 import {createBookingSchema} from "@/utils/createBookingSchema.ts";
 import {z} from "zod";
 import type {IconType} from "react-icons";
+import type {ExtraPrices} from "@/assets/bookingTypes";
 
 export type BookingOption = {id: string, label: TranslationKey}
 
@@ -58,10 +59,8 @@ export type AvailableRoomDetails = {
   capacity: number;
   available: number;
   price: number;
-  extraBed?: {
-    available: number;
-    priceIncrease: number;
-  }
+  extraPrices: ExtraPrices;
+  amenities: AmenityKey[];
 }
 
 export type AvailableRoomMap = Record<RoomTypeKey, AvailableRoomDetails>
@@ -92,6 +91,8 @@ export type BookingRoom = {
   roomId: Room['id'],
   people: number,
 }
+
+export type AmenityKey = typeof AMENITY_KEYS[number];
 
 export type Amenity = {
   id: string,

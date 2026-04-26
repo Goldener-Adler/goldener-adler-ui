@@ -11,7 +11,7 @@ import {useTranslation} from "react-i18next";
 import {getErrorMessage} from "@/utils/guards/translateError";
 
 interface ReportingRequirementFieldsProps {
-  prefix:  "meldepflicht.mainGuest" | `meldepflicht.additionalGuests.${number}`,
+  prefix:  "reportingRequirement.mainGuest" | `reportingRequirement.additionalGuests.${number}`,
   form: UseFormReturn<BookingForm>
   showFamilyCheckbox?: boolean
   showAllAreFamilyCheckbox?: boolean
@@ -51,11 +51,11 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
 
   const allGuestsAreFamily = useWatch({
     control,
-    name: `meldepflicht.allGuestsAreFamily`,
+    name: `reportingRequirement.allGuestsAreFamily`,
   })
 
 
-  const isMainGuest = prefix === "meldepflicht.mainGuest";
+  const isMainGuest = prefix === "reportingRequirement.mainGuest";
 
   const isForeign = citizenship ? citizenship !== "de" : false;
 
@@ -186,19 +186,19 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
     <Field orientation="horizontal" className="col-span-1 sm:col-span-2">
       <Controller
         control={control}
-        name="meldepflicht.allGuestsAreFamily"
+        name="reportingRequirement.allGuestsAreFamily"
         render={({ field }) => (
           <Checkbox
-            id="meldepflicht.allGuestsAreFamily"
+            id="reportingRequirement.allGuestsAreFamily"
             checked={field.value}
             onCheckedChange={(checked) => field.onChange(!!checked)}
           />
         )}
       />
-      <FieldLabel htmlFor="meldepflicht.allGuestsAreFamily">
+      <FieldLabel htmlFor="reportingRequirement.allGuestsAreFamily">
         {t('public.Forms.Labels.AllAreFamilyMembers')}
       </FieldLabel>
-      <FieldError>{getErrorMessage("meldepflicht.allGuestsAreFamily", errors)}</FieldError>
+      <FieldError>{getErrorMessage("reportingRequirement.allGuestsAreFamily", errors)}</FieldError>
     </Field>
   ) : null;
 

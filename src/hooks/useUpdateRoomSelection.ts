@@ -2,12 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNewBooking } from "@/contexts/NewBookingContext";
 import { updateRoomHolds } from "@/api/bookingAPI";
 import type { RoomTypeKey } from "@/assets/types";
-import type { RoomExtrasForm } from "@/assets/bookingTypes";
+import type {ExtraPrices, RoomExtrasForm} from "@/assets/bookingTypes";
 
 type UpdateRoomSelectionInput = {
   roomIndex: number;
   roomType: RoomTypeKey;
   extras: RoomExtrasForm;
+  extraPrices: ExtraPrices;
+  pricePerNight: number;
 };
 
 export function useUpdateRoomSelection() {
@@ -16,7 +18,7 @@ export function useUpdateRoomSelection() {
 
   return useMutation({
     mutationFn: async (input: UpdateRoomSelectionInput) => {
-      const { roomIndex, roomType } = input;
+      const { roomIndex, roomType, extras, extraPrices } = input;
 
       if (state.status === "uninitialized") {
         throw new Error("Invalid state");
@@ -30,19 +32,23 @@ export function useUpdateRoomSelection() {
         roomIndex,
         state.checkIn,
         state.checkOut,
+        extras,
+        extraPrices,
         existingHoldId
       );
     },
 
     onSuccess: (holdingId, input) => {
-      const { roomIndex, roomType, extras } = input;
+      const { roomIndex, roomType, extras, extraPrices, pricePerNight } = input;
 
       dispatch({
         type: "ADD_OR_UPDATE_SELECTED_ROOM",
         room: {
           id: holdingId,
           type: roomType,
-          extras
+          extras,
+          extraPrices,
+          pricePerNight
         },
         index: roomIndex,
       });

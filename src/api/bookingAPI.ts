@@ -1,4 +1,4 @@
-import type {RequestedRoom} from "@/assets/bookingTypes";
+import type {ExtraPrices, RequestedRoom, RoomExtrasForm} from "@/assets/bookingTypes";
 import {API_ENDPOINT, EMPTY_AVAILABLE_ROOMS_MAP} from "@/assets/consts";
 import type {AvailableRoomMap, RoomTypeKey} from "@/assets/types";
 
@@ -24,13 +24,15 @@ async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms
   }
 }
 
-async function updateRoomHolds(sessionId: string, roomType: RoomTypeKey, requestedRoomIndex: number, from: Date, to: Date, holdingId?: string): Promise<string> {
+async function updateRoomHolds(sessionId: string, roomType: RoomTypeKey, requestedRoomIndex: number, from: Date, to: Date, extras: RoomExtrasForm, extraPrices: ExtraPrices, holdingId?: string): Promise<string> {
   const requestBody = {
     sessionId,
     roomType,
     requestedRoomIndex,
     from,
     to,
+    extras,
+    extraPrices,
     holdingId
   }
 

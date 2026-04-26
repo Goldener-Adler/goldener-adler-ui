@@ -48,3 +48,9 @@ export function getNationalities(locale: string = "de") {
     return collator.compare(nameA, nameB);
   });
 }
+
+export function getCountryDisplayName(countryCode: string, locale: string = "de"): string {
+  const regionNames = new Intl.DisplayNames([locale], { type: "region" });
+  const countryName = regionNames.of(countryCode) || countryCode;
+  return `${getFlagEmoji(countryCode)} ${countryName}`;
+}
