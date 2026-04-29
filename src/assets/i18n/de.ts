@@ -68,7 +68,8 @@ const de = {
         People: "Personen",
         Breakfast: "Frühstück",
         Price: "Preis",
-        PerNight: "pro Nacht"
+        PerNight: "pro Nacht",
+        ShowDetails: "Details Anzeigen",
       },
       Information: {
         SingleAndDouble: "Die ca. 21m² großen Zimmer sind in hellen Farben gehalten, sowie funktional und modern eingerichtet.",
@@ -333,11 +334,14 @@ const de = {
       Accept: "Alle Akzeptieren",
       Decline: "Alle Ablehnen",
       Essential: "Nur Notwendige",
+      ToGuestForm: "Gästeangaben",
       ToCheckOut: "Zur Übersicht",
       Save: "Speichern",
       Add: "Hinzufügen",
       Select: "Auswählen",
       NotAvailable: "Nicht Verfügbar",
+      AddRoom: "Zimmer hinzufügen",
+      CheckAvailability: "Verfügbarkeit Prüfen",
     },
     CookieBanner: {
       Title: "Wir verwenden Cookies 🍪",
@@ -351,7 +355,8 @@ const de = {
       Torgelow: 'Torgelow',
     },
     Toast: {
-      GuestFormInvalid: "Kontaktangaben unvollständig"
+      GuestFormInvalid: "Kontaktangaben unvollständig",
+      BookingSuccess: "Buchung Erfolgreich",
     },
     Default: {
       Title: "No Title"

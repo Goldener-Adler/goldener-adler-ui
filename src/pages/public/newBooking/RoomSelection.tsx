@@ -11,6 +11,8 @@ import {getTypedEntries} from "@/utils/getTypedEntries";
 import {useCheckAvailability} from "@/hooks/useCheckAvailability";
 import {useUpdateRoomSelection} from "@/hooks/useUpdateRoomSelection";
 import {useTranslation} from "react-i18next";
+import {Button} from "@/components/ui/button";
+import {useNavigate} from "react-router";
 
 export const RoomSelection: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -20,6 +22,7 @@ export const RoomSelection: FunctionComponent = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [activeRoom, setActiveRoom] = useState<RoomTypeKey | null>(null);
+  const navigate = useNavigate();
 
   if (state.status === 'uninitialized') {
     return;
@@ -55,7 +58,7 @@ export const RoomSelection: FunctionComponent = () => {
         {!isLoading && data && state.requestedRooms.map((_, requestedRoomIndex) => (
           <TabsContent key={`room-tab-content-${requestedRoomIndex + 1}`} value={`${requestedRoomIndex}`}>
             <SidebarPageContentSpacing>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
               {getTypedEntries(data).map(([type, room]) =>
                 <RoomCard
                   key={`${requestedRoomIndex}-${type}-${requestedRoomIndex}`}
@@ -65,6 +68,9 @@ export const RoomSelection: FunctionComponent = () => {
                   onButtonClick={() => openDialog(type, requestedRoomIndex)}
                 />
               )}
+              <Button className="mt-4 col-span-1 sm:col-span-2 xl:col-span-3 w-fit justify-self-end" onClick={() => navigate('/new-booking/guests')}>
+                {t('public.Buttons.ToGuestForm')}
+              </Button>
             </div>
             </SidebarPageContentSpacing>
           </TabsContent>

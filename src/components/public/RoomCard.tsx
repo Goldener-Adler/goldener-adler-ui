@@ -1,11 +1,13 @@
 import {type FunctionComponent} from "react";
-import {Card, CardAction, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {useTranslation} from "react-i18next";
 import {titleKeyMap} from "@/assets/i18n/i18nConsts";
 import type {AvailableRoomDetails, RoomTypeKey} from "@/assets/types";
 import type {TranslationKey} from "@/assets/i18n/i18n";
 import {Separator} from "@/components/ui/separator";
+import {AmenityBadge} from "@/components/public/AmenityBadge";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 
 interface RoomCardProps {
   type: RoomTypeKey,
@@ -34,28 +36,41 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({type, room, onButton
       : "default";
 
   return (
-      <Card className={`relative pt-0 ${isUnavailable && 'opacity-75'}`}>
+      <Card className={`relative p-0 gap-0 ${isUnavailable && 'opacity-75'}`}>
         <div className="absolute rounded-t-xl inset-0 z-30 aspect-video bg-black/35" />
         <img
           src="https://avatar.vercel.sh/shadcn1"
           alt="Event cover"
           className="rounded-t-xl relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
         />
-        <CardHeader>
+        <CardHeader className="px-4 pt-4">
           <CardTitle>{t(titleKeyMap[type])}</CardTitle>
-          <CardAction className="flex flex-col items-end">
-            <b className="text-xl leading-7">{`${room.price} €`}</b>
-            <small>{t('public.Rooms.Extras.Per.Night')}</small>
-          </CardAction>
         </CardHeader>
+        <CardContent className="flex-1 px-4 pb-4 pt-0">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="details">
+              <AccordionTrigger className="py-0 text-muted-foreground">
+                {t('public.Rooms.Labels.ShowDetails')}
+              </AccordionTrigger>
+              <AccordionContent className="flex pt-4 pb-0 flex-wrap gap-2">
+                {room.amenities.map(key => <AmenityBadge key={key} amenityKey={key} />)}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </CardContent>
         <Separator/>
-        <CardFooter className="flex-row gap-2 justify-end">
+        <CardFooter className="p-4 flex-row gap-2 justify-between">
           <Button
             disabled={isUnavailable}
             onClick={onButtonClick}
-            variant={buttonVariant}>
+            variant={buttonVariant}
+          >
             {t(buttonLabel)}
           </Button>
+          <div className="flex flex-col items-end">
+            <b className="text-xl leading-7">{`${room.price} €`}</b>
+            <small>{t('public.Rooms.Extras.Per.Night')}</small>
+          </div>
         </CardFooter>
       </Card>
   )

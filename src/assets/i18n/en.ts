@@ -68,7 +68,8 @@ const en = {
         People: "People",
         Breakfast: "Breakfast",
         Price: "Price",
-        PerNight: "per night"
+        PerNight: "per night",
+        ShowDetails: "Show Details",
       },
       Information: {
         SingleAndDouble: "The rooms, approximately 21 m² in size, are decorated in bright colors and furnished in a modern, functional style.",
@@ -333,11 +334,14 @@ const en = {
       Accept: "Accept All",
       Decline: "Decline All",
       Essential: "Only Essential",
+      ToGuestForm: "Guest Details",
       ToCheckOut: "Check Out",
       Save: "Save",
       Add: "Add",
       Select: "Select",
       NotAvailable: "Not Available",
+      AddRoom: "Add Room",
+      CheckAvailability: "Check Availability",
     },
     CookieBanner: {
       Title: "We use cookies 🍪",
@@ -351,7 +355,8 @@ const en = {
       Torgelow: 'Torgelow',
     },
     Toast: {
-      GuestFormInvalid: "Contact Data is incomplete"
+      GuestFormInvalid: "Contact Data is incomplete",
+      BookingSuccess: "Booking Success",
     },
     Default: {
       Title: "No Title"

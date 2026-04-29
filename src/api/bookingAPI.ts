@@ -1,6 +1,7 @@
 import type {ExtraPrices, RequestedRoom, RoomExtrasForm} from "@/assets/bookingTypes";
 import {API_ENDPOINT, EMPTY_AVAILABLE_ROOMS_MAP} from "@/assets/consts";
 import type {AvailableRoomMap, RoomTypeKey} from "@/assets/types";
+import type {BookingForm} from "@/assets/guestTypes";
 
 async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[], sessionId: string): Promise<AvailableRoomMap> {
   const requestBody = {
@@ -57,8 +58,33 @@ async function deleteRoomHold(holdId: string): Promise<void> {
   return await response.json();
 }
 
+async function confirmBooking(
+  sessionId: string, // used to find roomHolds (selected rooms)
+  checkIn: Date,
+  checkOut: Date,
+  requestedRooms: RequestedRoom[],
+  guestsData: BookingForm,
+): Promise<void> {
+  const requestBody = {
+    sessionId,
+    checkIn,
+    checkOut,
+    requestedRooms,
+    guestsData,
+  }
+
+  const response = await fetch(API_ENDPOINT + "/booking/confirm",
+    {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(requestBody)
+    });
+  return await response.json();
+}
+
 export {
   fetchAvailableRooms,
   updateRoomHolds,
-  deleteRoomHold
+  deleteRoomHold,
+  confirmBooking
 }

@@ -6,6 +6,7 @@ import type {DateRange} from "react-day-picker";
 import type {AvailableRoomMap, Booking, RoomTypeKey} from "@/assets/types.ts";
 import type {RequestedRoom} from "@/assets/bookingTypes";
 import {createSessionId} from "@/utils/createSessionId";
+import type {BookingForm} from "@/assets/guestTypes";
 
 export const handlers = [
   http.post(import.meta.env.VITE_BOOKING_ENDPOINT, () => {
@@ -67,6 +68,19 @@ export const handlers = [
   }),
   http.delete(API_ENDPOINT + "/room-holdings/:id", async () => {
     return HttpResponse.json({status: 200});
+  }),
+  http.post(API_ENDPOINT + "/booking/confirm", async ({ request }) => {
+    const body = await request.json() as {
+      sessionId: string,
+      checkIn: Date,
+      checkOut: Date,
+      requestedRooms: RequestedRoom[],
+      guestsData: BookingForm
+    }
+
+    console.log(body);
+
+    return HttpResponse.json({ status: 200 });
   }),
   // Bookings
   http.post(API_ENDPOINT + "/bookings", async ({ request }) => {

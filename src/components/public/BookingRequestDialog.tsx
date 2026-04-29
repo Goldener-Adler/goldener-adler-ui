@@ -22,6 +22,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useIsMobile} from "@/hooks/use-mobile";
 import {useLocation, useNavigate} from "react-router";
 import {useCreateBookingRequest} from "@/hooks/useCreateBookingRequest";
+import {useTranslation} from "react-i18next";
 
 interface BookingRequestDialogProps {
   open: boolean,
@@ -29,6 +30,7 @@ interface BookingRequestDialogProps {
 }
 
 export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> = ({ open, setOpen }) => {
+  const { t } = useTranslation();
   const {state} = useNewBooking();
   const createBookingRequest = useCreateBookingRequest();
   const navigate = useNavigate();
@@ -114,7 +116,7 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
                     <Bed />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>Zimmer {index + 1}</ItemTitle>
+                    <ItemTitle>{t('public.Booking.Options.Rooms_one')} {index + 1}</ItemTitle>
                   </ItemContent>
                   <ItemActions>
                     <InputGroup className="border-0 shadow-none w-24">
@@ -151,7 +153,7 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
                     <Plus />
                   </ItemMedia>
                   <ItemTitle>
-                    Zimmer Hinzufügen
+                    {t('public.Buttons.AddRoom')}
                   </ItemTitle>
                 </button>
               </Item>
@@ -159,7 +161,7 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
           </ScrollArea>
           <Separator />
           <DialogFooter className="px-4 pt-4">
-            <Button type="submit">Verfügbarkeit Prüfen</Button>
+            <Button type="submit">{t('public.Buttons.CheckAvailability')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
