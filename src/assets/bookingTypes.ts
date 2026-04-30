@@ -2,6 +2,7 @@ import {z} from "zod";
 import {createNewBookingSchema} from "@/utils/createNewBookingRequestSchema";
 import type {BookingForm} from "@/assets/guestTypes";
 import type {Extra, MultilingualString, SelectedExtraSnapshot} from "@/assets/types";
+import type {DeepPartial} from "react-hook-form";
 
 export const newBookingRequestSchema = createNewBookingSchema();
 
@@ -34,11 +35,13 @@ export type RequestedRoom = {
   people: number,
 }
 
+// What should be stored in session storage
 export type BookingSession = {
   sessionId: string;
   checkIn: Date;
   checkOut: Date;
   requestedRooms: RequestedRoom[];
+  guestFormValues: DeepPartial<BookingForm>;
 }
 
 export type RoomHolding = {
@@ -59,17 +62,27 @@ export type NewBookingState = {
   requestedRooms: RequestedRoom[];
 }
   | {
+  status: "rehydrating";
+  checkIn: Date;
+  checkOut: Date;
+  requestedRooms: RequestedRoom[];
+  guestFormValues: DeepPartial<BookingForm>;
+  guestFormIsValid: boolean;
+}
+  | {
   status: "initialized";
   checkIn: Date;
   checkOut: Date;
   requestedRooms: RequestedRoom[];
   roomHoldings: Partial<Record<number, RoomHolding>>;
-  guestFormValues: BookingForm;
+  guestFormValues: DeepPartial<BookingForm>;
   guestFormIsValid: boolean;
 });
 
 export type Action =
   | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, rooms: RequestedRoom[], sessionId: string }
+  | { type: "SET_REHYDRATING"; checkIn: Date, checkOut: Date, rooms: RequestedRoom[], sessionId: string /* guestFormValues, isValid*/ }
+  | { type: "REHYDRATE_ROOM_HOLDINGS"; roomHoldings: Partial<Record<number, RoomHolding>> }
   | { type: "ADD_OR_UPDATE_ROOM_HOLDINGS"; room: RoomHolding, index: number }
   | { type: "REMOVE_ROOM_HOLDING"; index: number }
   | { type: "GO_TO_GUESTS" }

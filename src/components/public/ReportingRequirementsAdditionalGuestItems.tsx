@@ -6,6 +6,7 @@ import {getCountryDisplayName} from "@/utils/getNationalities";
 import { toDateOnly } from "@/utils/formatDate";
 import {Check} from "lucide-react";
 import {useTranslation} from "react-i18next";
+import {EMPTY_STRING} from "@/assets/consts";
 
 interface ReportingRequirementsAdditionalGuestItems {
   values: NonNullable<ReportingRequirement['additionalGuests']>[number],
@@ -20,18 +21,22 @@ export const ReportingRequirementsAdditionalGuestItems: FunctionComponent<Report
     <AccordionItem value={`additionalGuest-${index}`}>
     <AccordionTrigger>{`${t('public.GuestInfo.Guest_one')} ${index + 1}`}</AccordionTrigger>
     <AccordionContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <Item className="p-0">
-        <ItemContent>
-          <ItemTitle>{t('public.Forms.Labels.FirstName')}</ItemTitle>
-          <ItemDescription>{values.firstName}</ItemDescription>
-        </ItemContent>
-      </Item>
-      <Item className="p-0">
-        <ItemContent>
-          <ItemTitle>{t('public.Forms.Labels.LastName')}</ItemTitle>
-          <ItemDescription>{values.lastName}</ItemDescription>
-        </ItemContent>
-      </Item>
+      {values.firstName && values.firstName !== EMPTY_STRING && (
+        <Item className="p-0">
+          <ItemContent>
+            <ItemTitle>{t('public.Forms.Labels.FirstName')}</ItemTitle>
+            <ItemDescription>{values.firstName}</ItemDescription>
+          </ItemContent>
+        </Item>
+      )}
+      {values.lastName && values.lastName !== EMPTY_STRING && (
+        <Item className="p-0">
+          <ItemContent>
+            <ItemTitle>{t('public.Forms.Labels.LastName')}</ItemTitle>
+            <ItemDescription>{values.lastName}</ItemDescription>
+          </ItemContent>
+        </Item>
+      )}
       <Item className="p-0">
         <ItemContent>
           <ItemTitle>{t('public.Forms.Labels.Citizenship')}</ItemTitle>

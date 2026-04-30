@@ -125,4 +125,4 @@ export const ICON_MAP: Record<Icon, IconType> = {
   AdditionalBed: PiPlus,
 }
 
-export const SESSION_STORAGE_KEY = "session";
+export const NEW_BOOKING_SESSION_STORAGE_KEY = "session";

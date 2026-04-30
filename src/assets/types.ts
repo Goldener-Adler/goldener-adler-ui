@@ -55,6 +55,8 @@ export type BookingFormValues = z.infer<typeof bookingformSchema>;
  * Current Values
  */
 
+export type CookieConsent = "all" | "essential" | "none";
+
 export type MenuItem = {
   label: TranslationKey,
   path: string,

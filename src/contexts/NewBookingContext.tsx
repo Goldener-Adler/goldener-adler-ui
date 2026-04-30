@@ -6,10 +6,7 @@ import {
 
 import { bookingReducer, initialState } from "@/reducers/bookingReducer";
 import type {NewBookingState, Action} from "@/assets/bookingTypes";
-import {SESSION_STORAGE_KEY} from "@/assets/consts";
-import {isBookingSession} from "@/utils/guards/isBookingSession";
-import {getInitialBookingFormValues} from "@/assets/guestTypes";
-import getAdditionalGuestCount from "@/utils/getAdditionalGuestCount";
+import {clearBookingSession, loadBookingSession} from "@/utils/bookingSession";
 
 type BookingContextType = {
   state: NewBookingState;
@@ -25,29 +22,26 @@ const getInitialState = () => {
     return initialState;
   }
 
-  const storedValue = sessionStorage.getItem(SESSION_STORAGE_KEY);
+  const storedValue = loadBookingSession();
 
   if (!storedValue) return initialState;
 
   try {
     if (storedValue) {
-      const parsedData = JSON.parse(storedValue);
-      if (isBookingSession(parsedData)) {
         return {
           status: "initialized",
-          sessionId: parsedData.sessionId,
-          checkIn: new Date(parsedData.checkIn),
-          checkOut: new Date(parsedData.checkOut),
-          requestedRooms: parsedData.requestedRooms,
+          sessionId: storedValue.sessionId,
+          checkIn: new Date(storedValue.checkIn),
+          checkOut: new Date(storedValue.checkOut),
+          requestedRooms: storedValue.requestedRooms,
           roomHoldings: {},
-          guestFormValues: getInitialBookingFormValues(getAdditionalGuestCount(parsedData.requestedRooms)), //TODO: Read booking form values from session storage
+          guestFormValues: storedValue.guestFormValues,
           guestFormIsValid: false,
         } satisfies Extract<NewBookingState, { status: "initialized" }>;
-      }
     }
     return initialState;
   } catch {
-    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    clearBookingSession();
     return initialState;
   }
 }

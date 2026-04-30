@@ -13,7 +13,7 @@ export function useCookieConsent() {
   }, []);
 
   const accept = () => {
-    Cookies.set(COOKIE_KEY, "all", {
+    Cookies.set(COOKIE_KEY, "accept", {
       expires: 365,
       path: "/",
       sameSite: "Lax",

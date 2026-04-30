@@ -14,6 +14,7 @@ import {Button} from "@/components/ui/button";
 import {BookingRequestDialog} from "@/components/public/BookingRequestDialog";
 import {useRemoveRoomSelection} from "@/hooks/useRemoveRoomSelection";
 import {useTranslation} from "react-i18next";
+import {clearBookingSession} from "@/utils/bookingSession";
 
 export const BookingSidebar: FunctionComponent = () => {
   const { t, i18n } = useTranslation();
@@ -22,11 +23,12 @@ export const BookingSidebar: FunctionComponent = () => {
 
   const { mutate: removeRoomSelection } = useRemoveRoomSelection();
 
-  if (state.status === "uninitialized") {
+  if (state.status !== "initialized") {
     return;
   }
 
   const handleCancelBooking = () => {
+    clearBookingSession();
     dispatch({
       type: "RESET_BOOKING",
     })

@@ -1,11 +1,11 @@
-import {Fragment, type FunctionComponent} from "react";
+import {Fragment, type FunctionComponent, useEffect, useMemo} from "react";
 import {Page} from "@/layouts/Page";
 import {useNewBooking} from "@/contexts/NewBookingContext";
 import {useTranslation} from "react-i18next";
 import {Item, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
 import {getNights, toDateOnly} from "@/utils/formatDate";
 import {Separator} from "@/components/ui/separator";
-import {EMPTY_STRING, SESSION_STORAGE_KEY} from "@/assets/consts";
+import {EMPTY_STRING, NEW_BOOKING_SESSION_STORAGE_KEY} from "@/assets/consts";
 import {Check, Dot} from "lucide-react";
 import {Accordion} from "@/components/ui/accordion";
 import type {RoomHolding} from "@/assets/bookingTypes";
@@ -18,16 +18,63 @@ import {confirmBooking} from "@/api/bookingAPI";
 import {useMutation} from "@tanstack/react-query";
 import { toast } from "sonner";
 import {useLocalizedValue} from "@/hooks/useLocalizedValue";
+import { bookingSchema } from "@/assets/guestTypes";
+import {useNavigate} from "react-router";
 
 export const CheckOut: FunctionComponent = () => {
   const { state, dispatch } = useNewBooking();
   const localize = useLocalizedValue();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   // TODO: Concept for calculating with MultiCurrencyAmount + Display Total Amount
 
-  if (state.status === "uninitialized") return;
+  const parseResult = useMemo(
+    () => bookingSchema.safeParse(
+      state.status !== "uninitialized" ? state.guestFormValues : undefined
+    ),
+    [state]
+  );
+
+  useEffect(() => {
+    if (state.status !== "initialized" || !parseResult.success) {
+      navigate('/new-booking');
+    }
+  }, [state.status, parseResult.success, navigate]);
+
+  const {mutate, isPending} = useMutation({
+    mutationFn: () => {
+      if (!parseResult.success || !state.sessionId || state.status !== "initialized") {
+        throw new Error("Booking state not ready");
+      }
+      return confirmBooking(
+        state.sessionId,
+        state.checkIn,
+        state.checkOut,
+        state.requestedRooms,
+        parseResult.data
+      );
+    },
+    onSuccess: () => {
+      toast.success(t('public.Toast.BookingSuccess'));
+      sessionStorage.removeItem(NEW_BOOKING_SESSION_STORAGE_KEY);
+      dispatch({
+        type: "RESET_BOOKING"
+      })
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
+
+  if (state.status !== "initialized" || !parseResult.success) {
+    return null;
+  }
+
+  const { contact, differentGuest, mainGuestContact, fillAtCheckIn, reportingRequirement } = parseResult.data;
   const nights = getNights(state.checkIn, state.checkOut);
+
+  const isCheckOutDisabled = (!state.guestFormIsValid || !state.checkIn || !state.checkOut) || isPending;
 
   function RoomRow({ room, people, nights }: { room: RoomHolding; people: number; nights: number }) {
     return (
@@ -59,35 +106,6 @@ export const CheckOut: FunctionComponent = () => {
       </TableRow>
     ));
   }
-
-  const {mutate, isPending} = useMutation({
-    mutationFn: () => {
-      if (!state.sessionId) {
-        throw new Error("Booking state not ready");
-      }
-      return confirmBooking(
-        state.sessionId,
-        state.checkIn,
-        state.checkOut,
-        state.requestedRooms,
-        state.guestFormValues
-      );
-    },
-    onSuccess: () => {
-      toast.success(t('public.Toast.BookingSuccess'));
-      sessionStorage.removeItem(SESSION_STORAGE_KEY);
-      dispatch({
-        type: "RESET_BOOKING"
-      })
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    }
-  });
-
-  const isCheckOutDisabled = (state.guestFormIsValid && !!state.checkIn && !!state.checkOut) || isPending;
-
-  const { contact, differentGuest, mainGuestContact, fillAtCheckIn, reportingRequirement } = state.guestFormValues;
 
   return (
     <Page>

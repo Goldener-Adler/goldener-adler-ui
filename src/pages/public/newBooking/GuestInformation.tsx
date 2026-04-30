@@ -1,6 +1,6 @@
 import {type FunctionComponent, useEffect, useRef} from "react";
 import {Page} from "@/layouts/Page";
-import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
+import {Controller, useFieldArray, useForm, useFormState, useWatch} from "react-hook-form";
 import {type BookingForm, bookingSchema, getInitialBookingFormValues} from "@/assets/guestTypes";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
@@ -23,6 +23,7 @@ import {Trans, useTranslation} from "react-i18next";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {DEFAULT_INPUT_DEBOUNCE_MS} from "@/assets/consts";
 import {Button} from "@/components/ui/button";
+import {saveBookingSession} from "@/utils/bookingSession";
 
 export const GuestInformation: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ export const GuestInformation: FunctionComponent = () => {
     return defaults;
   };
 
-  const form = useForm({
+  const form = useForm<BookingForm>({
     resolver: zodResolver(bookingSchema),
     defaultValues: getFormDefaults(),
   });
@@ -56,7 +57,14 @@ export const GuestInformation: FunctionComponent = () => {
     name: "reportingRequirement.additionalGuests",
   });
 
+  const { isValid } = useFormState({ control });
+
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isValidRef = useRef(isValid);
+
+  useEffect(() => {
+    isValidRef.current = isValid;
+  }, [isValid]);
 
   useEffect(() => {
     const subscription = watch((values) => {
@@ -65,10 +73,11 @@ export const GuestInformation: FunctionComponent = () => {
       }
 
       timeoutRef.current = setTimeout(() => {
+        saveBookingSession({guestFormValues: values})
         dispatch({
           type: "UPDATE_BOOKING_FORM_VALUES",
           guestFormValues: values as BookingForm,
-          isValid: form.formState.isValid
+          isValid: isValidRef.current,
         });
       }, DEFAULT_INPUT_DEBOUNCE_MS);
     });
@@ -79,7 +88,7 @@ export const GuestInformation: FunctionComponent = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [watch, form.formState.isValid]);
+  }, [watch]);
 
   const differentGuest = watch("differentGuest");
 
@@ -91,7 +100,7 @@ export const GuestInformation: FunctionComponent = () => {
     if(skipReportingRequirement) {
       form.setValue('reportingRequirement', undefined);
     }
-  }, [skipReportingRequirement, differentGuest]);
+  }, [skipReportingRequirement]);
 
   useEffect(() => {
     if (!differentGuest) {
@@ -100,6 +109,7 @@ export const GuestInformation: FunctionComponent = () => {
   }, [differentGuest]);
 
   const onSubmit = (data: BookingForm) => {
+    saveBookingSession({guestFormValues: data});
     dispatch({
       type: "UPDATE_BOOKING_FORM_VALUES",
       guestFormValues: data,

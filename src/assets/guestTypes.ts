@@ -17,7 +17,7 @@ const reportingRequirementMainGuestSchema = z.object({
   citizenship: z
     .string()
     .optional()
-    .refine((val) => val && val.length > 0, {
+    .refine((val) => !val || val.length > 0, {
       message: 'public.Forms.Errors.Required.Citizenship' satisfies TranslationKey,
     }),
   birthDate: z.date().optional(),
@@ -75,7 +75,7 @@ const reportingRequirementAdditionalGuestSchema = z.object({
   citizenship: z
     .string()
     .optional()
-    .refine((val) => val && val.length > 0, {
+    .refine((val) => !val || val.length > 0, {
       message: 'public.Forms.Errors.Required.Citizenship' satisfies TranslationKey,
     }),
   birthDate: z.date().optional(),
@@ -258,3 +258,17 @@ export const getInitialBookingFormValues = (additionalGuestCount: number): Booki
     }
   }
 }
+
+export const bookingFormSessionSchema = z.object({
+  contact: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    email: z.string(),
+    phone: z.string().optional(),
+    message: z.string().optional(),
+  }),
+  differentGuest: z.boolean(),
+  fillAtCheckIn: z.boolean(),
+  reportingRequirement: z.any().optional(),
+  mainGuestContact: z.any().optional(),
+});

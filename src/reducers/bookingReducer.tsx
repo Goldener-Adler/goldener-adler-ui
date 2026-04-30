@@ -15,7 +15,7 @@ export const initialState: NewBookingState = {
  * Leave this to the Context.
  *
  * Store sessionId, checkIn, checkOut and requestedRooms in sessionStorage (if cookies allowed)
- * Pull on initialisation, else set initial state
+ * Pull on initialization, else set initial state
  */
 
 export function bookingReducer(
@@ -39,26 +39,56 @@ export function bookingReducer(
       };
     }
 
-    case "ADD_OR_UPDATE_ROOM_HOLDINGS": {
-      if (state.status === 'uninitialized') return state;
+    case "SET_REHYDRATING": {
+      const totalGuests = action.rooms.reduce((sum, room) => sum + room.people, 0);
+      const additionalGuestCount = Math.max(0, totalGuests - 1);
+      return {
+        ...state,
+        status: "rehydrating",
+        checkIn: action.checkIn,
+        checkOut: action.checkOut,
+        sessionId: action.sessionId,
+        requestedRooms: action.rooms,
+        /* rehydrate with guest form values from session storage in the future */
+        guestFormValues: getInitialBookingFormValues(additionalGuestCount),
+        guestFormIsValid: false
+      }
+    }
 
-      let newRoomHoldings = {...state.roomHoldings};
-      newRoomHoldings[action.index] = action.room;
+    case "REHYDRATE_ROOM_HOLDINGS": {
+      if (state.status === "uninitialized") return state;
 
       return {
         ...state,
-        roomHoldings: newRoomHoldings,
-      };
+        status: "initialized",
+        roomHoldings: action.roomHoldings
+      }
+    }
+
+    case "ADD_OR_UPDATE_ROOM_HOLDINGS": {
+      if (state.status === 'initialized') {
+
+        let newRoomHoldings = {...state.roomHoldings};
+        newRoomHoldings[action.index] = action.room;
+
+        return {
+          ...state,
+          roomHoldings: newRoomHoldings,
+        };
+      }
+      return state;
     }
 
     case "REMOVE_ROOM_HOLDING": {
-      if (state.status === 'uninitialized') return state;
-      const newRoomHoldings = {...state.roomHoldings};
-      delete newRoomHoldings[action.index];
-      return {
-        ...state,
-        roomHoldings: newRoomHoldings,
-      };
+      if (state.status === 'initialized') {
+        const newRoomHoldings = {...state.roomHoldings};
+        delete newRoomHoldings[action.index];
+        return {
+          ...state,
+          roomHoldings: newRoomHoldings,
+        };
+      }
+      return state;
     }
 
     case "UPDATE_BOOKING_FORM_VALUES": {
