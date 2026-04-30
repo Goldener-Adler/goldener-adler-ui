@@ -362,6 +362,7 @@ const en = {
     Toast: {
       GuestFormInvalid: "Contact Data is incomplete",
       BookingSuccess: "Booking Success",
+      NoRoomsAvailable: "No available room combination matches your request"
     },
     Default: {
       Title: "No Title"

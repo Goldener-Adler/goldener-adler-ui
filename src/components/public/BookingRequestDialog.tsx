@@ -12,7 +12,7 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {Controller, useFieldArray, useForm} from "react-hook-form";
 import {Calendar} from "@/components/ui/calendar";
 import {Item, ItemActions, ItemContent, ItemMedia, ItemTitle} from "@/components/ui/item";
-import {Bed, Minus, Plus, Users} from "lucide-react";
+import {Bed, Loader, Minus, Plus, Users} from "lucide-react";
 import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group";
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
@@ -20,7 +20,7 @@ import {useNewBooking} from "@/contexts/NewBookingContext";
 import {initialBookingRequestValues, type NewBookingRequest, newBookingRequestSchema} from "@/assets/bookingTypes";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useIsMobile} from "@/hooks/use-mobile";
-import {useLocation, useNavigate} from "react-router";
+import {useNavigate} from "react-router";
 import {useCreateBookingRequest} from "@/hooks/useCreateBookingRequest";
 import {useTranslation} from "react-i18next";
 import {VisuallyHidden} from "radix-ui";
@@ -33,9 +33,8 @@ interface BookingRequestDialogProps {
 export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> = ({ open, setOpen }) => {
   const { t } = useTranslation();
   const {state} = useNewBooking();
-  const createBookingRequest = useCreateBookingRequest();
+  const { mutate, isPending } = useCreateBookingRequest();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const form = useForm<NewBookingRequest>({
     resolver: zodResolver(newBookingRequestSchema),
@@ -68,22 +67,17 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
 
   const onSubmit = async (data: NewBookingRequest) => {
     const dateRange = data.dateRange;
-
     if (!dateRange || dateRange.to === undefined) return;
 
-    try {
-      await createBookingRequest(
-        dateRange.from,
-        dateRange.to,
-        data.requestedRooms,
-      );
-      setOpen(false);
-      if (location.pathname !== "/new-booking/rooms") {
-        navigate("/new-booking/rooms");
+    mutate(
+      { checkIn: dateRange.from, checkOut: dateRange.to, requestedRooms: data.requestedRooms },
+      {
+        onSuccess: () => {
+          setOpen(false);
+          navigate("/new-booking/rooms");
+        }
       }
-    } catch (error) {
-      // TODO: On Error don't close and don't navigate away
-    }
+    );
   }
 
   return (
@@ -164,7 +158,12 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
           </ScrollArea>
           <Separator />
           <DialogFooter className="px-4 pt-4">
-            <Button type="submit">{t('public.Buttons.CheckAvailability')}</Button>
+            <Button disabled={isPending} type="submit" className="min-w-36">
+              {isPending
+                ? <Loader className="animate-spin"/>
+                : t('public.Buttons.CheckAvailability')
+              }
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

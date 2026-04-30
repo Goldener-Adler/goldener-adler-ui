@@ -362,6 +362,7 @@ const de = {
     Toast: {
       GuestFormInvalid: "Kontaktangaben unvollständig",
       BookingSuccess: "Buchung Erfolgreich",
+      NoRoomsAvailable: "Es gibt keine verfügbare Zimmerkombination, die Ihrer Anfrage entspricht"
     },
     Default: {
       Title: "No Title"

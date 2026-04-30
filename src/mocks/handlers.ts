@@ -1,4 +1,4 @@
-import {http, HttpResponse} from "msw";
+import {delay, http, HttpResponse} from "msw";
 import {API_ENDPOINT, EMPTY_STRING} from "@/assets/consts.ts";
 import {
   MOCK_BOOKINGS,
@@ -21,7 +21,19 @@ export const handlers = [
   http.post(API_ENDPOINT + "/available-rooms", async ({ request }) => {
     const body = await request.json() as {checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[]};
 
-    const availableRooms: RoomCategory[] = MOCK_ROOM_CATEGORIES;
+    let availableRooms: RoomCategory[] = MOCK_ROOM_CATEGORIES;
+
+    // For testing the Error case
+    const UNAVAILABLE = false;
+
+    if (UNAVAILABLE) {
+      availableRooms = availableRooms.map(room => {
+        return {
+          ...room,
+          amount: 0,
+        }
+      })
+    }
 
     /*
     const availableRooms: AvailableRoomMap = { ...MOCK_FULL_AVAILABLE_ROOM_MAP };
@@ -52,6 +64,8 @@ export const handlers = [
       }
     })
      */
+
+    await delay(1000);
 
     return HttpResponse.json(
       availableRooms,
