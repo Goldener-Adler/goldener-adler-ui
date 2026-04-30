@@ -2,26 +2,28 @@ import {type FunctionComponent} from "react";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {useTranslation} from "react-i18next";
-import {titleKeyMap} from "@/assets/i18n/i18nConsts";
-import type {AvailableRoomDetails, RoomTypeKey} from "@/assets/types";
+import type {RoomCategory} from "@/assets/types";
 import type {TranslationKey} from "@/assets/i18n/i18n";
 import {Separator} from "@/components/ui/separator";
 import {AmenityBadge} from "@/components/public/AmenityBadge";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
+import { useLocalizedValue } from "@/hooks/useLocalizedValue";
+import {useFormatPrice} from "@/hooks/useFormatPrice";
 
 interface RoomCardProps {
-  type: RoomTypeKey,
-  room: AvailableRoomDetails,
+  room: RoomCategory,
   onButtonClick: () => void,
   isSelected: boolean,
 }
 
-export const RoomCard: FunctionComponent<RoomCardProps> = ({type, room, onButtonClick, isSelected}) => {
+export const RoomCard: FunctionComponent<RoomCardProps> = ({room, onButtonClick, isSelected}) => {
   const { t } = useTranslation();
+  const localize = useLocalizedValue();
+  const formatPrice = useFormatPrice();
 
-  // TODO: Fix Card Styling
+  // TODO: Show Price Info based on Per definition of price
 
-  const isUnavailable = room.available === 0;
+  const isUnavailable = room.amount === 0;
 
   const buttonLabel: TranslationKey = isUnavailable
     ? "public.Buttons.NotAvailable"
@@ -44,7 +46,7 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({type, room, onButton
           className="rounded-t-xl relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
         />
         <CardHeader className="px-4 pt-4">
-          <CardTitle>{t(titleKeyMap[type])}</CardTitle>
+          <CardTitle>{localize(room.title)}</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 px-4 pb-4 pt-0">
           <Accordion type="single" collapsible>
@@ -53,7 +55,7 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({type, room, onButton
                 {t('public.Rooms.Labels.ShowDetails')}
               </AccordionTrigger>
               <AccordionContent className="flex pt-4 pb-0 flex-wrap gap-2">
-                {room.amenities.map(key => <AmenityBadge key={key} amenityKey={key} />)}
+                {room.amenities.map((amenity, index) => <AmenityBadge key={index} amenity={amenity} />)}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -68,7 +70,7 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({type, room, onButton
             {t(buttonLabel)}
           </Button>
           <div className="flex flex-col items-end">
-            <b className="text-xl leading-7">{`${room.price} €`}</b>
+            <b className="text-xl leading-7">{formatPrice(room.price.amount)}</b>
             <small>{t('public.Rooms.Extras.Per.Night')}</small>
           </div>
         </CardFooter>

@@ -1,15 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNewBooking } from "@/contexts/NewBookingContext";
 import { updateRoomHolds } from "@/api/bookingAPI";
-import type { RoomTypeKey } from "@/assets/types";
-import type {ExtraPrices, RoomExtrasForm} from "@/assets/bookingTypes";
+import type {ExtrasFormValues} from "@/assets/bookingTypes";
+import type {RoomCategory} from "@/assets/types";
+import {buildExtrasSnapshots} from "@/utils/buildExtrasSnapshot";
 
 type UpdateRoomSelectionInput = {
   roomIndex: number;
-  roomType: RoomTypeKey;
-  extras: RoomExtrasForm;
-  extraPrices: ExtraPrices;
-  pricePerNight: number;
+  room: RoomCategory;
+  selectedExtras: ExtrasFormValues;
 };
 
 export function useUpdateRoomSelection() {
@@ -18,37 +17,39 @@ export function useUpdateRoomSelection() {
 
   return useMutation({
     mutationFn: async (input: UpdateRoomSelectionInput) => {
-      const { roomIndex, roomType, extras, extraPrices } = input;
+      const { roomIndex, room, selectedExtras } = input;
 
       if (state.status === "uninitialized") {
         throw new Error("Invalid state");
       }
 
-      const existingHoldId = state.selectedRooms[roomIndex]?.id;
+      const existingHoldId = state.roomHoldings[roomIndex]?.id;
 
       return updateRoomHolds(
         state.sessionId!,
-        roomType,
+        room.id,
         roomIndex,
+        state.requestedRooms[roomIndex].people,
         state.checkIn,
         state.checkOut,
-        extras,
-        extraPrices,
+        selectedExtras,
         existingHoldId
       );
     },
 
     onSuccess: (holdingId, input) => {
-      const { roomIndex, roomType, extras, extraPrices, pricePerNight } = input;
+      const { roomIndex, room, selectedExtras } = input;
+
+      const extrasSnapshot = buildExtrasSnapshots(selectedExtras, room.extras);
 
       dispatch({
-        type: "ADD_OR_UPDATE_SELECTED_ROOM",
+        type: "ADD_OR_UPDATE_ROOM_HOLDINGS",
         room: {
-          id: holdingId,
-          type: roomType,
-          extras,
-          extraPrices,
-          pricePerNight
+          id: room.id,
+          title: room.title,
+          extrasFormValues: selectedExtras,
+          extrasSnapshot: extrasSnapshot,
+          holdingId,
         },
         index: roomIndex,
       });

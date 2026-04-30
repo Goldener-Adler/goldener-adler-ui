@@ -1,6 +1,4 @@
-import type {AvailableRoomMap, Booking, BookingRoom, Room} from "@/assets/types.ts";
-
-import {AMENITY_KEYS} from "@/assets/consts";
+import type {Booking, BookingRoom, Extra, NewAmenity, Room, RoomCategory} from "@/assets/types.ts";
 
 /*
  * Mocks simulating persistent data
@@ -283,44 +281,162 @@ export const MOCK_BOOKINGS: Booking[] = [
   }
 ];
 
-export const MOCK_FULL_AVAILABLE_ROOM_MAP: AvailableRoomMap = {
-  single: {
-    capacity: 1,
-    available: 3,
-    price: 40,
-    extraPrices: {
-      breakfast: { amount: 5, currency: "EUR", per: "nightAndPerson" },
-      extraBed: { amount: 10, currency: "EUR", per: "night" },
-      bikeParking: undefined,
-      motorbike: undefined,
-      pet: undefined
+const MOCK_EXTRAS: Extra[] = [
+  {
+    label: {
+      en: 'Breakfast',
+      de: 'Frühstück',
     },
-    amenities: [...AMENITY_KEYS.filter(amenity => amenity !== 'kitchen' && amenity !== 'additionalBed')]
+    options: [
+      {
+        label: {
+          en: 'Regular',
+          de: 'Standard',
+        },
+        value: 'regular',
+        price: {
+          amount: { eur: 1000 },
+          per: "nightAndPerson",
+        }
+      },
+      {
+        label: {
+          en: 'Vegetarian',
+          de: 'Vegetarisch',
+        },
+        value: 'vegetarian',
+        price: {
+          amount: { eur: 1000 },
+          per: "nightAndPerson",
+        }
+      },
+      {
+        label: {
+          en: 'Vegan',
+          de: 'Vegan',
+        },
+        value: 'vegan',
+        price: {
+          amount: { eur: 1000 },
+          per: "nightAndPerson",
+        }
+      }
+    ]
   },
-  double: {
-    capacity: 2,
-    available: 6,
-    price: 55,
-    extraPrices: {
-      breakfast: { amount: 5, currency: "EUR", per: "nightAndPerson" },
-      extraBed: { amount: 10, currency: "EUR", per: "night" },
-      bikeParking: undefined,
-      motorbike: undefined,
-      pet: undefined
+  {
+    label: {
+      en: 'Bike Parking',
+      de: 'Fahrradstellplätze',
     },
-    amenities: [...AMENITY_KEYS.filter(amenity => amenity !== 'kitchen')]
-  },
-  apartment: {
-    capacity: 4,
-    available: 1,
-    price: 60,
-    extraPrices: {
-      breakfast: { amount: 15, currency: "EUR", per: "person" },
-      extraBed: { amount: 30, currency: "EUR", per: "night" },
-      bikeParking: undefined,
-      motorbike: undefined,
-      pet: undefined
-    },
-    amenities: [...AMENITY_KEYS],
+    options: undefined,
+    price: {
+      amount: { eur: 500 },
+      per: "night",
+    }
   }
-};
+]
+
+const MOCK_AMENITIES: NewAmenity[] = [
+  {
+    icon: "Wifi",
+    label: {
+      en: 'Wifi',
+      de: 'Wifi',
+    }
+  },
+  {
+    icon: "Towels",
+    label: {
+      en: 'Towels',
+      de: 'Handtücher',
+    }
+  },
+  {
+    icon: "Bath",
+    label: {
+      en: 'Bath Room',
+      de: 'Badezimmer',
+    }
+  },
+  {
+    icon: "Shower",
+    label: {
+      en: 'Shower',
+      de: 'Dusche'
+    }
+  },
+  {
+    icon: "AdditionalBed",
+    label: {
+      en: 'Extra Bed',
+      de: 'Aufbettung möglich'
+    },
+    highlight: true
+  }
+]
+
+export const MOCK_ROOM_CATEGORIES: RoomCategory[] = [
+  {
+    id: "single",
+    amount: 3,
+    title: {
+      en: 'Single Room',
+      de: 'Einzelzimmer',
+    },
+    description: {
+      en: 'Some Content',
+      de: 'Etwas Text',
+    },
+    price: {
+      amount: {
+        eur: 4000
+      },
+      per: "night"
+    },
+    capacity: 1,
+    amenities: MOCK_AMENITIES,
+    extras: MOCK_EXTRAS,
+  },
+  {
+    id: "double",
+    amount: 6,
+    title: {
+      en: 'Double Room',
+      de: 'Doppelzimmer',
+    },
+    description: {
+      en: 'Some Content',
+      de: 'Etwas Text',
+    },
+    price: {
+      amount: {
+        eur: 5500
+      },
+      per: "night"
+    },
+    capacity: 2,
+    amenities: MOCK_AMENITIES,
+    extras: MOCK_EXTRAS,
+  },
+  {
+    id: "apartment",
+    amount: 1,
+    title: {
+      en: 'Apartment',
+      de: 'Ferienwohnung',
+    },
+    description: {
+      en: 'Some Content',
+      de: 'Etwas Text',
+    },
+    price: {
+      amount: {
+        eur: 6000
+      },
+      per: "night"
+    },
+    capacity: 3,
+    amenities: MOCK_AMENITIES,
+    extras: MOCK_EXTRAS,
+  }
+]

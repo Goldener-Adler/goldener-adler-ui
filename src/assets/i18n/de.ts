@@ -331,6 +331,7 @@ const de = {
       Submit: "Senden",
       Review: "Zur Übersicht",
       Book: "Buchen",
+      CancelBooking: "Buchung Abbrechen",
       Accept: "Alle Akzeptieren",
       Decline: "Alle Ablehnen",
       Essential: "Nur Notwendige",

@@ -331,6 +331,7 @@ const en = {
       Submit: "Submit",
       Review: "Review",
       Book: "Book",
+      CancelBooking: "Cancel Booking",
       Accept: "Accept All",
       Decline: "Decline All",
       Essential: "Only Essential",

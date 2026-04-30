@@ -1,10 +1,13 @@
 import {http, HttpResponse} from "msw";
 import {API_ENDPOINT, EMPTY_STRING} from "@/assets/consts.ts";
-import {MOCK_BOOKING_ROOMS, MOCK_BOOKINGS, MOCK_FULL_AVAILABLE_ROOM_MAP, MOCK_ROOMS} from "@/mocks/mockData.ts";
+import {
+  MOCK_BOOKINGS,
+  MOCK_ROOM_CATEGORIES,
+} from "@/mocks/mockData.ts";
 import {toDateOnly} from "@/utils/formatDate.ts";
 import type {DateRange} from "react-day-picker";
-import type {AvailableRoomMap, Booking, RoomTypeKey} from "@/assets/types.ts";
-import type {RequestedRoom} from "@/assets/bookingTypes";
+import type {Booking, RoomCategory} from "@/assets/types.ts";
+import type {ExtrasFormValues, RequestedRoom} from "@/assets/bookingTypes";
 import {createSessionId} from "@/utils/createSessionId";
 import type {BookingForm} from "@/assets/guestTypes";
 
@@ -18,6 +21,9 @@ export const handlers = [
   http.post(API_ENDPOINT + "/available-rooms", async ({ request }) => {
     const body = await request.json() as {checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[]};
 
+    const availableRooms: RoomCategory[] = MOCK_ROOM_CATEGORIES;
+
+    /*
     const availableRooms: AvailableRoomMap = { ...MOCK_FULL_AVAILABLE_ROOM_MAP };
 
     MOCK_BOOKINGS.filter((booking: Booking) => {
@@ -45,6 +51,7 @@ export const handlers = [
         })
       }
     })
+     */
 
     return HttpResponse.json(
       availableRooms,
@@ -56,10 +63,12 @@ export const handlers = [
   http.post(API_ENDPOINT + "/room-holdings", async ({ request }) => {
     const body = await request.json() as {
       sessionId: string,
-      roomType: RoomTypeKey,
+      roomCategoryId: string,
       requestedRoomIndex: number,
+      people: number,
       from: Date,
       to: Date,
+      extras: ExtrasFormValues,
       holdingId: string | undefined,
     }
 

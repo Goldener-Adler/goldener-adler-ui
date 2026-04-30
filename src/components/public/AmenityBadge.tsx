@@ -1,15 +1,15 @@
-import {useTranslation} from "react-i18next";
 import {Badge} from "@/components/ui/badge";
-import {AMENITIES} from "@/assets/consts";
-import type {AmenityKey} from "@/assets/types";
+import type {NewAmenity} from "@/assets/types";
+import {useLocalizedValue} from "@/hooks/useLocalizedValue";
+import {ICON_MAP} from "@/assets/consts";
 
-export function AmenityBadge({ amenityKey }: { amenityKey: AmenityKey }) {
-  const { t } = useTranslation();
-  const { icon: Icon, label, variant } = AMENITIES[amenityKey];
+export function AmenityBadge({ amenity }: { amenity: NewAmenity }) {
+  const localize = useLocalizedValue();
+  const Icon = ICON_MAP[amenity.icon];
   return (
-    <Badge variant={variant}>
+    <Badge variant={amenity.highlight ? "default" : "secondary"}>
       <Icon />
-      {t(label)}
+      {localize(amenity.label)}
     </Badge>
   );
 }

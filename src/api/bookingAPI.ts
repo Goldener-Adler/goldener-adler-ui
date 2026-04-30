@@ -1,9 +1,9 @@
-import type {ExtraPrices, RequestedRoom, RoomExtrasForm} from "@/assets/bookingTypes";
-import {API_ENDPOINT, EMPTY_AVAILABLE_ROOMS_MAP} from "@/assets/consts";
-import type {AvailableRoomMap, RoomTypeKey} from "@/assets/types";
+import type {ExtrasFormValues, RequestedRoom} from "@/assets/bookingTypes";
+import {API_ENDPOINT} from "@/assets/consts";
+import type {RoomCategory} from "@/assets/types";
 import type {BookingForm} from "@/assets/guestTypes";
 
-async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[], sessionId: string): Promise<AvailableRoomMap> {
+async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[], sessionId: string): Promise<RoomCategory[]> {
   const requestBody = {
     checkIn,
     checkOut,
@@ -21,19 +21,19 @@ async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms
 
     return response.json();
   } catch {
-    return EMPTY_AVAILABLE_ROOMS_MAP;
+    return [];
   }
 }
 
-async function updateRoomHolds(sessionId: string, roomType: RoomTypeKey, requestedRoomIndex: number, from: Date, to: Date, extras: RoomExtrasForm, extraPrices: ExtraPrices, holdingId?: string): Promise<string> {
+async function updateRoomHolds(sessionId: string, roomCategoryId: string, requestedRoomIndex: number, people: number, from: Date, to: Date, extras: ExtrasFormValues, holdingId?: string): Promise<string> {
   const requestBody = {
     sessionId,
-    roomType,
+    roomCategoryId,
     requestedRoomIndex,
+    people,
     from,
     to,
     extras,
-    extraPrices,
     holdingId
   }
 

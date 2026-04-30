@@ -3,7 +3,10 @@ import {AMENITY_KEYS, BOOKING_OPTIONS} from "@/assets/consts.ts";
 import {createBookingSchema} from "@/utils/createBookingSchema.ts";
 import {z} from "zod";
 import type {IconType} from "react-icons";
-import type {ExtraPrices} from "@/assets/bookingTypes";
+
+/*
+ * Legacy Values //TODO: Clean Up Legacy Types
+ */
 
 export type BookingOption = {id: string, label: TranslationKey}
 
@@ -48,22 +51,69 @@ export const initialBookingFormValues: BookingFormValues = {
 export const bookingformSchema = createBookingSchema();
 export type BookingFormValues = z.infer<typeof bookingformSchema>;
 
+/*
+ * Current Values
+ */
+
 export type MenuItem = {
   label: TranslationKey,
   path: string,
 }
 
-export type RoomTypeKey = "single" | "double" | "apartment";
+export type MultilingualString = { en: string } & Record<string, string>;
 
-export type AvailableRoomDetails = {
-  capacity: number;
-  available: number;
-  price: number;
-  extraPrices: ExtraPrices;
-  amenities: AmenityKey[];
+export type MultiCurrencyAmount = { eur: number } & Record<string, number>;
+
+export type PricePer = 'stay' | 'night' | 'person' | 'nightAndPerson';
+
+export type Price = {
+  amount: MultiCurrencyAmount;
+  per: PricePer;
 }
 
-export type AvailableRoomMap = Record<RoomTypeKey, AvailableRoomDetails>
+export type Icon = 'Wifi' | 'TV' | 'Phone' | 'Sheets' | 'Towels' | 'Bath' | 'Shower' | 'SoundIsolation' | 'Kitchen' | 'AdditionalBed';
+
+export type NewAmenity = {
+  icon: Icon,
+  label: MultilingualString,
+  highlight?: boolean,
+}
+
+type BaseExtra = {
+  label: MultilingualString;
+  price?: Price;
+}
+
+export type ExtraOption =
+  | { value: string;  label: MultilingualString, price?: Price; }
+  | { value: number;  label?: MultilingualString, price?: Price; }
+
+export type ToggleExtra = BaseExtra & { options: undefined };
+export type SelectExtra = BaseExtra & { options: ExtraOption[] };
+
+export type Extra = ToggleExtra | SelectExtra;
+
+export type SelectedExtraSnapshot = {
+  extraLabel: MultilingualString;
+} & (
+  | { value: boolean; optionLabel?: never }           // yes/no
+  | { value: ExtraOption['value']; optionLabel?: MultilingualString } // multi-value
+  )
+
+export type RoomCategory = {
+  id: string;
+  amount: number;
+  title: MultilingualString;
+  description: MultilingualString;
+  price: Price;
+  capacity: number;
+  amenities: NewAmenity[];
+  extras: Extra[];
+}
+
+/*
+ * Dashboard Types (Export)
+ */
 
 export type Booking = {
   id: string,

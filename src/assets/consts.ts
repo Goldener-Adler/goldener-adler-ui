@@ -1,4 +1,4 @@
-import type {Amenity, AmenityKey, AvailableRoomMap, BookingOption, MenuItem} from "@/assets/types.ts";
+import type {Amenity, AmenityKey, BookingOption, Icon, MenuItem} from "@/assets/types.ts";
 import {
   PiBed, PiOven,
   PiPhone,
@@ -9,6 +9,7 @@ import {
   PiTowel,
   PiWifiHigh
 } from "react-icons/pi";
+import type {IconType} from "react-icons";
 
 export const BOOKING_SESSION_STORAGE_KEY = 'bookingDetails';
 
@@ -111,46 +112,17 @@ export const AMENITIES: Record<AmenityKey, Omit<Amenity, 'id'>> = {
   additionalBed: { label: 'public.Rooms.Labels.AdditionalBed',    icon: PiPlus,               variant: "default" },
 };
 
-export const EMPTY_AVAILABLE_ROOMS_MAP: AvailableRoomMap = {
-  single: {
-    capacity: 1,
-    available: 0,
-    price: 0,
-    extraPrices: {
-      pet: undefined,
-      extraBed: undefined,
-      breakfast: undefined,
-      bikeParking: undefined,
-      motorbike: undefined
-    },
-    amenities: []
-  },
-  double: {
-    capacity: 2,
-    available: 0,
-    price: 0,
-    extraPrices: {
-      pet: undefined,
-      extraBed: undefined,
-      breakfast: undefined,
-      bikeParking: undefined,
-      motorbike: undefined
-    },
-    amenities: []
-  },
-  apartment: {
-    capacity: 4,
-    available: 0,
-    price: 0,
-    extraPrices: {
-      pet: undefined,
-      extraBed: undefined,
-      breakfast: undefined,
-      bikeParking: undefined,
-      motorbike: undefined
-    },
-    amenities: []
-  }
-};
+export const ICON_MAP: Record<Icon, IconType> = {
+  Wifi: PiWifiHigh,
+  TV: PiTelevisionSimple,
+  Phone: PiPhone,
+  Sheets: PiBed,
+  Towels: PiTowel,
+  Bath: PiToilet,
+  Shower: PiShower,
+  SoundIsolation: PiSpeakerSimpleSlash,
+  Kitchen: PiOven,
+  AdditionalBed: PiPlus,
+}
 
 export const SESSION_STORAGE_KEY = "session";

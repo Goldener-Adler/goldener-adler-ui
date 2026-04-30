@@ -33,31 +33,31 @@ export function bookingReducer(
         checkOut: action.checkOut,
         sessionId: action.sessionId,
         requestedRooms: action.rooms,
-        selectedRooms: [],
+        roomHoldings: [],
         guestFormValues: getInitialBookingFormValues(additionalGuestCount),
         guestFormIsValid: false
       };
     }
 
-    case "ADD_OR_UPDATE_SELECTED_ROOM": {
+    case "ADD_OR_UPDATE_ROOM_HOLDINGS": {
       if (state.status === 'uninitialized') return state;
 
-      let newSelectedRooms = {...state.selectedRooms};
-      newSelectedRooms[action.index] = action.room;
+      let newRoomHoldings = {...state.roomHoldings};
+      newRoomHoldings[action.index] = action.room;
 
       return {
         ...state,
-        selectedRooms: newSelectedRooms,
+        roomHoldings: newRoomHoldings,
       };
     }
 
-    case "REMOVE_SELECTED_ROOM": {
+    case "REMOVE_ROOM_HOLDING": {
       if (state.status === 'uninitialized') return state;
-      const newSelectedRooms = {...state.selectedRooms};
-      delete newSelectedRooms[action.index];
+      const newRoomHoldings = {...state.roomHoldings};
+      delete newRoomHoldings[action.index];
       return {
         ...state,
-        selectedRooms: newSelectedRooms,
+        roomHoldings: newRoomHoldings,
       };
     }
 

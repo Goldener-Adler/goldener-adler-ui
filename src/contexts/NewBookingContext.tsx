@@ -39,7 +39,7 @@ const getInitialState = () => {
           checkIn: new Date(parsedData.checkIn),
           checkOut: new Date(parsedData.checkOut),
           requestedRooms: parsedData.requestedRooms,
-          selectedRooms: {},
+          roomHoldings: {},
           guestFormValues: getInitialBookingFormValues(getAdditionalGuestCount(parsedData.requestedRooms)), //TODO: Read booking form values from session storage
           guestFormIsValid: false,
         } satisfies Extract<NewBookingState, { status: "initialized" }>;

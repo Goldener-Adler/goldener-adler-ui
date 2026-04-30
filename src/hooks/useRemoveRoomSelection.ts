@@ -13,7 +13,7 @@ export function useRemoveRoomSelection() {
         throw new Error("Invalid state");
       }
 
-      const existingHoldId = state.selectedRooms[requestedRoomIndex]?.id;
+      const existingHoldId = state.roomHoldings[requestedRoomIndex]?.id;
 
       if (!existingHoldId) {
         throw new Error("Could not find hold for requested room " + requestedRoomIndex);
@@ -23,7 +23,7 @@ export function useRemoveRoomSelection() {
     },
     onSuccess: (_, requestedRoomIndex) => {
       dispatch({
-        type: 'REMOVE_SELECTED_ROOM',
+        type: 'REMOVE_ROOM_HOLDING',
         index: requestedRoomIndex
       })
 

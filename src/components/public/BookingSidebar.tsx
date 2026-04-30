@@ -13,8 +13,10 @@ import {BookingSelectionSidebarGroup} from "@/components/public/BookingSelection
 import {Button} from "@/components/ui/button";
 import {BookingRequestDialog} from "@/components/public/BookingRequestDialog";
 import {useRemoveRoomSelection} from "@/hooks/useRemoveRoomSelection";
+import {useTranslation} from "react-i18next";
 
 export const BookingSidebar: FunctionComponent = () => {
+  const { t, i18n } = useTranslation();
   const { state, dispatch } = useNewBooking();
   const [openBookingDialog, setOpenBookingDialog] = useState(false);
 
@@ -38,10 +40,10 @@ export const BookingSidebar: FunctionComponent = () => {
             <SidebarMenuButton onClick={() => setOpenBookingDialog(true)} size="lg" className="h-fit flex flex-col hover:cursor-pointer items-stretch group-data-[collapsible=icon]:h-auto!">
               <div className="grid grid-cols-3 items-center">
                 <div className="flex flex-col items-center justify-center">
-                  <span className="text-xs block">Check-In</span>
+                  <span className="text-xs block">{t('public.Forms.Labels.CheckIn')}</span>
                   <span className="text-2xl">{state.checkIn.toLocaleDateString("de", {day: "numeric"})}</span>
                   <span className="font-medium text-xs block">
-                    {`${state.checkIn.toLocaleDateString("de", {month: "short"})} ${state.checkIn.toLocaleDateString("de", {year: "numeric"})}`}
+                    {`${state.checkIn.toLocaleDateString(i18n.language, {month: "short"})} ${state.checkIn.toLocaleDateString(i18n.language, {year: "numeric"})}`}
                   </span>
                 </div>
                 <span className="flex justify-center">
@@ -49,10 +51,10 @@ export const BookingSidebar: FunctionComponent = () => {
                 </span>
 
                 <div className="flex flex-col items-center justify-center">
-                  <span className="text-xs block">Check-Out</span>
+                  <span className="text-xs block">{t('public.Forms.Labels.CheckOut')}</span>
                   <span className="text-2xl">{state.checkOut.toLocaleDateString("de", {day: "numeric"})}</span>
                   <span className="font-medium text-xs block">
-                    {`${state.checkOut.toLocaleDateString("de", {month: "short"})} ${state.checkOut.toLocaleDateString("de", {year: "numeric"})}`}
+                    {`${state.checkOut.toLocaleDateString(i18n.language, {month: "short"})} ${state.checkOut.toLocaleDateString(i18n.language, {year: "numeric"})}`}
                   </span>
                 </div>
               </div>
@@ -63,7 +65,7 @@ export const BookingSidebar: FunctionComponent = () => {
                   {state.requestedRooms.map((room, index) =>
                     <SidebarMenuItem key={`requested-room-${index}-people-${room.people}`} className="px-0 flex gap-2 items-center justify-between">
                       <div className="flex gap-2 items-center">
-                        <p>Zimmer {index + 1}</p>
+                        <p>{t('public.Booking.Options.Rooms_one')} {index + 1}</p>
                       </div>
                       <div className="flex gap-2 items-center">
                         <Users size="16" />
@@ -81,12 +83,12 @@ export const BookingSidebar: FunctionComponent = () => {
       <Separator/>
       <SidebarContent className="no-scrollbar py-4">
         {state.requestedRooms.map((_, index) => {
-          const selectedRoom = state.selectedRooms[index];
+          const roomHolding = state.roomHoldings[index];
           return (
             <BookingSelectionSidebarGroup
-              key={`${index}-${selectedRoom ? selectedRoom.type : 'no-selection' }`}
-              recordKey={index}
-              selectedRoom={selectedRoom}
+              key={`${index}-${roomHolding ? roomHolding.id : 'no-selection' }`}
+              requestedRoomIndex={index}
+              roomHolding={roomHolding}
               onRemoveSelection={() => removeRoomSelection(index)}
             />)
         })}
@@ -96,7 +98,7 @@ export const BookingSidebar: FunctionComponent = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <Button size="lg" variant="destructive-outline" className="w-full" onClick={handleCancelBooking}>
-              Buchung Abbrechen
+              {t('public.Buttons.CancelBooking')}
             </Button>
           </SidebarMenuItem>
         </SidebarMenu>
