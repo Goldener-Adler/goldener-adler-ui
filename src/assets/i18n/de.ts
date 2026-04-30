@@ -113,6 +113,10 @@ const de = {
         GuestDetails: "Gästeangaben",
         CheckOut: "Übersicht",
       },
+      Request: {
+        Title: "Neue Buchung oder Buchung aktualisieren",
+        Description: "Geben Sie die Details zu Ihrem Aufenthalt ein, und wir prüfen die Verfügbarkeit",
+      },
       Options: {
         Description: "Verfeinern Sie Ihren Aufenthalt mit zusätzlichen Leistungen.",
         NoSelection: 'Keine Auswahl',

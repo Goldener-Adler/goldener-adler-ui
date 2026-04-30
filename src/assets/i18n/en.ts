@@ -113,6 +113,10 @@ const en = {
         GuestDetails: "Guest Details",
         CheckOut: "Check Out",
       },
+      Request: {
+        Title: "New Booking or Update Booking",
+        Description: "Select the details for your stay and we check the availability",
+      },
       Options: {
         Description: "Enhance your stay with additional amenities.",
         NoSelection: 'No Selection',

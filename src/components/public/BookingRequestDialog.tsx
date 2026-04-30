@@ -6,7 +6,7 @@ import {
 } from "react";
 import {
   Dialog,
-  DialogContent, DialogFooter,
+  DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Controller, useFieldArray, useForm} from "react-hook-form";
@@ -23,6 +23,7 @@ import {useIsMobile} from "@/hooks/use-mobile";
 import {useLocation, useNavigate} from "react-router";
 import {useCreateBookingRequest} from "@/hooks/useCreateBookingRequest";
 import {useTranslation} from "react-i18next";
+import {VisuallyHidden} from "radix-ui";
 
 interface BookingRequestDialogProps {
   open: boolean,
@@ -85,17 +86,19 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
     }
   }
 
-  // TODO: Make a VisuallyHidden component to hide elements but still provide aria labels
-
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogContent className="px-0 py-4 md:min-w-xl">
-        {/*<DialogHeader className="px-4">
-          <DialogTitle>Neue Buchung</DialogTitle>
-          <DialogDescription>Geben Sie ihren gewünschten Aufenthaltszeitraum, sowie die erforderlichen Zimmer inklusive der Personenanzahl an</DialogDescription>
-        </DialogHeader>*/}
+        <DialogHeader>
+          <VisuallyHidden.Root asChild>
+            <DialogTitle>{t('public.Booking.Request.Title')}</DialogTitle>
+          </VisuallyHidden.Root>
+          <VisuallyHidden.Root>
+            <DialogDescription>{t('public.Booking.Request.Description')}</DialogDescription>
+          </VisuallyHidden.Root>
+        </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-          <ScrollArea className={`w-full px-4 max-h-125`}>
+          <ScrollArea className={`w-full px-4 max-h-115`}>
             <div className="flex flex-col gap-2 items-center mb-4">
               <Controller
                 control={control}
