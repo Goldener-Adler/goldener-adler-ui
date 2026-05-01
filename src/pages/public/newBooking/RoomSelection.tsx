@@ -12,6 +12,7 @@ import {useUpdateRoomSelection} from "@/hooks/useUpdateRoomSelection";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {useNavigate} from "react-router";
+import {RoomCardSkeleton} from "@/components/public/RoomCardSkeleton";
 
 export const RoomSelection: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -23,8 +24,8 @@ export const RoomSelection: FunctionComponent = () => {
   const [activeRoomCategory, setActiveRoomCategory] = useState<RoomCategory | null>(null);
   const navigate = useNavigate();
 
-  if (state.status !== 'initialized') {
-    return; // TODO: Allow rehydration state
+  if (state.status === 'uninitialized') {
+    return;
   }
 
   const openDialog = (room: RoomCategory, requestedRoom: RequestedRoom) => {
@@ -71,7 +72,15 @@ export const RoomSelection: FunctionComponent = () => {
             </SidebarPageContentSpacing>
           </TabsContent>
         ))}
-        {isPending && <div>Loading</div>}
+        {isPending && (
+          <SidebarPageContentSpacing>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
+              <RoomCardSkeleton/>
+              <RoomCardSkeleton/>
+              <RoomCardSkeleton/>
+            </div>
+          </SidebarPageContentSpacing>
+        )}
         {!isPending && !data && <div>No Rooms</div>}
       </Tabs>
         {data && activeRoomCategory && activeRequestedRoom !== null && (

@@ -23,7 +23,7 @@ export const BookingLayout: FunctionComponent = () => {
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const { t } = useTranslation();
   const isMobile = useIsMobile();
-  const { isRehydrating } = useRehydrateBooking();
+  useRehydrateBooking();
 
   useEffect(() => {
     if (!isMobile) return;
@@ -36,10 +36,6 @@ export const BookingLayout: FunctionComponent = () => {
 
     return () => clearTimeout(timeout);
   }, [isMobile]);
-
-  if (isRehydrating) {
-    return <div>Rehydrating</div>
-  }
 
   return (
     <SidebarProvider side="right">
