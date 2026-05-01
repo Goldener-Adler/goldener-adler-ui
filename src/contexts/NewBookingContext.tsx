@@ -29,15 +29,15 @@ const getInitialState = () => {
   try {
     if (storedValue) {
         return {
-          status: "initialized",
+          status: "rehydrating",
           sessionId: storedValue.sessionId,
           checkIn: new Date(storedValue.checkIn),
           checkOut: new Date(storedValue.checkOut),
           requestedRooms: storedValue.requestedRooms,
-          roomHoldings: {},
+          roomHoldings: [],
           guestFormValues: storedValue.guestFormValues,
           guestFormIsValid: false,
-        } satisfies Extract<NewBookingState, { status: "initialized" }>;
+        } satisfies Extract<NewBookingState, { status: "rehydrating" }>;
     }
     return initialState;
   } catch {

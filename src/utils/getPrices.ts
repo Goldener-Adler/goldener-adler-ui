@@ -13,7 +13,12 @@ export const getExtraPrice = (price: Price, value: boolean | string | number, pe
   }
 }
 
-export function getRoomTotal(room: RoomHolding, price: Price, people: number, nights: number): number {
+export function getRoomTotal(
+  room: RoomHolding,
+  price: Price,
+  people: number,
+  nights: number
+): number {
   const extrasTotal = room.extrasSnapshot
     .filter(extra => extra.value !== false)
     .reduce((sum, extra) => {
@@ -26,9 +31,25 @@ export function getRoomTotal(room: RoomHolding, price: Price, people: number, ni
 
 // Pass Prices form BE
 
-export const getTotalPrice = (selectedRooms: Partial<Record<number, RoomHolding>>, requestedRooms: RequestedRoom[], nights: number)=> {
-  return Object.entries(selectedRooms).reduce((sum, [index, room]) => {
+export const getTotalPrice = (
+  selectedRooms: Partial<Record<string, RoomHolding>>,
+  requestedRooms: RequestedRoom[],
+  nights: number
+) => {
+  return requestedRooms.reduce((sum, req) => {
+    const room = selectedRooms[req.id];
     if (!room) return sum;
-    return sum + getRoomTotal(room, {amount: { eur: 5000 }, per: "night"}, requestedRooms[Number(index)].people, nights);
+
+    const people = req.people;
+
+    return (
+      sum +
+      getRoomTotal(
+        room,
+        { amount: { eur: 5000 }, per: "night" }, // replace with real BE price
+        people,
+        nights
+      )
+    );
   }, 0);
-}
+};

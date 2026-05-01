@@ -3,6 +3,7 @@ import {AMENITY_KEYS, BOOKING_OPTIONS} from "@/assets/consts.ts";
 import {createBookingSchema} from "@/utils/createBookingSchema.ts";
 import {z} from "zod";
 import type {IconType} from "react-icons";
+import type {ExtrasFormValues} from "@/assets/bookingTypes";
 
 /*
  * Legacy Values //TODO: Clean Up Legacy Types
@@ -114,7 +115,7 @@ export type RoomCategory = {
 }
 
 /*
- * Dashboard Types (Export)
+ * Dashboard / Backend Types (Export)
  */
 
 export type Booking = {
@@ -152,3 +153,29 @@ export type Amenity = {
   icon: IconType,
   variant: 'default' | 'secondary',
 }
+
+export type CreateRoomHoldingPayload = {
+  roomCategoryId: string;
+  requestedRoomId: string;
+  people: number;
+  selectedExtras: ExtrasFormValues;
+  checkIn: Date;
+  checkOut: Date;
+}
+
+export type RoomHoldingBE = {
+  holdingId: string;
+  roomCategoryId: string;
+  capacity: number;
+  requestedRoomId: string;
+  people: number;
+  selectedExtras: ExtrasFormValues; // raw selection only
+  checkIn: Date;
+  checkOut: Date;
+  expiresAt: Date;
+}
+
+export type DIAGNOSTIC_CODE =
+  'REHYDRATION_FAILED' |
+  'DELETE_ROOM_HOLD_FAILED' |
+  'SAVE_ROOM_HOLD_FAILED'

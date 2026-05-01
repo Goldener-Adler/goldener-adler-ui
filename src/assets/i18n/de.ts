@@ -362,7 +362,10 @@ const de = {
     Toast: {
       GuestFormInvalid: "Kontaktangaben unvollständig",
       BookingSuccess: "Buchung Erfolgreich",
-      NoRoomsAvailable: "Es gibt keine verfügbare Zimmerkombination, die Ihrer Anfrage entspricht"
+      NoRoomsAvailable: "Es gibt keine verfügbare Zimmerkombination, die Ihrer Anfrage entspricht",
+      RehydrationFailed: "Zimmerauswahl konnte nicht wiederhergestellt werden",
+      DeleteRoomHoldFailed: "Zimmerwahl konnte nicht entfernt werden",
+      SaveRoomHoldFailed: "Zimmerwahl konnte nicht gespeichert werden",
     },
     Default: {
       Title: "No Title"

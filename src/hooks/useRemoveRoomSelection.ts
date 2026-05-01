@@ -1,30 +1,34 @@
 import {useNewBooking} from "@/contexts/NewBookingContext";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {deleteRoomHold} from "@/api/bookingAPI";
+import {deleteRoomHolding} from "@/api/bookingAPI";
+import {toast} from "sonner";
+import {useTranslation} from "react-i18next";
+import {getDiagnosticCodeMessage} from "@/assets/i18n/i18nConsts";
 
 export function useRemoveRoomSelection() {
   const { state, dispatch } = useNewBooking();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (requestedRoomIndex: number) => {
+    mutationFn: async (requestedRoomId: string) => {
 
-      if (state.status === "uninitialized") {
+      if (state.status !== "initialized") {
         throw new Error("Invalid state");
       }
 
-      const existingHoldId = state.roomHoldings[requestedRoomIndex]?.id;
+      const existingHoldId = state.roomHoldings[requestedRoomId]?.holdingId;
 
       if (!existingHoldId) {
-        throw new Error("Could not find hold for requested room " + requestedRoomIndex);
+        throw new Error("Could not find hold for requested room " + requestedRoomId);
       }
 
-      return deleteRoomHold(existingHoldId);
+      return deleteRoomHolding(state.sessionId, existingHoldId);
     },
-    onSuccess: (_, requestedRoomIndex) => {
+    onSuccess: (_, requestedRoomId) => {
       dispatch({
         type: 'REMOVE_ROOM_HOLDING',
-        index: requestedRoomIndex
+        requestedRoomId
       })
 
       queryClient.invalidateQueries({
@@ -35,7 +39,7 @@ export function useRemoveRoomSelection() {
     onError: (error) => {
       // 🚨 race condition happened
       console.error(error);
-      alert("Could not remove room");
+      toast.error(t(getDiagnosticCodeMessage['DELETE_ROOM_HOLD_FAILED']));
 
       queryClient.invalidateQueries({
         queryKey: ["availability"],

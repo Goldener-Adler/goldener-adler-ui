@@ -439,4 +439,4 @@ export const MOCK_ROOM_CATEGORIES: RoomCategory[] = [
     amenities: MOCK_AMENITIES,
     extras: MOCK_EXTRAS,
   }
-]
+];

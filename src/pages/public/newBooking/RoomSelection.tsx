@@ -5,7 +5,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {RoomCard} from "@/components/public/RoomCard";
 import {useNewBooking} from "@/contexts/NewBookingContext";
 import {RoomExtrasDialog} from "@/components/public/RoomExtrasDialog";
-import type {ExtrasFormValues} from "@/assets/bookingTypes";
+import type {ExtrasFormValues, RequestedRoom} from "@/assets/bookingTypes";
 import type {RoomCategory} from "@/assets/types";
 import {useCheckAvailability} from "@/hooks/useCheckAvailability";
 import {useUpdateRoomSelection} from "@/hooks/useUpdateRoomSelection";
@@ -16,28 +16,27 @@ import {useNavigate} from "react-router";
 export const RoomSelection: FunctionComponent = () => {
   const { t } = useTranslation();
   const { state } = useNewBooking();
-  const { isLoading, data } = useCheckAvailability();
+  const { isPending, data } = useCheckAvailability();
   const { mutate: updateRoomSelection } = useUpdateRoomSelection();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeRequestedRoom, setActiveRequestedRoom] = useState<RequestedRoom | null>(null);
   const [activeRoomCategory, setActiveRoomCategory] = useState<RoomCategory | null>(null);
   const navigate = useNavigate();
 
-  if (state.status === 'uninitialized') {
-    return;
+  if (state.status !== 'initialized') {
+    return; // TODO: Allow rehydration state
   }
 
-  const openDialog = (room: RoomCategory, index: number) => {
+  const openDialog = (room: RoomCategory, requestedRoom: RequestedRoom) => {
     setActiveRoomCategory(room);
-    setActiveIndex(index);
+    setActiveRequestedRoom(requestedRoom);
     setIsDialogOpen(true);
   };
 
   const onSaveRoom = (extras: ExtrasFormValues) => {
-    if (activeRoomCategory !== null && activeIndex !== null && data) {
-      console.log("ExtrasFormValues: ", extras);
+    if (activeRoomCategory !== null && activeRequestedRoom !== null && data) {
       updateRoomSelection({
-        roomIndex: activeIndex,
+        requestedRoom: activeRequestedRoom,
         room: activeRoomCategory,
         selectedExtras: extras
       })
@@ -53,7 +52,7 @@ export const RoomSelection: FunctionComponent = () => {
             <TabsTrigger key={`room-tab-trigger-${index + 1}`} className="flex-initial" value={`${index}`}>{t('public.Booking.Options.Rooms_one')} {index + 1}</TabsTrigger>
           ))}
         </TabsList>
-        {!isLoading && data && state.requestedRooms.map((_, requestedRoomIndex) => (
+        {!isPending && data && state.requestedRooms.map((requestedRoom, requestedRoomIndex) => (
           <TabsContent key={`room-tab-content-${requestedRoomIndex + 1}`} value={`${requestedRoomIndex}`}>
             <SidebarPageContentSpacing>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
@@ -61,8 +60,8 @@ export const RoomSelection: FunctionComponent = () => {
                 <RoomCard
                   key={`${room.id}`}
                   room={room}
-                  isSelected={state.roomHoldings[requestedRoomIndex]?.id === room.id}
-                  onButtonClick={() => openDialog(room, requestedRoomIndex)}
+                  isSelected={state.roomHoldings[requestedRoom.id]?.id === room.id}
+                  onButtonClick={() => openDialog(room, requestedRoom)}
                 />
               )}
               <Button className="mt-4 col-span-1 sm:col-span-2 xl:col-span-3 w-fit justify-self-end" onClick={() => navigate('/new-booking/guests')}>
@@ -72,16 +71,18 @@ export const RoomSelection: FunctionComponent = () => {
             </SidebarPageContentSpacing>
           </TabsContent>
         ))}
+        {isPending && <div>Loading</div>}
+        {!isPending && !data && <div>No Rooms</div>}
       </Tabs>
-        {data && activeRoomCategory && activeIndex !== null && (
+        {data && activeRoomCategory && activeRequestedRoom !== null && (
           <RoomExtrasDialog
             isOpen={isDialogOpen}
             roomCategory={activeRoomCategory}
-            existing={state.roomHoldings[activeIndex]?.id === activeRoomCategory.id
-              ? state.roomHoldings[activeIndex]?.extrasFormValues
+            existing={state.roomHoldings[activeRequestedRoom.id]?.id === activeRoomCategory.id
+              ? state.roomHoldings[activeRequestedRoom.id]?.extrasFormValues
               : undefined
             }
-            isSelected={state.roomHoldings[activeIndex]?.id === activeRoomCategory.id}
+            isSelected={state.roomHoldings[activeRequestedRoom.id]?.id === activeRoomCategory.id}
             onClose={() => setIsDialogOpen(false)}
             onSubmit={onSaveRoom}
           />

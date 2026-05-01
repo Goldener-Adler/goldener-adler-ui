@@ -16,12 +16,14 @@ import {useTranslation} from "react-i18next";
 import {BookingSteps} from "@/components/public/BookingSteps";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {useIsMobile} from "@/hooks/use-mobile";
+import {useRehydrateBooking} from "@/hooks/useRehydrateBooking";
 
 export const BookingLayout: FunctionComponent = () => {
   const navigate = useNavigate();
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const { t } = useTranslation();
   const isMobile = useIsMobile();
+  const { isRehydrating } = useRehydrateBooking();
 
   useEffect(() => {
     if (!isMobile) return;
@@ -34,6 +36,10 @@ export const BookingLayout: FunctionComponent = () => {
 
     return () => clearTimeout(timeout);
   }, [isMobile]);
+
+  if (isRehydrating) {
+    return <div>Rehydrating</div>
+  }
 
   return (
     <SidebarProvider side="right">

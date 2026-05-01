@@ -6,10 +6,11 @@ import {
 } from "@/mocks/mockData.ts";
 import {toDateOnly} from "@/utils/formatDate.ts";
 import type {DateRange} from "react-day-picker";
-import type {Booking, RoomCategory} from "@/assets/types.ts";
-import type {ExtrasFormValues, RequestedRoom} from "@/assets/bookingTypes";
-import {createSessionId} from "@/utils/createSessionId";
+import type {Booking, CreateRoomHoldingPayload, RoomCategory, RoomHoldingBE} from "@/assets/types.ts";
+import type {RequestedRoom} from "@/assets/bookingTypes";
 import type {BookingForm} from "@/assets/guestTypes";
+import {mockStore} from "@/mocks/store";
+import {toRoomHolding} from "@/mocks/toRoomHolding";
 
 export const handlers = [
   http.post(import.meta.env.VITE_BOOKING_ENDPOINT, () => {
@@ -74,24 +75,56 @@ export const handlers = [
       }
     );
   }),
-  http.post(API_ENDPOINT + "/room-holdings", async ({ request }) => {
-    const body = await request.json() as {
-      sessionId: string,
-      roomCategoryId: string,
-      requestedRoomIndex: number,
-      people: number,
-      from: Date,
-      to: Date,
-      extras: ExtrasFormValues,
-      holdingId: string | undefined,
+
+  http.get(API_ENDPOINT + "/sessions/:sessionId/room-holdings", ({ params }) => {
+    const { sessionId } = params as { sessionId: string };
+    const holdings = mockStore.getHoldings(sessionId).map(toRoomHolding);
+    return HttpResponse.json(holdings, { status: 200 });
+  }),
+
+  http.post(API_ENDPOINT + "/sessions/:sessionId/room-holdings", async ({ params, request }) => {
+    const { sessionId } = params as { sessionId: string };
+    const body = await request.json() as CreateRoomHoldingPayload;
+
+    const stored: RoomHoldingBE = {
+      ...body,
+      holdingId: crypto.randomUUID(),
+      capacity: MOCK_ROOM_CATEGORIES.find(room => room.id === body.roomCategoryId)?.capacity ?? 0,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 30), // 30 min
+    };
+
+    mockStore.addHolding(sessionId, stored);
+    return HttpResponse.json(toRoomHolding(stored), { status: 201 });
+  }),
+
+  http.put(API_ENDPOINT + "/sessions/:sessionId/room-holdings/:holdingId", async ({ params, request }) => {
+    const { sessionId, holdingId } = params as { sessionId: string; holdingId: string };
+    const updates = await request.json() as Partial<CreateRoomHoldingPayload>;
+
+    const updated = mockStore.updateHolding(sessionId, holdingId, {
+      ...updates,
+      selectedExtras: updates.selectedExtras,
+    });
+
+    if (!updated) {
+      return HttpResponse.json({ message: "Holding not found" }, { status: 404 });
     }
 
-    const holdingId = body.holdingId ? body.holdingId : createSessionId();
-    return HttpResponse.json(holdingId, { status: 200 });
+    return HttpResponse.json(toRoomHolding(updated), { status: 200 });
   }),
-  http.delete(API_ENDPOINT + "/room-holdings/:id", async () => {
-    return HttpResponse.json({status: 200});
+
+  http.delete(API_ENDPOINT + "/sessions/:sessionId/room-holdings/:holdingId", ({ params }) => {
+    const { sessionId, holdingId } = params as { sessionId: string; holdingId: string };
+    mockStore.removeHolding(sessionId, holdingId);
+    return new HttpResponse(null, { status: 204 });
   }),
+
+  http.delete(API_ENDPOINT + "/sessions/:sessionId/room-holdings", ({ params }) => {
+    const { sessionId } = params as { sessionId: string };
+    mockStore.clearHoldings(sessionId);
+    return new HttpResponse(null, { status: 204 });
+  }),
+
   http.post(API_ENDPOINT + "/booking/confirm", async ({ request }) => {
     const body = await request.json() as {
       sessionId: string,

@@ -362,7 +362,10 @@ const en = {
     Toast: {
       GuestFormInvalid: "Contact Data is incomplete",
       BookingSuccess: "Booking Success",
-      NoRoomsAvailable: "No available room combination matches your request"
+      NoRoomsAvailable: "No available room combination matches your request",
+      RehydrationFailed: "Could not restore room selections",
+      DeleteRoomHoldFailed: "Delete room hold failed",
+      SaveRoomHoldFailed: "Save room hold failed",
     },
     Default: {
       Title: "No Title"

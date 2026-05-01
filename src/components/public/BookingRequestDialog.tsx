@@ -48,7 +48,7 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
         : undefined,
       requestedRooms: state.requestedRooms.length > 0
         ? state.requestedRooms
-        : [{ people: 1 }],
+        : [{ id: crypto.randomUUID(), people: 1 }],
     });
   }, []);
 
@@ -145,7 +145,7 @@ export const BookingRequestDialog: FunctionComponent<BookingRequestDialogProps> 
                 </Item>
               ))}
               <Item variant="outline" size="sm" asChild className="w-full hover:cursor-pointer">
-                <button type="button" className="hover:bg-accent transition-all" onClick={() => appendRoomField({ people: 1 })}>
+                <button type="button" className="hover:bg-accent transition-all" onClick={() => appendRoomField({ id: crypto.randomUUID(), people: 1 })}>
                   <ItemMedia>
                     <Plus />
                   </ItemMedia>

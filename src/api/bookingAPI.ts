@@ -1,6 +1,6 @@
-import type {ExtrasFormValues, RequestedRoom} from "@/assets/bookingTypes";
+import type {RequestedRoom, RoomHolding} from "@/assets/bookingTypes";
 import {API_ENDPOINT} from "@/assets/consts";
-import type {RoomCategory} from "@/assets/types";
+import type {CreateRoomHoldingPayload, RoomCategory} from "@/assets/types";
 import type {BookingForm} from "@/assets/guestTypes";
 
 async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms: RequestedRoom[], sessionId: string): Promise<RoomCategory[]> {
@@ -25,37 +25,74 @@ async function fetchAvailableRooms(checkIn: Date, checkOut: Date, requestedRooms
   }
 }
 
-async function updateRoomHolds(sessionId: string, roomCategoryId: string, requestedRoomIndex: number, people: number, from: Date, to: Date, extras: ExtrasFormValues, holdingId?: string): Promise<string> {
-  const requestBody = {
-    sessionId,
-    roomCategoryId,
-    requestedRoomIndex,
-    people,
-    from,
-    to,
-    extras,
-    holdingId
-  }
+async function fetchRoomHoldings(sessionId: string): Promise<RoomHolding[]> {
+  const response = await fetch(`${API_ENDPOINT}/sessions/${sessionId}/room-holdings`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
 
-  const response = await fetch(API_ENDPOINT + "/room-holdings",
-    {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(requestBody),
-    }
-  );
-
-  return await response.json();
+  if (!response.ok) throw new Error(`Failed to fetch room holdings: ${response.status}`);
+  return response.json();
 }
 
-async function deleteRoomHold(holdId: string): Promise<void> {
-  const response = await fetch(API_ENDPOINT + "/room-holdings/" + holdId,
-    {
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
-    }
+async function createRoomHolding(
+  sessionId: string,
+  payload: CreateRoomHoldingPayload
+): Promise<RoomHolding> {
+  const response = await fetch(`${API_ENDPOINT}/sessions/${sessionId}/room-holdings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error(`Failed to create room holding: ${response.status}`);
+  return response.json();
+}
+
+async function updateRoomHolding(
+  sessionId: string,
+  holdingId: string,
+  payload: Partial<CreateRoomHoldingPayload>
+): Promise<RoomHolding> {
+  const response = await fetch(`${API_ENDPOINT}/sessions/${sessionId}/room-holdings/${holdingId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) throw new Error(`Failed to update room holding: ${response.status}`);
+  return response.json();
+}
+
+async function deleteRoomHolding(
+  sessionId: string,
+  holdingId: string
+): Promise<void> {
+  const response = await fetch(`${API_ENDPOINT}/sessions/${sessionId}/room-holdings/${holdingId}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (!response.ok) throw new Error(`Failed to delete room holding: ${response.status}`);
+}
+
+async function deleteRoomHoldings(sessionId: string, holdings: RoomHolding[]) {
+  await Promise.all(
+    holdings.map(h =>
+      fetch(`${API_ENDPOINT}/sessions/${sessionId}/room-holdings/${h.holdingId}`, {
+        method: "DELETE",
+      })
+    )
   );
-  return await response.json();
+}
+
+async function clearRoomHoldings(sessionId: string): Promise<void> {
+  const response = await fetch(`${API_ENDPOINT}/sessions/${sessionId}/room-holdings`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  if (!response.ok) throw new Error(`Failed to delete room holding: ${response.status}`);
 }
 
 async function confirmBooking(
@@ -84,7 +121,11 @@ async function confirmBooking(
 
 export {
   fetchAvailableRooms,
-  updateRoomHolds,
-  deleteRoomHold,
+  fetchRoomHoldings,
+  createRoomHolding,
+  updateRoomHolding,
+  deleteRoomHolding,
+  deleteRoomHoldings,
+  clearRoomHoldings,
   confirmBooking
 }

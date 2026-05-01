@@ -41,9 +41,9 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({room, onButtonClick,
       <Card className={`relative p-0 gap-0 ${isUnavailable && 'opacity-75'}`}>
         <div className="absolute rounded-t-xl inset-0 z-30 aspect-video bg-black/35" />
         <img
-          src="https://avatar.vercel.sh/shadcn1"
+          src="https://www.gasthof-goldener-adler.de/images/adler/zimmer.jpg"
           alt="Event cover"
-          className="rounded-t-xl relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
+          className="rounded-t-xl relative z-20 aspect-video w-full object-cover"
         />
         <CardHeader className="px-4 pt-4">
           <CardTitle>{localize(room.title)}</CardTitle>

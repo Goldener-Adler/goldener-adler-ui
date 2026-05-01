@@ -84,14 +84,14 @@ export const BookingSidebar: FunctionComponent = () => {
       </SidebarHeader>
       <Separator/>
       <SidebarContent className="no-scrollbar py-4">
-        {state.requestedRooms.map((_, index) => {
-          const roomHolding = state.roomHoldings[index];
+        {state.requestedRooms.map((requestedRoom, index) => {
+          const roomHolding = state.roomHoldings[requestedRoom.id];
           return (
             <BookingSelectionSidebarGroup
               key={`${index}-${roomHolding ? roomHolding.id : 'no-selection' }`}
               requestedRoomIndex={index}
               roomHolding={roomHolding}
-              onRemoveSelection={() => removeRoomSelection(index)}
+              onRemoveSelection={() => removeRoomSelection(requestedRoom.id)}
             />)
         })}
       </SidebarContent>

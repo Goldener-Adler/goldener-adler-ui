@@ -6,6 +6,7 @@ export const initialState: NewBookingState = {
   checkIn: undefined,
   checkOut: undefined,
   requestedRooms: [],
+  roomHoldings: {},
   sessionId: null,
 };
 
@@ -33,7 +34,7 @@ export function bookingReducer(
         checkOut: action.checkOut,
         sessionId: action.sessionId,
         requestedRooms: action.rooms,
-        roomHoldings: [],
+        roomHoldings: action.roomHoldings,
         guestFormValues: getInitialBookingFormValues(additionalGuestCount),
         guestFormIsValid: false
       };
@@ -49,7 +50,7 @@ export function bookingReducer(
         checkOut: action.checkOut,
         sessionId: action.sessionId,
         requestedRooms: action.rooms,
-        /* rehydrate with guest form values from session storage in the future */
+        roomHoldings: state.roomHoldings,
         guestFormValues: getInitialBookingFormValues(additionalGuestCount),
         guestFormIsValid: false
       }
@@ -69,7 +70,7 @@ export function bookingReducer(
       if (state.status === 'initialized') {
 
         let newRoomHoldings = {...state.roomHoldings};
-        newRoomHoldings[action.index] = action.room;
+        newRoomHoldings[action.requestedRoomId] = action.room;
 
         return {
           ...state,
@@ -82,7 +83,7 @@ export function bookingReducer(
     case "REMOVE_ROOM_HOLDING": {
       if (state.status === 'initialized') {
         const newRoomHoldings = {...state.roomHoldings};
-        delete newRoomHoldings[action.index];
+        delete newRoomHoldings[action.requestedRoomId];
         return {
           ...state,
           roomHoldings: newRoomHoldings,

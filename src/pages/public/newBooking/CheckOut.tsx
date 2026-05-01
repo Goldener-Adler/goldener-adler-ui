@@ -262,8 +262,9 @@ export const CheckOut: FunctionComponent = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Object.entries(state.roomHoldings).map(([index, room]) => {
-              const people = state.requestedRooms[Number(index)].people;
+            {state.requestedRooms.map((requestedRoom, index) => {
+              const room = state.roomHoldings[requestedRoom.id];
+              const people = requestedRoom.people;
               return (
                 <Fragment key={room ? `${index}-${room.id}` : `${index}-no-room`}>
                   {room

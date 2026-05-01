@@ -44,6 +44,7 @@ export const createNewBookingSchema = () => {
   // TODO: Discuss if a Request should have a Max Room Number
   const requestedRoomsSchema = z.array(
     z.object({
+      id: z.string(),
       people: z.number().min(1).max(4),
     })
   ).min(1);
