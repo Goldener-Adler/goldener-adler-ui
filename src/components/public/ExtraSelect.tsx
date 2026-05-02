@@ -31,12 +31,12 @@ export const ExtraSelect: FunctionComponent<ExtraSelectProps> = ({extra, control
 
   return (
     <Field>
-      <FieldLabel htmlFor={extra.label.en}>
+      <FieldLabel htmlFor={extra.id}>
         {localize(extra.label)}
-        {extra.price && ` (${extra.price.amount.eur.toFixed(2)} €)`}
+        {extra.price && ` (${formatPrice(extra.price.amount)} ${t(pricePerTranslationMap[extra.price.per])})`}
       </FieldLabel>
       <Controller
-        name={extra.label.en}
+        name={extra.id}
         control={control}
         render={({ field }) => (
           <Select
@@ -47,15 +47,15 @@ export const ExtraSelect: FunctionComponent<ExtraSelectProps> = ({extra, control
               field.onChange(original?.value ?? val);
             }}
           >
-            <SelectTrigger id={extra.label.en}>
-              <SelectValue />
+            <SelectTrigger id={extra.id}>
+              <SelectValue placeholder={t('public.Buttons.Select')} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>{localize(extra.label)}</SelectLabel>
                 {extra.options.map((option) => (
                   <SelectItem
-                    key={String(option.value)}
+                    key={option.id}
                     value={String(option.value)}
                   >
                     <span>

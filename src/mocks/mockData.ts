@@ -283,58 +283,71 @@ export const MOCK_BOOKINGS: Booking[] = [
 
 const MOCK_EXTRAS: Extra[] = [
   {
+    id: "breakfast", // ✅ stable id
     label: {
-      en: 'Breakfast',
-      de: 'Frühstück',
+      en: "Breakfast",
+      de: "Frühstück",
     },
     options: [
       {
+        id: "breakfast_none", // ✅ option id
         label: {
-          en: 'Regular',
-          de: 'Standard',
+          en: "No Breakfast",
+          de: "Kein Frühstück",
         },
-        value: 'regular',
-        price: {
-          amount: { eur: 1000 },
-          per: "nightAndPerson",
-        }
+        value: "default",
       },
       {
+        id: "breakfast_regular", // ✅ option id
         label: {
-          en: 'Vegetarian',
-          de: 'Vegetarisch',
+          en: "Regular",
+          de: "Standard",
         },
-        value: 'vegetarian',
+        value: "regular",
         price: {
-          amount: { eur: 1000 },
+          amount: 1000,
           per: "nightAndPerson",
-        }
+        },
       },
       {
+        id: "breakfast_vegetarian",
         label: {
-          en: 'Vegan',
-          de: 'Vegan',
+          en: "Vegetarian",
+          de: "Vegetarisch",
         },
-        value: 'vegan',
+        value: "vegetarian",
         price: {
-          amount: { eur: 1000 },
+          amount: 1000,
           per: "nightAndPerson",
-        }
-      }
-    ]
+        },
+      },
+      {
+        id: "breakfast_vegan",
+        label: {
+          en: "Vegan",
+          de: "Vegan",
+        },
+        value: "vegan",
+        price: {
+          amount: 1000,
+          per: "nightAndPerson",
+        },
+      },
+    ],
   },
   {
+    id: "bike_parking",
     label: {
-      en: 'Bike Parking',
-      de: 'Fahrradstellplätze',
+      en: "Bike Parking",
+      de: "Fahrradstellplätze",
     },
     options: undefined,
     price: {
-      amount: { eur: 500 },
+      amount: 500,
       per: "night",
-    }
-  }
-]
+    },
+  },
+];
 
 const MOCK_AMENITIES: NewAmenity[] = [
   {
@@ -388,9 +401,7 @@ export const MOCK_ROOM_CATEGORIES: RoomCategory[] = [
       de: 'Etwas Text',
     },
     price: {
-      amount: {
-        eur: 4000
-      },
+      amount: 4000,
       per: "night"
     },
     capacity: 1,
@@ -409,9 +420,7 @@ export const MOCK_ROOM_CATEGORIES: RoomCategory[] = [
       de: 'Etwas Text',
     },
     price: {
-      amount: {
-        eur: 5500
-      },
+      amount: 5500,
       per: "night"
     },
     capacity: 2,
@@ -430,9 +439,7 @@ export const MOCK_ROOM_CATEGORIES: RoomCategory[] = [
       de: 'Etwas Text',
     },
     price: {
-      amount: {
-        eur: 6000
-      },
+      amount: 6000,
       per: "night"
     },
     capacity: 3,

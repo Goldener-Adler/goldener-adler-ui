@@ -1,7 +1,7 @@
 import {z} from "zod";
 import {createNewBookingSchema} from "@/utils/createNewBookingRequestSchema";
 import type {BookingForm} from "@/assets/guestTypes";
-import type {Extra, MultilingualString, SelectedExtraSnapshot} from "@/assets/types";
+import type {Extra, MultilingualString, Price, SelectedExtraSnapshot} from "@/assets/types";
 import type {DeepPartial} from "react-hook-form";
 
 export const newBookingRequestSchema = createNewBookingSchema();
@@ -16,7 +16,7 @@ export const initialBookingRequestValues: NewBookingRequest = {
 export function buildExtrasSchema(extras: Extra[]) {
   const shape = Object.fromEntries(
     extras.map(extra => [
-      extra.label.en,
+      extra.id,
       extra.options === undefined
         ? z.boolean()                          // yes/no extra
         : z.union([
@@ -49,8 +49,8 @@ export type RoomHolding = {
   id: string;
   requestedRoomId: string;
   capacity: number;
+  price: Price;
   title: MultilingualString;
-  extrasFormValues: ExtrasFormValues;
   extrasSnapshot: SelectedExtraSnapshot[];
   holdingId: string;
 };
@@ -72,7 +72,6 @@ export type NewBookingState = (
   requestedRooms: RequestedRoom[];
   roomHoldings: Partial<Record<string, RoomHolding>>;
   guestFormValues: DeepPartial<BookingForm>;
-  guestFormIsValid: boolean;
 }
   | {
   status: "initialized";
@@ -82,16 +81,20 @@ export type NewBookingState = (
   requestedRooms: RequestedRoom[];
   roomHoldings: Partial<Record<string, RoomHolding>>;
   guestFormValues: DeepPartial<BookingForm>;
-  guestFormIsValid: boolean;
 });
+
+export type SafeNewBookingState = Extract<
+  NewBookingState,
+  { status: "initialized" | "rehydrating" }
+>;
 
 export type Action =
   | { type: "SET_REQUEST"; checkIn: Date; checkOut: Date, rooms: RequestedRoom[], roomHoldings: Partial<Record<number, RoomHolding>>, sessionId: string }
-  | { type: "SET_REHYDRATING"; checkIn: Date, checkOut: Date, rooms: RequestedRoom[], sessionId: string /* guestFormValues, isValid*/ }
+  | { type: "SET_REHYDRATING"; checkIn: Date, checkOut: Date, rooms: RequestedRoom[], sessionId: string }
   | { type: "REHYDRATE_ROOM_HOLDINGS"; roomHoldings: Partial<Record<number, RoomHolding>> }
   | { type: "ADD_OR_UPDATE_ROOM_HOLDINGS"; room: RoomHolding, requestedRoomId: string }
   | { type: "REMOVE_ROOM_HOLDING"; requestedRoomId: string }
   | { type: "GO_TO_GUESTS" }
-  | { type: "UPDATE_BOOKING_FORM_VALUES"; guestFormValues: BookingForm, isValid: boolean }
+  | { type: "UPDATE_BOOKING_FORM_VALUES"; guestFormValues: BookingForm }
   | { type: "GO_TO_CHECKOUT" }
   | { type: "RESET_BOOKING" };

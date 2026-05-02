@@ -11,17 +11,18 @@ import {FieldGroup, FieldSet} from "@/components/ui/field";
 import {Button} from "@/components/ui/button";
 import type {ExtrasFormValues} from "@/assets/bookingTypes";
 import {useTranslation} from "react-i18next";
-import type {RoomCategory} from "@/assets/types";
+import type {RoomCategory, SelectedExtraSnapshot} from "@/assets/types";
 import {Separator} from "@/components/ui/separator";
 import {useLocalizedValue} from "@/hooks/useLocalizedValue";
 import {useExtrasForm} from "@/hooks/useExtrasForm";
 import {ExtraToggle} from "@/components/public/ExtraToggle";
 import {ExtraSelect} from "@/components/public/ExtraSelect";
+import {snapshotToFormValues} from "@/utils/buildExtrasSnapshot";
 
 interface RoomExtrasDialogProps {
   isOpen: boolean;
   roomCategory: RoomCategory;
-  existing?: ExtrasFormValues;
+  existing?: SelectedExtraSnapshot[];
   isSelected: boolean;
   onClose: () => void;
   onSubmit: (data: ExtrasFormValues) => void;
@@ -42,7 +43,8 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      reset(existing);
+      const formValues = snapshotToFormValues(existing, roomCategory.extras);
+      reset(formValues);
     }
   }, [isOpen, existing]);
 
@@ -59,9 +61,9 @@ export const RoomExtrasDialog: FunctionComponent<RoomExtrasDialogProps> = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldSet>
             <FieldGroup className="gap-3">
-              {roomCategory.extras.map((extra, index) => extra.options === undefined
-                  ? <ExtraToggle key={index} extra={extra} control={control} />
-                  : <ExtraSelect key={index} extra={extra} control={control} />
+              {roomCategory.extras.map((extra) => extra.options === undefined
+                  ? <ExtraToggle key={extra.id} extra={extra} control={control} />
+                  : <ExtraSelect key={extra.id} extra={extra} control={control} />
               )}
             </FieldGroup>
           </FieldSet>

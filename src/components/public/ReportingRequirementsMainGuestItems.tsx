@@ -1,4 +1,4 @@
-import type {ReportingRequirement} from "@/assets/guestTypes";
+import type {UnsafeReportingRequirementForm} from "@/assets/guestTypes";
 import type {FunctionComponent} from "react";
 import {AccordionContent, AccordionItem, AccordionTrigger} from "../ui/accordion";
 import {Item, ItemContent, ItemDescription, ItemTitle} from "@/components/ui/item";
@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 import {getCountryDisplayName} from "@/utils/getNationalities";
 
 interface ReportingRequirementsMainGuestItemsProps {
-  values: ReportingRequirement['mainGuest'];
+  values: UnsafeReportingRequirementForm['mainGuest'];
 }
 
 export const ReportingRequirementsMainGuestItems: FunctionComponent<ReportingRequirementsMainGuestItemsProps> = ({ values }: ReportingRequirementsMainGuestItemsProps) => {

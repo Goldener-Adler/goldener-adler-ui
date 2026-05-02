@@ -1,4 +1,4 @@
-import {type FunctionComponent, useEffect} from "react";
+import {type FunctionComponent, useEffect, useRef} from "react";
 import {getNationalities} from "@/utils/getNationalities";
 import {Controller, type UseFormReturn, useWatch} from "react-hook-form";
 import {Field, FieldError, FieldLabel} from "@/components/ui/field";
@@ -54,6 +54,7 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
     name: `reportingRequirement.allGuestsAreFamily`,
   })
 
+  const prevAllGuestsAreFamily = useRef(allGuestsAreFamily);
 
   const isMainGuest = prefix === "reportingRequirement.mainGuest";
 
@@ -71,7 +72,11 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
 
   // sync checkboxes with main total family checkbox
   useEffect(() => {
-    if(!isMainGuest) {
+    // guard against initial value being false and thereby resetting all
+    if (allGuestsAreFamily === prevAllGuestsAreFamily.current) return;
+    prevAllGuestsAreFamily.current = allGuestsAreFamily;
+
+    if (!isMainGuest) {
       form.setValue(`${prefix}.familyMember`, allGuestsAreFamily);
     }
   }, [allGuestsAreFamily]);
@@ -168,7 +173,7 @@ export const ReportingRequirementFields: FunctionComponent<ReportingRequirementF
         render={({ field }) => (
           <Checkbox
             id={`${prefix}.familyMember`}
-            checked={field.value}
+            checked={field.value ?? false}
             onCheckedChange={(checked) => field.onChange(!!checked)}
             disabled={allGuestsAreFamily}
           />

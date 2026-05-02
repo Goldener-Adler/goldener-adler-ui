@@ -31,9 +31,8 @@ export function useUpdateRoomSelection() {
 
       const payload: CreateRoomHoldingPayload = {
         roomCategoryId: room.id,
-        requestedRoomId: requestedRoom.id,
-        people: requestedRoom.people,
-        selectedExtras,
+        requestedRoom: requestedRoom,
+        extras: selectedExtras,
         checkIn: state.checkIn,
         checkOut: state.checkOut,
       };

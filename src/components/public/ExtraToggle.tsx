@@ -21,19 +21,19 @@ export const ExtraToggle: FunctionComponent<ExtraToggleProps> = ({extra, control
 
   return (
     <Controller
-      name={extra.label.en}
+      name={extra.id}
       control={control}
       render={({ field }) => (
         <Field orientation="horizontal">
           <Checkbox
-            id={`${extra.label.en}-checkbox`}
+            id={`${extra.id}-checkbox`}
             checked={field.value as boolean}
             onCheckedChange={(checked) => {
               field.onChange(checked === true);
             }}
           />
           <FieldLabel
-            htmlFor={`${extra.label.en}-checkbox`}
+            htmlFor={`${extra.id}-checkbox`}
             className="font-normal"
           >
             {localize(extra.label)}

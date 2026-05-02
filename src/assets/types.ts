@@ -3,7 +3,7 @@ import {AMENITY_KEYS, BOOKING_OPTIONS} from "@/assets/consts.ts";
 import {createBookingSchema} from "@/utils/createBookingSchema.ts";
 import {z} from "zod";
 import type {IconType} from "react-icons";
-import type {ExtrasFormValues} from "@/assets/bookingTypes";
+import type {ExtrasFormValues, RequestedRoom} from "@/assets/bookingTypes";
 
 /*
  * Legacy Values //TODO: Clean Up Legacy Types
@@ -63,14 +63,14 @@ export type MenuItem = {
   path: string,
 }
 
-export type MultilingualString = { en: string } & Record<string, string>;
+export type Currency = 'eur' | 'usd'; // adjust
 
-export type MultiCurrencyAmount = { eur: number } & Record<string, number>;
+export type MultilingualString = { en: string } & Record<string, string>;
 
 export type PricePer = 'stay' | 'night' | 'person' | 'nightAndPerson';
 
 export type Price = {
-  amount: MultiCurrencyAmount;
+  amount: number;
   per: PricePer;
 }
 
@@ -83,13 +83,14 @@ export type NewAmenity = {
 }
 
 type BaseExtra = {
+  id: string;
   label: MultilingualString;
   price?: Price;
 }
 
 export type ExtraOption =
-  | { value: string;  label: MultilingualString, price?: Price; }
-  | { value: number;  label?: MultilingualString, price?: Price; }
+  | { id: string, value: string;  label: MultilingualString, price?: Price; }
+  | { id: string, value: number;  label?: MultilingualString, price?: Price; }
 
 export type ToggleExtra = BaseExtra & { options: undefined };
 export type SelectExtra = BaseExtra & { options: ExtraOption[] };
@@ -97,10 +98,12 @@ export type SelectExtra = BaseExtra & { options: ExtraOption[] };
 export type Extra = ToggleExtra | SelectExtra;
 
 export type SelectedExtraSnapshot = {
+  extraId: string;
   extraLabel: MultilingualString;
+  price?: Price;
 } & (
-  | { value: boolean; optionLabel?: never }           // yes/no
-  | { value: ExtraOption['value']; optionLabel?: MultilingualString } // multi-value
+  | { value: boolean; optionLabel?: never; optionPrice?: Price }           // yes/no
+  | { value: ExtraOption['value']; optionId?: string; optionLabel?: MultilingualString; optionPrice?: Price } // multi-value
   )
 
 export type RoomCategory = {
@@ -156,9 +159,8 @@ export type Amenity = {
 
 export type CreateRoomHoldingPayload = {
   roomCategoryId: string;
-  requestedRoomId: string;
-  people: number;
-  selectedExtras: ExtrasFormValues;
+  extras: ExtrasFormValues;
+  requestedRoom: RequestedRoom;
   checkIn: Date;
   checkOut: Date;
 }
@@ -167,9 +169,9 @@ export type RoomHoldingBE = {
   holdingId: string;
   roomCategoryId: string;
   capacity: number;
-  requestedRoomId: string;
-  people: number;
-  selectedExtras: ExtrasFormValues; // raw selection only
+  price: Price;
+  extras: SelectedExtraSnapshot[];
+  requestedRoom: RequestedRoom;
   checkIn: Date;
   checkOut: Date;
   expiresAt: Date;

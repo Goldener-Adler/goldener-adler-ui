@@ -359,6 +359,17 @@ const de = {
       Contact: 'Kontakt',
       Torgelow: 'Torgelow',
     },
+    Alerts: {
+      GuestDataIncomplete: {
+        Title: "Gästeangaben unvollständig",
+        Content: "Bitte füllen Sie die notwendigen Angaben aus, um die Buchung abschließen zu können.",
+        Action: "Angaben anpassen",
+      },
+      PricesChanged: {
+        Title: "Preise geändert",
+        Content: "Bitte beachten Sie die aktualisierten Preise in der folgenden Übersicht.",
+      }
+    },
     Toast: {
       GuestFormInvalid: "Kontaktangaben unvollständig",
       BookingSuccess: "Buchung Erfolgreich",

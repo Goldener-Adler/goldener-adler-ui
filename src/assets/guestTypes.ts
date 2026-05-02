@@ -1,36 +1,21 @@
 import {z} from "zod";
 import type {TranslationKey} from "@/assets/i18n/i18n";
 
-const phoneSchema = z.string().regex(
-  /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
-  'public.Forms.Errors.Required.Phone' satisfies TranslationKey
-);
-export const contactInfoSchema = z.object({
-  firstName: z.string().min(1, { message: 'public.Forms.Errors.Required.FirstName' satisfies TranslationKey }),
-  lastName: z.string().min(1, { message: 'public.Forms.Errors.Required.LastName' satisfies TranslationKey }),
-  email: z.email({ error: 'public.Forms.Errors.Required.Email' satisfies TranslationKey}),
-  phone: z.union([phoneSchema, z.literal("")]).optional(),
-  message: z.string().optional()
-});
+function validateAddress(address: any, ctx: z.RefinementCtx) {
+  const result = addressSchema.safeParse(address);
 
-const reportingRequirementMainGuestSchema = z.object({
-  citizenship: z
-    .string()
-    .optional()
-    .refine((val) => !val || val.length > 0, {
-      message: 'public.Forms.Errors.Required.Citizenship' satisfies TranslationKey,
-    }),
-  birthDate: z.date().optional(),
-  address: z
-    .object({
-      street: z.string().min(1, { message: 'public.Forms.Errors.Required.Street' satisfies TranslationKey }),
-      postalCode: z.string().min(1, { message: 'public.Forms.Errors.Required.PostalCode' satisfies TranslationKey}),
-      city: z.string().min(1, { message: 'public.Forms.Errors.Required.City' satisfies TranslationKey}),
-      country: z.string().min(1, { message: 'public.Forms.Errors.Required.Country' satisfies TranslationKey}),
-    })
-    .optional(),
-}).superRefine((data, ctx) => {
-  const isForeign = data.citizenship && data.citizenship !== "de"
+  if (!result.success) {
+    result.error.issues.forEach((issue) => {
+      ctx.addIssue({
+        ...issue,
+        path: ["address", ...issue.path],
+      });
+    });
+  }
+}
+
+function validateMainGuest(data: any, ctx: z.RefinementCtx) {
+  const isForeign = data.citizenship !== "de"
 
   if (!isForeign) return
 
@@ -51,45 +36,11 @@ const reportingRequirementMainGuestSchema = z.object({
     return
   }
 
-  // 🔴 Validate address fields (important!)
-  const result = z.object({
-    street: z.string().min(1),
-    postalCode: z.string().min(1),
-    city: z.string().min(1),
-    country: z.string().min(1),
-  }).safeParse(data.address)
+  validateAddress(data.address, ctx);
+}
 
-  if (!result.success) {
-    result.error.issues.forEach((issue) => {
-      ctx.addIssue({
-        ...issue,
-        path: ["address", ...issue.path],
-      })
-    })
-  }
-})
-
-const reportingRequirementAdditionalGuestSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  citizenship: z
-    .string()
-    .optional()
-    .refine((val) => !val || val.length > 0, {
-      message: 'public.Forms.Errors.Required.Citizenship' satisfies TranslationKey,
-    }),
-  birthDate: z.date().optional(),
-  familyMember: z.boolean().optional(),
-  address: z
-    .object({
-      street: z.string().min(1),
-      postalCode: z.string().min(1),
-      city: z.string().min(1),
-      country: z.string().min(1),
-    })
-    .optional(),
-}).superRefine((data, ctx) => {
-  const isForeign = data.citizenship && data.citizenship !== "de"
+function validateAdditionalGuest(data: any, ctx: z.RefinementCtx) {
+  const isForeign = data.citizenship !== "de"
   const isFamilyMember = data.familyMember === true
 
   if (!isForeign) return
@@ -138,22 +89,63 @@ const reportingRequirementAdditionalGuestSchema = z.object({
     }
   }
 
-  // 🔴 Validate address fields (important!)
-  const result = z.object({
-    street: z.string().min(1),
-    postalCode: z.string().min(1),
-    city: z.string().min(1),
-    country: z.string().min(1),
-  }).safeParse(data.address)
+  validateAddress(data.address, ctx);
+}
 
-  if (!result.success) {
-    result.error.issues.forEach((issue) => {
-      ctx.addIssue({
-        ...issue,
-        path: ["address", ...issue.path],
-      })
-    })
+const phoneSchema = z.string().regex(
+  /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
+  'public.Forms.Errors.Required.Phone' satisfies TranslationKey
+);
+export const contactInfoSchema = z.object({
+  firstName: z.string().min(1, { message: 'public.Forms.Errors.Required.FirstName' satisfies TranslationKey }),
+  lastName: z.string().min(1, { message: 'public.Forms.Errors.Required.LastName' satisfies TranslationKey }),
+  email: z.email({ error: 'public.Forms.Errors.Required.Email' satisfies TranslationKey}),
+  phone: z.union([phoneSchema, z.literal("")]).optional(),
+  message: z.string().optional()
+});
+
+const addressSchema = z
+  .object({
+    street: z.string().min(1, { message: 'public.Forms.Errors.Required.Street' satisfies TranslationKey }),
+    postalCode: z.string().min(1, { message: 'public.Forms.Errors.Required.PostalCode' satisfies TranslationKey}),
+    city: z.string().min(1, { message: 'public.Forms.Errors.Required.City' satisfies TranslationKey}),
+    country: z.string().min(1, { message: 'public.Forms.Errors.Required.Country' satisfies TranslationKey}),
+  });
+
+const reportingRequirementBaseSchema = z.object({
+  citizenship: z.string().optional(),
+  birthDate: z.date().optional(),
+  address: addressSchema.optional(),
+});
+
+const reportingRequirementMainGuestSchema = reportingRequirementBaseSchema.superRefine((data, ctx) => {
+  if (!data.citizenship || data.citizenship.trim().length === 0) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["citizenship"],
+      message: 'public.Forms.Errors.Required.Citizenship',
+    });
+    return;
   }
+
+  validateMainGuest(data, ctx);
+});
+
+const reportingRequirementAdditionalGuestSchema = reportingRequirementBaseSchema.extend({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  familyMember: z.boolean().optional(),
+}).superRefine((data, ctx) => {
+  if (!data.citizenship || data.citizenship.trim().length === 0) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["citizenship"],
+      message: 'public.Forms.Errors.Required.Citizenship',
+    });
+    return;
+  }
+
+  validateAdditionalGuest(data, ctx);
 })
 
 const reportingRequirementObjectSchema = z.object({
@@ -259,16 +251,40 @@ export const getInitialBookingFormValues = (additionalGuestCount: number): Booki
   }
 }
 
+/*
+ * Less strict schemas for validating form values parsed from session storage
+ */
+
+const addressSessionSchema = z.object({
+  street: z.string().optional(),
+  postalCode: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+});
+
+const reportingRequirementBaseSessionSchema = z.object({
+  citizenship: z.string().optional(),
+  birthDate: z.date().optional(),
+  address: addressSessionSchema.optional(),
+});
+
+export const reportingRequirementSessionSchema = z.object({
+  mainGuest: reportingRequirementBaseSessionSchema,
+  allGuestsAreFamily: z.boolean().optional(),
+  allGuestsSameCitizenship: z.boolean().optional(),
+  additionalGuests: z.array(reportingRequirementBaseSessionSchema.extend({
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    familyMember: z.boolean().optional(),
+  })).optional()
+});
+
+export type UnsafeReportingRequirementForm = z.infer<typeof reportingRequirementSessionSchema>;
+
 export const bookingFormSessionSchema = z.object({
-  contact: z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.string(),
-    phone: z.string().optional(),
-    message: z.string().optional(),
-  }),
+  contact: contactInfoSchema,
   differentGuest: z.boolean(),
   fillAtCheckIn: z.boolean(),
-  reportingRequirement: z.any().optional(),
-  mainGuestContact: z.any().optional(),
+  reportingRequirement: reportingRequirementSessionSchema.nullable().optional(),
+  mainGuestContact: contactInfoSchema.optional(),
 });

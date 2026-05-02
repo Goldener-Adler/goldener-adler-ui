@@ -40,7 +40,7 @@ export const BookingSelectionSidebarGroup: FunctionComponent<BookingSidebarSelec
             </SidebarMenuAction>}
               <SidebarMenuSub className="mx-2">
                 {roomHolding && roomHolding.extrasSnapshot
-                  .filter(extra => extra.value !== false)
+                  .filter(extra => extra.value !== false && extra.value !== "default")
                   .map((extra) => (
                       <SidebarMenuSubItem key={`${roomHolding.id}-${extra.extraLabel.en}`} className="px-2 py-1">
                         <span>{localize(extra.extraLabel)}</span>

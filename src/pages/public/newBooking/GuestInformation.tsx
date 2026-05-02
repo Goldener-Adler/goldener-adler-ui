@@ -1,6 +1,6 @@
 import {type FunctionComponent, useEffect, useRef} from "react";
 import {Page} from "@/layouts/Page";
-import {Controller, useFieldArray, useForm, useFormState, useWatch} from "react-hook-form";
+import {Controller, type DeepPartial, useFieldArray, useForm, useWatch} from "react-hook-form";
 import {type BookingForm, bookingSchema, getInitialBookingFormValues} from "@/assets/guestTypes";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
@@ -35,14 +35,10 @@ export const GuestInformation: FunctionComponent = () => {
 
   if (state.status === "uninitialized") return;
 
-  const getFormDefaults = () => {
-    const defaults = state.guestFormValues;
+  const getFormDefaults = (): DeepPartial<BookingForm> => {
+    if (state.guestFormValues) return state.guestFormValues;
 
-    if (!defaults.reportingRequirement && additionalGuestCount > 0) {
-      defaults.reportingRequirement = getInitialBookingFormValues(additionalGuestCount).reportingRequirement;
-    }
-
-    return defaults;
+    return getInitialBookingFormValues(additionalGuestCount);
   };
 
   const form = useForm<BookingForm>({
@@ -57,14 +53,7 @@ export const GuestInformation: FunctionComponent = () => {
     name: "reportingRequirement.additionalGuests",
   });
 
-  const { isValid } = useFormState({ control });
-
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isValidRef = useRef(isValid);
-
-  useEffect(() => {
-    isValidRef.current = isValid;
-  }, [isValid]);
 
   useEffect(() => {
     const subscription = watch((values) => {
@@ -77,7 +66,6 @@ export const GuestInformation: FunctionComponent = () => {
         dispatch({
           type: "UPDATE_BOOKING_FORM_VALUES",
           guestFormValues: values as BookingForm,
-          isValid: isValidRef.current,
         });
       }, DEFAULT_INPUT_DEBOUNCE_MS);
     });
@@ -113,7 +101,6 @@ export const GuestInformation: FunctionComponent = () => {
     dispatch({
       type: "UPDATE_BOOKING_FORM_VALUES",
       guestFormValues: data,
-      isValid: form.formState.isValid
     });
     navigate('/new-booking/check-out');
   }

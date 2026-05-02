@@ -88,7 +88,7 @@ export const RoomSelection: FunctionComponent = () => {
             isOpen={isDialogOpen}
             roomCategory={activeRoomCategory}
             existing={state.roomHoldings[activeRequestedRoom.id]?.id === activeRoomCategory.id
-              ? state.roomHoldings[activeRequestedRoom.id]?.extrasFormValues
+              ? state.roomHoldings[activeRequestedRoom.id]?.extrasSnapshot
               : undefined
             }
             isSelected={state.roomHoldings[activeRequestedRoom.id]?.id === activeRoomCategory.id}

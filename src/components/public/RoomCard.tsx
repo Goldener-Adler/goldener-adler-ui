@@ -9,6 +9,7 @@ import {AmenityBadge} from "@/components/public/AmenityBadge";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import { useLocalizedValue } from "@/hooks/useLocalizedValue";
 import {useFormatPrice} from "@/hooks/useFormatPrice";
+import {pricePerTranslationMap} from "@/assets/i18n/i18nConsts";
 
 interface RoomCardProps {
   room: RoomCategory,
@@ -20,8 +21,6 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({room, onButtonClick,
   const { t } = useTranslation();
   const localize = useLocalizedValue();
   const formatPrice = useFormatPrice();
-
-  // TODO: Show Price Info based on Per definition of price
 
   const isUnavailable = room.amount === 0;
 
@@ -71,7 +70,7 @@ export const RoomCard: FunctionComponent<RoomCardProps> = ({room, onButtonClick,
           </Button>
           <div className="flex flex-col items-end">
             <b className="text-xl leading-7">{formatPrice(room.price.amount)}</b>
-            <small>{t('public.Rooms.Extras.Per.Night')}</small>
+            <small>{t(pricePerTranslationMap[room.price.per])}</small>
           </div>
         </CardFooter>
       </Card>

@@ -36,7 +36,6 @@ export function bookingReducer(
         requestedRooms: action.rooms,
         roomHoldings: action.roomHoldings,
         guestFormValues: getInitialBookingFormValues(additionalGuestCount),
-        guestFormIsValid: false
       };
     }
 
@@ -52,7 +51,6 @@ export function bookingReducer(
         requestedRooms: action.rooms,
         roomHoldings: state.roomHoldings,
         guestFormValues: getInitialBookingFormValues(additionalGuestCount),
-        guestFormIsValid: false
       }
     }
 
@@ -97,7 +95,6 @@ export function bookingReducer(
       return {
         ...state,
         guestFormValues: action.guestFormValues,
-        guestFormIsValid: action.isValid
       }
     }
 

@@ -95,6 +95,16 @@ async function clearRoomHoldings(sessionId: string): Promise<void> {
   if (!response.ok) throw new Error(`Failed to delete room holding: ${response.status}`);
 }
 
+export async function fetchPrices(sessionId: string): Promise<RoomHolding[]> {
+  const res = await fetch(`${API_ENDPOINT}/sessions/${sessionId}/price-check`, {
+    method: "POST",
+  });
+
+  if (!res.ok) throw new Error("Failed to fetch pricing");
+
+  return res.json();
+}
+
 async function confirmBooking(
   sessionId: string, // used to find roomHolds (selected rooms)
   checkIn: Date,

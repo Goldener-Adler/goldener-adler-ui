@@ -1,4 +1,4 @@
-import type { ReportingRequirement } from "@/assets/guestTypes";
+import type {UnsafeReportingRequirementForm} from "@/assets/guestTypes";
 import type {FunctionComponent} from "react";
 import {AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {Item, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 import {EMPTY_STRING} from "@/assets/consts";
 
 interface ReportingRequirementsAdditionalGuestItems {
-  values: NonNullable<ReportingRequirement['additionalGuests']>[number],
+  values: NonNullable<UnsafeReportingRequirementForm['additionalGuests']>[number],
   index: number,
   allIsFamily: boolean
 }

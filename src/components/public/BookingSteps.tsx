@@ -6,8 +6,7 @@ import type {TranslationKey} from "@/assets/i18n/i18n";
 import {useTranslation} from "react-i18next";
 import {useNewBooking} from "@/contexts/NewBookingContext";
 import {useIsMobile} from "@/hooks/use-mobile";
-
-// TODO: Turn into step based view with left & right arrow buttons on mobile with active step in the middle
+import {bookingSchema} from "@/assets/guestTypes";
 
 type Step = {
   path: string;
@@ -62,7 +61,7 @@ export const BookingSteps: FunctionComponent = () => {
         if (form instanceof HTMLFormElement) {
           form.requestSubmit(); // triggers RHF + validation
         }
-        if (state.guestFormIsValid) {
+        if (bookingSchema.safeParse(state.guestFormValues).success) {
           const next = steps[currentIndex + 1];
           navigate(next.path);
         }

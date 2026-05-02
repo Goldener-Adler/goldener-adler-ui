@@ -34,9 +34,8 @@ const getInitialState = () => {
           checkIn: new Date(storedValue.checkIn),
           checkOut: new Date(storedValue.checkOut),
           requestedRooms: storedValue.requestedRooms,
-          roomHoldings: [],
+          roomHoldings: {},
           guestFormValues: storedValue.guestFormValues,
-          guestFormIsValid: false,
         } satisfies Extract<NewBookingState, { status: "rehydrating" }>;
     }
     return initialState;
@@ -49,9 +48,6 @@ const getInitialState = () => {
 export function NewBookingProvider({children}: { children: ReactNode }) {
   const [state, dispatch] = useReducer(bookingReducer, initialState, getInitialState);
 
-  //TODO: Rehydrate selected rooms with a backend fetch on init (useEffect with empty dependency)
-
-  //TODO: Add Hooks for
   /*
     O - reset booking (delete room holds if existing, finally clear state)
     O - confirm booking

@@ -11,6 +11,7 @@ import type {RequestedRoom} from "@/assets/bookingTypes";
 import type {BookingForm} from "@/assets/guestTypes";
 import {mockStore} from "@/mocks/store";
 import {toRoomHolding} from "@/mocks/toRoomHolding";
+import {formValuesToSnapshot} from "@/utils/buildExtrasSnapshot";
 
 export const handlers = [
   http.post(import.meta.env.VITE_BOOKING_ENDPOINT, () => {
@@ -76,9 +77,10 @@ export const handlers = [
     );
   }),
 
-  http.get(API_ENDPOINT + "/sessions/:sessionId/room-holdings", ({ params }) => {
+  http.get(API_ENDPOINT + "/sessions/:sessionId/room-holdings", async ({ params }) => {
     const { sessionId } = params as { sessionId: string };
     const holdings = mockStore.getHoldings(sessionId).map(toRoomHolding);
+    await delay(400);
     return HttpResponse.json(holdings, { status: 200 });
   }),
 
@@ -86,14 +88,24 @@ export const handlers = [
     const { sessionId } = params as { sessionId: string };
     const body = await request.json() as CreateRoomHoldingPayload;
 
+    const selectedRoomCategory = MOCK_ROOM_CATEGORIES.find(room => room.id === body.roomCategoryId);
+
+    if (!selectedRoomCategory) {
+      return HttpResponse.json({ message: "Room not found" }, { status: 404 });
+    }
+
     const stored: RoomHoldingBE = {
       ...body,
+      roomCategoryId: body.roomCategoryId,
+      capacity: selectedRoomCategory.capacity,
+      price: selectedRoomCategory.price,
+      extras: formValuesToSnapshot(body.extras, selectedRoomCategory.extras),
       holdingId: crypto.randomUUID(),
-      capacity: MOCK_ROOM_CATEGORIES.find(room => room.id === body.roomCategoryId)?.capacity ?? 0,
       expiresAt: new Date(Date.now() + 1000 * 60 * 30), // 30 min
     };
 
     mockStore.addHolding(sessionId, stored);
+    await delay(400);
     return HttpResponse.json(toRoomHolding(stored), { status: 201 });
   }),
 
@@ -101,28 +113,59 @@ export const handlers = [
     const { sessionId, holdingId } = params as { sessionId: string; holdingId: string };
     const updates = await request.json() as Partial<CreateRoomHoldingPayload>;
 
+    const existing = mockStore.getHoldings(sessionId)
+      .find(h => h.holdingId === holdingId);
+
+    if (!existing) {
+      return HttpResponse.json({ message: "Holding not found" }, { status: 404 });
+    }
+
+    const selectedRoomCategory = MOCK_ROOM_CATEGORIES.find(room => room.id === updates.roomCategoryId);
+
+    if (!selectedRoomCategory) {
+      return HttpResponse.json({ message: "Room not found" }, { status: 404 });
+    }
+
     const updated = mockStore.updateHolding(sessionId, holdingId, {
       ...updates,
-      selectedExtras: updates.selectedExtras,
+      extras: updates.extras !== undefined
+        ? formValuesToSnapshot(updates.extras, selectedRoomCategory.extras)
+        : existing.extras,
     });
 
     if (!updated) {
       return HttpResponse.json({ message: "Holding not found" }, { status: 404 });
     }
-
+    await delay(400);
     return HttpResponse.json(toRoomHolding(updated), { status: 200 });
   }),
 
-  http.delete(API_ENDPOINT + "/sessions/:sessionId/room-holdings/:holdingId", ({ params }) => {
+  http.delete(API_ENDPOINT + "/sessions/:sessionId/room-holdings/:holdingId", async ({ params }) => {
     const { sessionId, holdingId } = params as { sessionId: string; holdingId: string };
     mockStore.removeHolding(sessionId, holdingId);
+    await delay(400);
     return new HttpResponse(null, { status: 204 });
   }),
 
-  http.delete(API_ENDPOINT + "/sessions/:sessionId/room-holdings", ({ params }) => {
+  http.delete(API_ENDPOINT + "/sessions/:sessionId/room-holdings", async ({ params }) => {
     const { sessionId } = params as { sessionId: string };
     mockStore.clearHoldings(sessionId);
+    await delay(400);
     return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post(API_ENDPOINT + "/sessions/:sessionId/price-check", async ({ params }) => {
+    const { sessionId } = params as { sessionId: string };
+
+    const holdings = mockStore.getHoldings(sessionId);
+
+    // here BE would revalidate prices, but we just pass the original ones
+    const priced = holdings.map(h => ({
+      ...toRoomHolding(h),
+      price: { amount: 3000, per: h.price.per},
+    }));
+    await delay(3000);
+    return HttpResponse.json(priced, { status: 200 });
   }),
 
   http.post(API_ENDPOINT + "/booking/confirm", async ({ request }) => {

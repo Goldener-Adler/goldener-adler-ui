@@ -1,55 +1,81 @@
 import type {RequestedRoom, RoomHolding} from "@/assets/bookingTypes";
-import type {Price} from "@/assets/types";
+import type {Price, SelectedExtraSnapshot} from "@/assets/types";
+import {isExtraSelected} from "@/utils/guards/isExtraSelected";
 
-export const getExtraPrice = (price: Price, value: boolean | string | number, people: number, nights: number): number => {
-  if (value === false) return 0;
+export function getExtraPriceCents(
+  extra: SelectedExtraSnapshot,
+  nights: number,
+  people: number,
+): number {
+  const price = extra.optionPrice ?? extra.price;
+
+  if (!price || !isExtraSelected(extra)) return 0;
+
+  const base = price.amount;
 
   switch (price.per) {
-    case "night":           return price.amount.eur * nights;
-    case "person":          return price.amount.eur * people;
-    case "nightAndPerson":  return price.amount.eur * nights * people;
-    case "stay":            return price.amount.eur;
-    default:                return price.amount.eur;
+    case "night":
+      return base * nights;
+    case "person":
+      return base * people;
+    case "nightAndPerson":
+      return base * nights * people;
+    case "stay":
+      return base;
   }
 }
 
-export function getRoomTotal(
+export function getRoomCents(
   room: RoomHolding,
-  price: Price,
-  people: number,
-  nights: number
+  nights: number,
 ): number {
-  const extrasTotal = room.extrasSnapshot
-    .filter(extra => extra.value !== false)
-    .reduce((sum, extra) => {
-      if (!extra.price) return sum;
-      return sum + getExtraPrice(extra.price, extra.value, people, nights);
-    }, 0);
-
-  return price.amount.eur * nights + extrasTotal;
+  return room.price.amount * nights;
 }
 
-// Pass Prices form BE
+function getRoomTotalCents(
+  room: RoomHolding,
+  people: number,
+  nights: number,
+): number {
+  const extras = room.extrasSnapshot.reduce((sum, extra) => {
+    return sum + getExtraPriceCents(extra, nights, people);
+  }, 0);
 
-export const getTotalPrice = (
+  return room.price.amount * nights + extras;
+}
+
+export function getTotalPrice(
   selectedRooms: Partial<Record<string, RoomHolding>>,
   requestedRooms: RequestedRoom[],
-  nights: number
-) => {
-  return requestedRooms.reduce((sum, req) => {
-    const room = selectedRooms[req.id];
+  nights: number,
+) {
+  return Object.entries(selectedRooms).reduce((sum, [id, room]) => {
     if (!room) return sum;
 
-    const people = req.people;
+    const people =
+      requestedRooms.find(r => r.id === id)?.people ?? 0;
 
-    return (
-      sum +
-      getRoomTotal(
-        room,
-        { amount: { eur: 5000 }, per: "night" }, // replace with real BE price
-        people,
-        nights
-      )
-    );
+    return sum + getRoomTotalCents(room, people, nights);
   }, 0);
-};
+}
+
+export function getPriceInCents(price: Price, nights: number, people: number): number {
+  const base = price.amount;
+
+  switch (price.per) {
+    case "night":
+      return base * nights;
+
+    case "person":
+      return base * people;
+
+    case "nightAndPerson":
+      return base * nights * people;
+
+    case "stay":
+      return base;
+
+    default:
+      return base;
+  }
+}
